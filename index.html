@@ -813,11 +813,24 @@
  const clockMinutes=t=>{const m=/^(\d{2}):(\d{2})$/.exec(t||'');return m?Number(m[1])*60+Number(m[2]):0;};
  const flightFirstStart=()=>clockMinutes(state.flight.arrTime)+Number(state.flight.entry)+Number(state.flight.transfer);
  const flightLastCutoff=()=>clockMinutes(state.flight.depTime)-Number(state.flight.checkin)-Number(state.flight.transfer);
- const flightMap=(airport,mode='transit')=>'https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(airport+' airport Japan')+'&travelmode='+(mode==='driving'?'driving':'transit');
+ const airportNames={KIX:'關西國際機場',NRT:'成田國際機場',HND:'羽田機場',NGO:'中部國際機場',FUK:'福岡機場',CTS:'新千歲機場',OKA:'那霸機場',ITM:'大阪國際機場',UKB:'神戶機場',HIJ:'廣島機場',SDJ:'仙台機場',KOJ:'鹿兒島機場',KMJ:'熊本機場',TAK:'高松機場',MYJ:'松山機場',OIT:'大分機場',NGS:'長崎機場',KMQ:'小松機場',HKD:'函館機場',ASJ:'奄美機場',ISG:'新石垣機場',MMY:'宮古機場'};
+ const airportPlace=code=>(airportNames[code]||code+' airport')+' 日本';
+ const airportDirections=(from,to,mode)=>'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(from)+'&destination='+encodeURIComponent(to)+'&travelmode='+(mode==='driving'?'driving':'transit');
  function renderFlightPanel(wrap,di){const last=state.days.length-1,f=state.flight;if(di!==0&&di!==last)return;
   const p=document.createElement('div');p.className='v414-flight';
-  if(di===0){const h=document.createElement('strong');h.textContent='✈️ 抵達日 · '+f.tw+' → '+f.arr;p.append(h);const t=document.createElement('p');t.textContent='日本 '+f.arrTime+' 抵達｜入境 '+f.entry+' 分＋進市區 '+f.transfer+' 分｜建議 '+minutesClock(flightFirstStart())+' 後開始市區行程（估算）';p.append(t);const a=document.createElement('a');a.href=flightMap(f.arr,f.mode);a.target='_blank';a.rel='noopener noreferrer';a.textContent='📍 機場地圖／交通查詢';p.append(a);}
-  if(di===last){const h=document.createElement('strong');h.textContent='🛫 回程日 · '+f.dep+' → '+f.twReturn;p.append(h);const t=document.createElement('p');t.textContent='日本 '+f.depTime+' 起飛｜提前 '+f.checkin+' 分到機場＋交通 '+f.transfer+' 分｜建議最晚 '+minutesClock(Math.max(0,flightLastCutoff()))+' 從市區出發（估算）';p.append(t);const a=document.createElement('a');a.href=flightMap(f.dep,f.mode);a.target='_blank';a.rel='noopener noreferrer';a.textContent='📍 回程機場地圖／交通查詢';p.append(a);}
+  const addRoute=(label,airport,isArrival)=>{
+   const a=document.createElement('a');a.href='#';a.textContent=label;a.setAttribute('aria-label',label);
+   a.addEventListener('click',e=>{
+    e.preventDefault();
+    const hotel=(state.days[di]?.base||state.settings.base||'').trim();
+    if(!hotel){showMessage('請先在下方「當日住宿／出發地」輸入飯店名稱或完整地址，再點擊導航。');const input=wrap.querySelector('.v44-base input');if(input){input.focus();input.scrollIntoView({behavior:'smooth',block:'center'});}return;}
+    const origin=isArrival?airportPlace(airport):hotel;
+    const destination=isArrival?hotel:airportPlace(airport);
+    window.open(airportDirections(origin,destination,f.mode),'_blank','noopener,noreferrer');
+   });p.append(a);
+  };
+  if(di===0){const h=document.createElement('strong');h.textContent='✈️ 抵達日 · '+f.tw+' → '+f.arr;p.append(h);const t=document.createElement('p');t.textContent='日本 '+f.arrTime+' 抵達｜入境 '+f.entry+' 分＋進市區 '+f.transfer+' 分｜建議 '+minutesClock(flightFirstStart())+' 後開始市區行程（估算）';p.append(t);addRoute('📍 機場 → 飯店 Google Maps 導航',f.arr,true);}
+  if(di===last){const h=document.createElement('strong');h.textContent='🛫 回程日 · '+f.dep+' → '+f.twReturn;p.append(h);const t=document.createElement('p');t.textContent='日本 '+f.depTime+' 起飛｜提前 '+f.checkin+' 分到機場＋交通 '+f.transfer+' 分｜建議最晚 '+minutesClock(Math.max(0,flightLastCutoff()))+' 從市區出發（估算）';p.append(t);addRoute('📍 飯店 → 回程機場 Google Maps 導航',f.dep,false);}
   wrap.append(p);
  }
  function readSettings(){state.settings={start:byId('trip-start').value||'09:00',duration:Number(byId('trip-duration').value),transfer:0,base:byId('trip-base').value.trim(),coords:byId('trip-coords').value.trim(),smart:byId('trip-smart').checked};save()}
