@@ -297,7 +297,7 @@
    <div class="v4-settings">
     <label>每日出發時間<input class="select-control" type="time" id="trip-start" value="09:00"></label>
     <label>每個景點建議停留（分鐘）<select class="select-control" id="trip-duration"><option value="60">60 分鐘</option><option value="90" selected>90 分鐘</option><option value="120">120 分鐘</option></select></label>
-    <div class="v41-explain"><strong>🚉 分段 Google Maps 導航</strong><small>逐段查詢大眾運輸／步行，將 Google Maps 顯示的分鐘數填入行程；不再預設 40 分鐘。</small></div>
+    
     <label>住宿／每日出發地（選填）<input class="select-control" id="trip-base" maxlength="80" placeholder="例如：大阪難波站"></label>
    </div>
    <label class="v4-toggle"><input type="checkbox" id="trip-smart" checked> 自動依同區域景點優先排序</label>
@@ -669,7 +669,7 @@
    const add=document.createElement('button');add.type='button';add.className='mini-btn';add.textContent='＋ 選擇景點';add.addEventListener('click',()=>openPicker(di));head.append(title,add);wrap.append(head);
    const route=document.createElement('div');route.className='v4-route';
    if(day.spots.length>1){const note=document.createElement('strong');note.textContent='🚉 分段導航：';route.append(note)}
-   const routeNote=document.createElement('span');routeNote.className='v4-route-note';routeNote.textContent='大眾運輸不支援多個途經點；請使用每段的「大眾運輸／步行」按鈕';route.append(routeNote);wrap.append(route);
+   const routeNote=document.createElement('span');routeNote.className='v4-route-note';routeNote.textContent='大眾運輸不支援多個途經點；請使用每段的「大眾運輸／步行／開車」按鈕';route.append(routeNote);wrap.append(route);
    const meta=document.createElement('p');meta.className='v4-day-meta';meta.textContent='出發 '+state.settings.start+' · '+day.spots.length+' 個景點 · '+(state.settings.smart?'同區域優先':'手動順序');wrap.append(meta);
    if(!day.spots.length){const p=document.createElement('p');p.className='muted-note';p.textContent='這天尚無景點，可點「＋ 選擇景點」新增；資料不足時不會自動重複景點。';wrap.append(p)}
    let cursor=getStartMinutes();let clockKnown=true;
@@ -684,6 +684,7 @@
     if(from){
       addLink(links,'🚉 大眾運輸',segmentRoute(from,placeText(spot,day.pref),'transit'));
       addLink(links,'🚶 步行',segmentRoute(from,placeText(spot,day.pref),'walking'));
+      addLink(links,'🚗 開車',segmentRoute(from,placeText(spot,day.pref),'driving'));
       const travelLabel=document.createElement('label');travelLabel.className='v41-minutes';travelLabel.textContent='本段交通（分鐘） ';
       const travelInput=document.createElement('input');travelInput.type='number';travelInput.min='0';travelInput.max='1440';travelInput.step='1';travelInput.placeholder='待確認';travelInput.setAttribute('aria-label','到 '+spot.name+' 的交通分鐘數');
       travelInput.value=spot.travelMinutes??'';
