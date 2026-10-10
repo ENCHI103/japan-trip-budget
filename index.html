@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f4ed">
+  <meta name="description" content="免費日本自由行旅費計算器，估算機票、住宿、餐飲、交通與其他費用。">
+  <title>日本自由行旅費計算器</title>
+  <style>
+    :root {
+      --bg: #f7f4ed;
+      --panel: #ffffff;
+      --ink: #202820;
+      --muted: #68736b;
+      --line: #e4e7df;
+      --green: #275b46;
+      --green-dark: #1c4535;
+      --mint: #e8f1e9;
+      --orange: #d77745;
+      --danger: #b42318;
+      --shadow: 0 12px 34px rgba(35, 54, 42, .07);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "PingFang TC", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 95% 0%, rgba(215,119,69,.10), transparent 27rem),
+        var(--bg);
+      line-height: 1.55;
+    }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    .shell { width: min(1080px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 44px; }
+    .topline { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 24px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: .02em; }
+    .brand-mark { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 14px; color: white; background: var(--green); font-size: 21px; }
+    .tag { color: var(--green); background: var(--mint); border-radius: 999px; padding: 6px 11px; font-size: 12px; font-weight: 750; }
+    .hero { display: grid; grid-template-columns: 1.3fr .7fr; gap: 22px; align-items: stretch; margin-bottom: 22px; }
+    .hero-copy { padding: 20px 0; }
+    .eyebrow { color: var(--orange); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; font-weight: 850; }
+    h1 { font-size: clamp(30px, 5vw, 49px); line-height: 1.12; letter-spacing: -.04em; margin: 10px 0 14px; max-width: 650px; }
+    .hero-copy p { color: var(--muted); max-width: 580px; margin: 0; }
+    .hero-note { background: var(--green); color: white; border-radius: 22px; padding: 23px; display: flex; flex-direction: column; justify-content: space-between; min-height: 190px; box-shadow: var(--shadow); }
+    .hero-note .big { font-size: 30px; font-weight: 850; letter-spacing: -.03em; }
+    .hero-note p { margin: 4px 0 0; color: rgba(255,255,255,.76); font-size: 13px; }
+    .hero-note .note-bottom { border-top: 1px solid rgba(255,255,255,.22); padding-top: 14px; margin-top: 22px; font-size: 13px; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1.04fr) minmax(0, .96fr); gap: 22px; align-items: start; }
+    .card { background: var(--panel); border: 1px solid rgba(35,54,42,.06); border-radius: 22px; padding: 23px; box-shadow: var(--shadow); min-width: 0; }
+    .section-head { display: flex; justify-content: space-between; align-items: start; gap: 12px; margin-bottom: 20px; }
+    h2 { font-size: 20px; margin: 0; letter-spacing: -.02em; }
+    .sub { color: var(--muted); font-size: 13px; margin: 5px 0 0; }
+    .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px; }
+    .field { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+    label { font-size: 13px; font-weight: 750; }
+    .input-wrap { display: flex; align-items: center; border: 1px solid var(--line); border-radius: 12px; background: #fff; transition: border .15s, box-shadow .15s; }
+    .input-wrap:focus-within { border-color: var(--green); box-shadow: 0 0 0 3px rgba(39,91,70,.12); }
+    .input-wrap input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; padding: 12px 11px; color: var(--ink); }
+    .unit { padding: 0 11px; color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .hint { color: var(--muted); font-size: 11px; min-height: 15px; }
+    .error { display: none; color: var(--danger); font-size: 12px; margin-top: 2px; }
+    .field.invalid .input-wrap { border-color: var(--danger); }
+    .field.invalid .error { display: block; }
+    .full { grid-column: 1 / -1; }
+    .split-title { display: flex; align-items: center; gap: 8px; margin: 22px 0 13px; font-size: 14px; font-weight: 850; }
+    .split-title:after { content: ""; height: 1px; background: var(--line); flex: 1; }
+    .check-row { display: flex; align-items: flex-start; gap: 10px; background: #f8faf7; border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin-top: 16px; }
+    .check-row input { margin-top: 4px; accent-color: var(--green); }
+    .check-row label { font-weight: 600; line-height: 1.4; }
+    .check-row small { display: block; font-weight: 400; color: var(--muted); margin-top: 3px; }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 21px; }
+    .btn { border: 0; border-radius: 12px; padding: 12px 16px; font-weight: 800; transition: transform .12s, background .12s; }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary { background: var(--green); color: #fff; flex: 1; }
+    .btn-primary:hover { background: var(--green-dark); }
+    .btn-secondary { background: #f0f3ef; color: var(--ink); }
+    .btn-secondary:hover { background: #e6ebe5; }
+    .summary-card { position: sticky; top: 18px; overflow: hidden; }
+    .total-panel { background: var(--mint); border-radius: 17px; padding: 19px; margin-bottom: 20px; }
+    .total-label { color: var(--green); font-size: 12px; font-weight: 800; }
+    .total { font-size: clamp(30px, 4vw, 42px); font-weight: 900; line-height: 1.15; letter-spacing: -.045em; margin: 7px 0 8px; overflow-wrap: anywhere; }
+    .per-person { color: var(--muted); font-size: 13px; }
+    .summary-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
+    .pill { background: rgba(255,255,255,.8); color: var(--green-dark); border-radius: 999px; padding: 6px 9px; font-size: 12px; font-weight: 750; }
+    .cost-list { display: flex; flex-direction: column; gap: 0; }
+    .cost-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .cost-row:last-child { border-bottom: 0; }
+    .cost-name { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .cost-icon { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 11px; background: #f5f4ef; flex-shrink: 0; }
+    .cost-name strong { display: block; font-size: 14px; }
+    .cost-name small { display: block; color: var(--muted); font-size: 11px; margin-top: 2px; }
+    .cost-value { font-weight: 850; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .cost-total { background: #fafbf9; margin: 10px -8px 0; padding: 15px 8px; border-radius: 12px; }
+    .cost-total .cost-value { color: var(--green); font-size: 18px; }
+    .breakdown { background: #fbfaf7; border: 1px solid var(--line); border-radius: 14px; padding: 14px; margin-top: 17px; }
+    .breakdown h3 { margin: 0 0 10px; font-size: 14px; }
+    .breakdown-line { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--muted); margin-top: 7px; }
+    .breakdown-line strong { color: var(--ink); text-align: right; }
+    .disclaimer { color: var(--muted); font-size: 11px; margin: 15px 0 0; line-height: 1.65; }
+    .toast { display: none; margin-top: 12px; padding: 10px 12px; background: var(--mint); color: var(--green-dark); border-radius: 10px; font-size: 13px; font-weight: 700; }
+    .toast.show { display: block; }
+    footer { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; color: var(--muted); font-size: 12px; margin-top: 25px; padding: 0 3px; }
+    footer a { color: var(--green); }
+    @media (max-width: 760px) {
+      .shell { width: min(100% - 22px, 600px); padding-top: 15px; }
+      .topline { margin-bottom: 12px; }
+      .hero { grid-template-columns: 1fr; gap: 14px; margin-bottom: 14px; }
+      .hero-copy { padding: 12px 2px 0; }
+      .hero-note { min-height: 0; padding: 17px; }
+      .hero-note .big { font-size: 25px; }
+      .hero-note .note-bottom { margin-top: 15px; }
+      .layout { grid-template-columns: 1fr; gap: 14px; }
+      .card { padding: 17px; border-radius: 18px; }
+      .summary-card { position: static; }
+      .total { font-size: 34px; }
+      .field-grid { gap: 12px; }
+    }
+    @media (max-width: 390px) {
+      .field-grid { grid-template-columns: 1fr; }
+      .full { grid-column: auto; }
+      .tag { display: none; }
+      .cost-value { font-size: 13px; }
+    }
+    @media print {
+      body { background: white; }
+      .shell { width: 100%; padding: 0; }
+      .hero-note, .card { box-shadow: none; }
+      .actions, .topline .tag, footer { display: none !important; }
+      .layout { grid-template-columns: 1fr 1fr; }
+      .summary-card { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="topline">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">旅</span><span>自由行小幫手</span></div>
+      <span class="tag">免費工具 · 無需登入</span>
+    </div>
+
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-copy">
+        <div class="eyebrow">YOUR JAPAN TRIP BUDGET</div>
+        <h1 id="page-title">日本自由行<br>旅費計算器</h1>
+        <p>出發前先把預算算清楚。輸入人數、天數與花費，就能快速估算整趟旅程的費用，並複製摘要分享給旅伴。</p>
+      </div>
+      <aside class="hero-note">
+        <div>
+          <div class="big">規劃得更安心。</div>
+          <p>機票、住宿、餐飲、交通與其他費用，一次拆分。</p>
+        </div>
+        <div class="note-bottom">適用：日本自由行預算初估 · 金額以新台幣計算</div>
+      </aside>
+    </section>
+
+    <div class="layout">
+      <section class="card" aria-labelledby="input-title">
+        <div class="section-head">
+          <div>
+            <h2 id="input-title">設定你的旅程</h2>
+            <p class="sub">修改欄位後，總預算會自動更新。</p>
+          </div>
+          <span class="tag">可自訂</span>
+        </div>
+
+        <form id="budget-form" novalidate>
+          <div class="field-grid">
+            <div class="field" data-field="people">
+              <label for="people">旅遊人數</label>
+              <div class="input-wrap"><input id="people" name="people" type="number" min="1" max="30" step="1" value="3" inputmode="numeric" required><span class="unit">人</span></div>
+              <div class="hint">1～30 人</div><div class="error">請輸入 1～30 的整數。</div>
+            </div>
+            <div class="field" data-field="days">
+              <label for="days">旅遊天數</label>
+              <div class="input-wrap"><input id="days" name="days" type="number" min="1" max="60" step="1" value="5" inputmode="numeric" required><span class="unit">天</span></div>
+              <div class="hint">1～60 天</div><div class="error">請輸入 1～60 的整數。</div>
+            </div>
+            <div class="field" data-field="flight">
+              <label for="flight">每人來回機票</label>
+              <div class="input-wrap"><input id="flight" name="flight" type="number" min="0" max="1000000" step="100" value="10000" inputmode="decimal" required><span class="unit">NT$</span></div>
+              <div class="hint">每人總價</div><div class="error">請輸入 0～1,000,000 的金額。</div>
+            </div>
+            <div class="field" data-field="hotel">
+              <label for="hotel">住宿每晚總價</label>
+              <div class="input-wrap"><input id="hotel" name="hotel" type="number" min="0" max="1000000" step="100" value="1800" inputmode="decimal" required><span class="unit">NT$</span></div>
+              <div class="hint">整間房每晚，不是每人</div><div class="error">請輸入 0～1,000,000 的金額。</div>
+            </div>
+            <div class="field" data-field="food">
+              <label for="food">每人每日餐費</label>
+              <div class="input-wrap"><input id="food" name="food" type="number" min="0" max="100000" step="100" value="1200" inputmode="decimal" required><span class="unit">NT$</span></div>
+              <div class="hint">早餐、午餐、晚餐等</div><div class="error">請輸入 0～100,000 的金額。</div>
+            </div>
+            <div class="field" data-field="transport">
+              <label for="transport">每人每日交通</label>
+              <div class="input-wrap"><input id="transport" name="transport" type="number" min="0" max="100000" step="100" value="500" inputmode="decimal" required><span class="unit">NT$</span></div>
+              <div class="hint">市區交通與預估車資</div><div class="error">請輸入 0～100,000 的金額。</div>
+            </div>
+          </div>
+
+          <div class="split-title">其他預算</div>
+          <div class="field-grid">
+            <div class="field" data-field="tickets">
+              <label for="tickets">每人門票／體驗總額</label>
+              <div class="input-wrap"><input id="tickets" name="tickets" type="number" min="0" max="1000000" step="100" value="0" inputmode="decimal" required><span class="unit">NT$</span></div>
+              <div class="hint">整趟旅程每人合計</div><div class="error">請輸入 0～1,000,000 的金額。</div>
+            </div>
+            <div class="field" data-field="shopping">
+              <label for="shopping">每人購物預算</label>
+              <div class="input-wrap"><input id="shopping" name="shopping" type="number" min="0" max="1000000" step="100" value="0" inputmode="decimal" required><span class="unit">NT$</span></div>
+              <div class="hint">伴手禮、個人購物等</div><div class="error">請輸入 0～1,000,000 的金額。</div>
+            </div>
+            <div class="field full" data-field="buffer">
+              <label for="buffer">預備金比例</label>
+              <div class="input-wrap"><input id="buffer" name="buffer" type="number" min="0" max="100" step="1" value="10" inputmode="numeric" required><span class="unit">%</span></div>
+              <div class="hint">按機票、住宿、餐飲、交通、門票與購物小計計算，預留突發支出。</div><div class="error">請輸入 0～100 的比例。</div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-primary" type="button" id="copy-btn">複製預算摘要</button>
+            <button class="btn btn-secondary" type="button" id="reset-btn">重設</button>
+            <button class="btn btn-secondary" type="button" id="print-btn">列印／存成 PDF</button>
+          </div>
+          <div class="toast" id="toast" role="status" aria-live="polite"></div>
+        </form>
+      </section>
+
+      <section class="card summary-card" aria-labelledby="summary-title">
+        <div class="section-head">
+          <div>
+            <h2 id="summary-title">你的預算摘要</h2>
+            <p class="sub">依目前輸入即時估算</p>
+          </div>
+          <span class="tag">NTD</span>
+        </div>
+        <div class="total-panel">
+          <div class="total-label">全團預估總費用</div>
+          <div class="total" id="grand-total" aria-live="polite">NT$ 0</div>
+          <div class="per-person" id="per-person">平均每人 NT$ 0</div>
+          <div class="summary-meta">
+            <span class="pill" id="meta-people">3 位旅客</span>
+            <span class="pill" id="meta-days">5 天</span>
+            <span class="pill" id="meta-buffer">含 10% 預備金</span>
+          </div>
+        </div>
+
+        <div class="cost-list" id="cost-list">
+          <div class="cost-row"><div class="cost-name"><span class="cost-icon">✈️</span><div><strong>來回機票</strong><small>每人機票 × 人數</small></div></div><div class="cost-value">NT$ 30,000</div></div>
+        </div>
+
+        <div class="breakdown">
+          <h3>計算方式</h3>
+          <div class="breakdown-line"><span>住宿</span><strong id="formula-hotel">每晚總價 × 住宿晚數</strong></div>
+          <div class="breakdown-line"><span>餐飲與交通</span><strong id="formula-daily">每人每日 × 天數 × 人數</strong></div>
+          <div class="breakdown-line"><span>預備金</span><strong id="formula-buffer">按基本費用小計計算</strong></div>
+        </div>
+        <p class="disclaimer">這是規劃用估算，不是即時報價。預設住宿晚數＝旅遊天數－1；若實際住宿晚數不同，請調整天數或住宿金額。費用不包含未輸入的保險、行李、匯率差、城市間交通等支出。出發前請再次確認航空公司、住宿與交通業者的實際價格。</p>
+      </section>
+    </div>
+
+    <footer>
+      <span>自由行小幫手 · 免費旅費估算工具</span>
+      <span>不會把輸入資料傳送至伺服器；計算完全在你的瀏覽器中進行。</span>
+    </footer>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+      const defaults = {
+        people: 3, days: 5, flight: 10000, hotel: 1800,
+        food: 1200, transport: 500, tickets: 0, shopping: 0, buffer: 10
+      };
+      const fields = Object.keys(defaults);
+      const form = document.getElementById("budget-form");
+      const toast = document.getElementById("toast");
+      let toastTimer;
+
+      const $ = id => document.getElementById(id);
+      const numberFormat = new Intl.NumberFormat("zh-TW", { maximumFractionDigits: 0 });
+      const money = value => "NT$ " + numberFormat.format(Math.round(value));
+      const getValues = () => Object.fromEntries(fields.map(key => [key, Number($(key).value)]));
+
+      function validate() {
+        let valid = true;
+        fields.forEach(key => {
+          const input = $(key);
+          const wrapper = document.querySelector(`[data-field="${key}"]`);
+          const value = input.value.trim() === "" ? NaN : Number(input.value);
+          const min = Number(input.min);
+          const max = Number(input.max);
+          const isInteger = ["people", "days", "buffer"].includes(key);
+          const ok = Number.isFinite(value) && value >= min && value <= max && (!isInteger || Number.isInteger(value));
+          wrapper.classList.toggle("invalid", !ok);
+          input.setAttribute("aria-invalid", String(!ok));
+          if (!ok) valid = false;
+        });
+        return valid;
+      }
+
+      function calculate(v) {
+        const nights = Math.max(0, v.days - 1);
+        const costs = {
+          flight: v.flight * v.people,
+          hotel: v.hotel * nights,
+          food: v.food * v.days * v.people,
+          transport: v.transport * v.days * v.people,
+          tickets: v.tickets * v.people,
+          shopping: v.shopping * v.people
+        };
+        const subtotal = Object.values(costs).reduce((sum, value) => sum + value, 0);
+        costs.buffer = subtotal * v.buffer / 100;
+        costs.total = subtotal + costs.buffer;
+        return { nights, costs, subtotal, perPerson: costs.total / v.people };
+      }
+
+      function render() {
+        if (!validate()) {
+          $("grand-total").textContent = "請檢查輸入";
+          $("per-person").textContent = "請修正標示的欄位後查看估算";
+          return null;
+        }
+        const v = getValues();
+        const { nights, costs, subtotal, perPerson } = calculate(v);
+        $("grand-total").textContent = money(costs.total);
+        $("per-person").textContent = `平均每人 ${money(perPerson)}`;
+        $("meta-people").textContent = `${v.people} 位旅客`;
+        $("meta-days").textContent = `${v.days} 天`;
+        $("meta-buffer").textContent = `含 ${v.buffer}% 預備金`;
+
+        const rows = [
+          ["✈️", "來回機票", `每人 ${money(v.flight)} × ${v.people} 人`, costs.flight],
+          ["🏨", "住宿", `${money(v.hotel)}／晚 × ${nights} 晚（整間房）`, costs.hotel],
+          ["🍜", "餐飲", `每人每日 ${money(v.food)} × ${v.days} 天 × ${v.people} 人`, costs.food],
+          ["🚆", "交通", `每人每日 ${money(v.transport)} × ${v.days} 天 × ${v.people} 人`, costs.transport],
+          ["🎟️", "門票／體驗", `每人 ${money(v.tickets)} × ${v.people} 人`, costs.tickets],
+          ["🛍️", "購物", `每人 ${money(v.shopping)} × ${v.people} 人`, costs.shopping],
+          ["🧰", "預備金", `基本費用 ${money(subtotal)} × ${v.buffer}%`, costs.buffer]
+        ];
+        $("cost-list").innerHTML = rows.map(([icon, name, desc, amount]) => `
+          <div class="cost-row">
+            <div class="cost-name"><span class="cost-icon" aria-hidden="true">${icon}</span><div><strong>${name}</strong><small>${desc}</small></div></div>
+            <div class="cost-value">${money(amount)}</div>
+          </div>`).join("") + `
+          <div class="cost-row cost-total">
+            <div class="cost-name"><span class="cost-icon">＝</span><div><strong>全團總預算</strong><small>基本費用＋預備金</small></div></div>
+            <div class="cost-value">${money(costs.total)}</div>
+          </div>`;
+        $("formula-hotel").textContent = `${money(v.hotel)} × ${nights} 晚 = ${money(costs.hotel)}`;
+        $("formula-daily").textContent = `(${money(v.food)} + ${money(v.transport)}) × ${v.days} 天 × ${v.people} 人`;
+        $("formula-buffer").textContent = `${money(subtotal)} × ${v.buffer}% = ${money(costs.buffer)}`;
+        return { v, nights, costs, subtotal, perPerson };
+      }
+
+      function makeSummary(data) {
+        const { v, nights, costs, subtotal, perPerson } = data;
+        return [
+          "日本自由行旅費預算摘要",
+          `旅遊人數：${v.people} 人`,
+          `旅遊天數：${v.days} 天（估算住宿 ${nights} 晚）`,
+          "",
+          `來回機票：${money(costs.flight)}`,
+          `住宿：${money(costs.hotel)}（${money(v.hotel)}／晚 × ${nights} 晚）`,
+          `餐飲：${money(costs.food)}`,
+          `交通：${money(costs.transport)}`,
+          `門票／體驗：${money(costs.tickets)}`,
+          `購物：${money(costs.shopping)}`,
+          `基本費用小計：${money(subtotal)}`,
+          `預備金（${v.buffer}%）：${money(costs.buffer)}`,
+          `全團預估總費用：${money(costs.total)}`,
+          `平均每人：${money(perPerson)}`,
+          "",
+          "提醒：以上為自行輸入的預算估算，並非即時報價。"
+        ].join("\n");
+      }
+
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("show"), 3000);
+      }
+
+      fields.forEach(key => $(key).addEventListener("input", render));
+
+      $("reset-btn").addEventListener("click", () => {
+        fields.forEach(key => $(key).value = defaults[key]);
+        render();
+        showToast("已恢復預設旅費設定。");
+      });
+
+      $("copy-btn").addEventListener("click", async () => {
+        const data = render();
+        if (!data) {
+          showToast("請先修正輸入欄位。");
+          return;
+        }
+        const summary = makeSummary(data);
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(summary);
+          } else {
+            const area = document.createElement("textarea");
+            area.value = summary;
+            area.style.position = "fixed";
+            area.style.opacity = "0";
+            document.body.appendChild(area);
+            area.select();
+            const copied = document.execCommand("copy");
+            area.remove();
+            if (!copied) throw new Error("clipboard unavailable");
+          }
+          showToast("預算摘要已複製，可以貼給旅伴了！");
+        } catch {
+          showToast("無法自動複製，請改用「列印／存成 PDF」。");
+        }
+      });
+
+      $("print-btn").addEventListener("click", () => {
+        if (render()) window.print();
+        else showToast("請先修正輸入欄位。");
+      });
+
+      form.addEventListener("submit", event => event.preventDefault());
+      render();
+    })();
+  </script>
+</body>
+</html>
