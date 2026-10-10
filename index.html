@@ -524,6 +524,7 @@
   const a=document.createElement('a');a.href=photo.source;a.target='_blank';a.rel='noopener noreferrer';a.textContent='照片來源／授權';el.replaceChildren(img,a);
  }
  let pickerDay=-1,pickerRegion='',pickerCategory='全部',pickerChosen=new Map();
+ const byId=id=>document.getElementById(id);
  const picker=byId('spot-picker');
  function allChosen(){return state.days.flatMap((d,i)=>d.spots.map(s=>({name:s.name,pref:d.pref,day:i})));}
  function openPicker(di){
@@ -569,7 +570,6 @@
 
  const cats=['文化','自然','美食','購物','動漫','娛樂','散步'];
  const storeKey='japanTripPlannerV2';
- const byId=id=>document.getElementById(id);
  const escapeHTML=str=>String(str).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
  const initial=()=>({stops:[{pref:'大阪府',days:3},{pref:'京都府',days:2}],prefs:['文化','美食','自然'],days:[]});
  let state=initial();
