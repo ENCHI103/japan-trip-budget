@@ -814,6 +814,8 @@
  const clockMinutes=t=>{const m=/^(\d{2}):(\d{2})$/.exec(t||'');return m?Number(m[1])*60+Number(m[2]):0;};
  const flightFirstStart=()=>clockMinutes(state.flight.arrTime)+Number(state.flight.entry)+Number(state.flight.transfer);
  const flightLastCutoff=()=>clockMinutes(state.flight.depTime)-Number(state.flight.checkin)-Number(state.flight.transfer);
+ // Day 1 cannot start before immigration and airport-to-city transfer are complete.
+ const effectiveDayStart=di=>Math.max(getStartMinutes(),di===0?flightFirstStart():0);
  const airportNames={KIX:'關西國際機場',NRT:'成田國際機場',HND:'羽田機場',NGO:'中部國際機場',FUK:'福岡機場',CTS:'新千歲機場',OKA:'那霸機場',ITM:'大阪國際機場',UKB:'神戶機場',HIJ:'廣島機場',SDJ:'仙台機場',KOJ:'鹿兒島機場',KMJ:'熊本機場',TAK:'高松機場',MYJ:'松山機場',OIT:'大分機場',NGS:'長崎機場',KMQ:'小松機場',HKD:'函館機場',ASJ:'奄美機場',ISG:'新石垣機場',MMY:'宮古機場'};
  const airportPlace=code=>(airportNames[code]||code+' airport')+' 日本';
  const airportDirections=(from,to,mode)=>'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(from)+'&destination='+encodeURIComponent(to)+'&travelmode='+(mode==='driving'?'driving':'transit');
@@ -1022,9 +1024,9 @@
    if(day.spots.length>1){const note=document.createElement('strong');note.textContent='🚉 分段導航：';route.append(note)}
    const routeNote=document.createElement('span');routeNote.className='v4-route-note';routeNote.textContent='大眾運輸不支援多個途經點；請使用每段的「大眾運輸／步行／開車」按鈕';route.append(routeNote);wrap.append(route);
    const hint=document.createElement('p');hint.className='v45-hint';hint.textContent='💡 使用「移至 Day」選單可跨天移動景點；本日景點可拖曳調整順序。';wrap.append(hint);
-   const meta=document.createElement('p');meta.className='v4-day-meta';meta.textContent='出發 '+state.settings.start+' · '+day.spots.length+' 個景點 · '+(state.settings.smart?'參考座標／區域排序':'手動順序');wrap.append(meta);
+   const meta=document.createElement('p');meta.className='v4-day-meta';meta.textContent='出發 '+minutesClock(effectiveDayStart(di))+(di===0?'（已考慮航班抵達與進市區時間）':'')+' · '+day.spots.length+' 個景點 · '+(state.settings.smart?'參考座標／區域排序':'手動順序');wrap.append(meta);
    if(!day.spots.length){const p=document.createElement('p');p.className='muted-note';p.textContent='這天尚無景點，可點「＋ 選擇景點」新增；資料不足時不會自動重複景點。';wrap.append(p)}
-   let cursor=getStartMinutes();let clockKnown=true;
+   let cursor=effectiveDayStart(di);let clockKnown=true;
    day.spots.forEach((spot,si)=>{
     const stay=stayMinutes(spot);const row=document.createElement('div');row.className='spot-row v45-drag';row.draggable=true;
     row.addEventListener('dragstart',e=>{draggedSpot={day:di,index:si};row.classList.add('dragging');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',String(di)+':'+String(si))});
@@ -1063,6 +1065,8 @@
     make('×','刪除 '+spot.name,()=>{day.spots.splice(si,1);save();renderDays()});
     row.append(desc,actions);wrap.append(row);if(clockKnown)cursor+=stay;
    });
+   if(di===0&&day.spots.length){const notice=document.createElement('p');notice.className='v4-time-alert';notice.textContent='✈️ 第一天景點從 '+minutesClock(effectiveDayStart(di))+' 後開始估算，已計入入境與機場進市區預留時間；從飯店到第一個景點的實際交通、寄放行李時間仍需自行確認。';wrap.append(notice)}
+   if(di===state.days.length-1&&day.spots.length){const cutoff=flightLastCutoff();if(!clockKnown||cursor>cutoff){const notice=document.createElement('p');notice.className='v45-warning';notice.textContent='⚠️ 回程日行程可能超過 '+minutesClock(Math.max(0,cutoff))+' 的建議市區離開時間，請減少景點或調整停留與交通時間。';wrap.append(notice)}}
    const regions=new Set(day.spots.map(p=>p.pref||day.pref));
    const totalStay=day.spots.reduce((sum,p)=>sum+stayMinutes(p),0);
    if(regions.size>1||totalStay>540||day.spots.length>6){const warn=document.createElement('p');warn.className='v45-warning';warn.textContent=(regions.size>1?'⚠️ 同一天包含不同都道府縣，請確認跨區交通時間。 ':'')+(totalStay>540?'⚠️ 景點停留合計超過 9 小時，尚未計入交通與用餐。 ':'')+(day.spots.length>6?'⚠️ 當天超過 6 個景點，可能較趕。':'');wrap.append(warn)}
