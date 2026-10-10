@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f7f4ed">
-  <meta name="description" content="免費日本自由行旅費計算器，估算機票、住宿、餐飲、交通與其他費用。">
-  <title>日本自由行旅費計算器</title>
+  <meta name="description" content="免費日本旅費與行程規劃器，支援 47 都道府縣、多城市行程及旅費估算。">
+  <title>日本自由行旅費與行程規劃器</title>
   <style>
     :root {
       --bg: #f7f4ed;
@@ -130,7 +130,12 @@
       .layout { grid-template-columns: 1fr 1fr; }
       .summary-card { position: static; }
     }
-  </style>
+  
+
+/* V2 itinerary planner */
+.nav-tabs{display:flex;gap:9px;flex-wrap:wrap;margin:0 0 20px}.tab-btn{border:1px solid var(--line);background:white;color:var(--ink);padding:11px 17px;border-radius:12px;font-weight:800}.tab-btn.active{background:var(--green);color:white;border-color:var(--green)}.view[hidden]{display:none!important}.planner-grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:20px;align-items:start}.planner-grid .card{min-width:0}.stack{display:grid;gap:12px}.select-control{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;background:white;color:var(--ink)}.stop-list{display:grid;gap:9px;margin:13px 0}.stop{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#f7faf7;border:1px solid var(--line);padding:10px;border-radius:12px}.stop small,.spot-row small{color:var(--muted)}.stop-left{min-width:0}.stop-controls{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.mini-input{width:60px;border:1px solid var(--line);border-radius:8px;padding:6px}.mini-btn{border:1px solid var(--line);background:white;border-radius:8px;padding:6px 9px;font-size:12px;font-weight:700}.mini-btn:hover{background:var(--mint)}.mini-btn.danger{color:var(--danger)}.prefs{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}.pref{display:flex;align-items:center;gap:5px;background:#f5f7f3;border-radius:999px;padding:7px 10px;font-size:13px}.pref input{accent-color:var(--green)}.itinerary-day{border:1px solid var(--line);border-radius:16px;padding:15px;margin:0 0 13px;background:#fff}.day-head{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:10px}.day-head h3{font-size:16px;margin:0}.spot-row{display:flex;justify-content:space-between;gap:8px;align-items:center;border-top:1px solid var(--line);padding:11px 0}.spot-row .spot-title{font-weight:700;font-size:14px}.spot-actions{display:flex;gap:4px;flex-shrink:0}.spot-actions button{min-width:27px;padding:5px}.muted-note{font-size:12px;color:var(--muted)}.planner-status{margin:10px 0;color:var(--muted);font-size:13px}.planner-result{max-height:900px;overflow-y:auto;padding-right:2px}.btn[disabled]{opacity:.5;cursor:not-allowed}@media(max-width:760px){.planner-grid{grid-template-columns:1fr}.planner-result{max-height:none}.stop{align-items:flex-start;flex-direction:column}.stop-controls{width:100%;justify-content:flex-start}}
+
+</style>
 </head>
 <body>
   <main class="shell">
@@ -139,6 +144,8 @@
       <span class="tag">免費工具 · 無需登入</span>
     </div>
 
+    <nav class="nav-tabs" role="tablist" aria-label="網站功能"><button type="button" id="tab-budget" class="tab-btn active" role="tab" aria-selected="true">💰 旅費計算器</button><button type="button" id="tab-planner" class="tab-btn" role="tab" aria-selected="false">🗺️ 行程規劃器</button></nav>
+    <div id="budget-view" class="view">
     <section class="hero" aria-labelledby="page-title">
       <div class="hero-copy">
         <div class="eyebrow">YOUR JAPAN TRIP BUDGET</div>
@@ -258,6 +265,33 @@
         <p class="disclaimer">這是規劃用估算，不是即時報價。預設住宿晚數＝旅遊天數－1；若實際住宿晚數不同，請調整天數或住宿金額。費用不包含未輸入的保險、行李、匯率差、城市間交通等支出。出發前請再次確認航空公司、住宿與交通業者的實際價格。</p>
       </section>
     </div>
+
+    </div>
+
+<section id="planner-view" class="view" hidden aria-labelledby="planner-title">
+ <div class="section-head"><div><h2 id="planner-title">日本多城市行程規劃器</h2><p class="sub">全日本 47 都道府縣可選，先建立路線，再產生每日景點安排。</p></div><span class="tag">V2 · 免費</span></div>
+ <div class="planner-grid">
+  <section class="card stack" aria-label="行程設定">
+   <div><h2>① 選擇旅行地區</h2><p class="sub">可新增多個都道府縣，並分別設定停留天數。順序就是旅行順序。</p></div>
+   <label for="pref-select">目的地（都道府縣）</label>
+   <select class="select-control" id="pref-select"></select>
+   <button class="btn btn-secondary" id="add-stop" type="button">＋ 加入目的地</button>
+   <div class="stop-list" id="stop-list" aria-live="polite"></div>
+   <p class="muted-note">目前以都道府縣為規劃單位；縣內景點可能相距很遠，請確認交通時間。</p>
+   <div class="split-title">② 選擇景點偏好</div>
+   <div class="prefs" id="prefs"></div>
+   <div class="split-title">③ 產生與分享</div>
+   <button class="btn btn-primary" id="generate-trip" type="button">自動產生每日行程</button>
+   <div class="actions" style="margin-top:0"><button class="btn btn-secondary" id="copy-trip" type="button">複製行程</button><button class="btn btn-secondary" id="reset-trip" type="button">重設行程</button></div>
+   <p class="muted-note">不使用付費 API，依內建景點資料及偏好排序；不提供即時營業時間、路線或車資。行程只儲存在此瀏覽器。</p>
+  </section>
+  <section class="card" aria-label="每日行程結果">
+   <div class="section-head"><div><h2>每日行程</h2><p class="sub">可編輯名稱、新增景點、調整順序或刪除。</p></div><span class="tag" id="trip-total">0 天</span></div>
+   <p class="planner-status" id="trip-status" role="status" aria-live="polite">請先設定地區並按「自動產生每日行程」。</p>
+   <div id="trip-days" class="planner-result"></div>
+  </section>
+ </div>
+</section>
 
     <footer>
       <span>自由行小幫手 · 免費旅費估算工具</span>
@@ -426,5 +460,103 @@
       render();
     })();
   </script>
+<script>
+
+(() => {
+ 'use strict';
+ const PREFECTURES = [{"pref":"北海道","city":"札幌","spots":[{"name":"大通公園","cat":"自然"},{"name":"北海道神宮","cat":"文化"},{"name":"小樽運河","cat":"散步"},{"name":"藻岩山","cat":"自然"},{"name":"狸小路商店街","cat":"購物"}]},{"pref":"青森縣","city":"青森","spots":[{"name":"睡魔之家 WA RASSE","cat":"文化"},{"name":"弘前公園","cat":"自然"}]},{"pref":"岩手縣","city":"盛岡","spots":[{"name":"盛岡城跡公園","cat":"自然"},{"name":"中尊寺","cat":"文化"}]},{"pref":"宮城縣","city":"仙台","spots":[{"name":"仙台城跡","cat":"文化"},{"name":"瑞鳳殿","cat":"文化"},{"name":"松島灣","cat":"自然"}]},{"pref":"秋田縣","city":"秋田","spots":[{"name":"千秋公園","cat":"自然"},{"name":"角館武家屋敷","cat":"文化"}]},{"pref":"山形縣","city":"山形","spots":[{"name":"山寺立石寺","cat":"文化"},{"name":"霞城公園","cat":"自然"}]},{"pref":"福島縣","city":"福島","spots":[{"name":"鶴之城","cat":"文化"},{"name":"大內宿","cat":"散步"}]},{"pref":"茨城縣","city":"水戶","spots":[{"name":"偕樂園","cat":"自然"},{"name":"國營常陸海濱公園","cat":"自然"}]},{"pref":"栃木縣","city":"宇都宮","spots":[{"name":"日光東照宮","cat":"文化"},{"name":"華嚴瀑布","cat":"自然"}]},{"pref":"群馬縣","city":"前橋","spots":[{"name":"草津溫泉街","cat":"散步"},{"name":"富岡製絲廠","cat":"文化"}]},{"pref":"埼玉縣","city":"埼玉","spots":[{"name":"川越一番街","cat":"散步"},{"name":"冰川神社","cat":"文化"}]},{"pref":"千葉縣","city":"千葉","spots":[{"name":"東京迪士尼度假區","cat":"娛樂"},{"name":"成田山新勝寺","cat":"文化"},{"name":"佐原老街","cat":"散步"}]},{"pref":"東京都","city":"東京","spots":[{"name":"淺草寺","cat":"文化"},{"name":"上野公園","cat":"自然"},{"name":"秋葉原","cat":"動漫"},{"name":"澀谷十字路口","cat":"散步"},{"name":"明治神宮","cat":"文化"},{"name":"東京晴空塔","cat":"娛樂"},{"name":"銀座","cat":"購物"},{"name":"新宿御苑","cat":"自然"}]},{"pref":"神奈川縣","city":"橫濱","spots":[{"name":"橫濱紅磚倉庫","cat":"購物"},{"name":"山下公園","cat":"自然"},{"name":"鎌倉大佛","cat":"文化"},{"name":"江之島","cat":"自然"}]},{"pref":"新潟縣","city":"新潟","spots":[{"name":"萬代橋","cat":"散步"},{"name":"彌彥神社","cat":"文化"}]},{"pref":"富山縣","city":"富山","spots":[{"name":"富岩運河環水公園","cat":"自然"},{"name":"立山黑部阿爾卑斯路線","cat":"自然"}]},{"pref":"石川縣","city":"金澤","spots":[{"name":"兼六園","cat":"自然"},{"name":"東茶屋街","cat":"散步"},{"name":"近江町市場","cat":"美食"}]},{"pref":"福井縣","city":"福井","spots":[{"name":"福井縣立恐龍博物館","cat":"娛樂"},{"name":"東尋坊","cat":"自然"}]},{"pref":"山梨縣","city":"甲府","spots":[{"name":"河口湖","cat":"自然"},{"name":"忍野八海","cat":"自然"}]},{"pref":"長野縣","city":"長野","spots":[{"name":"善光寺","cat":"文化"},{"name":"松本城","cat":"文化"},{"name":"上高地","cat":"自然"}]},{"pref":"岐阜縣","city":"岐阜","spots":[{"name":"白川鄉","cat":"文化"},{"name":"高山老街","cat":"散步"}]},{"pref":"靜岡縣","city":"靜岡","spots":[{"name":"三保松原","cat":"自然"},{"name":"熱海溫泉街","cat":"散步"}]},{"pref":"愛知縣","city":"名古屋","spots":[{"name":"名古屋城","cat":"文化"},{"name":"熱田神宮","cat":"文化"},{"name":"大須商店街","cat":"購物"},{"name":"吉卜力公園","cat":"娛樂"}]},{"pref":"三重縣","city":"津","spots":[{"name":"伊勢神宮","cat":"文化"},{"name":"御蔭橫丁","cat":"散步"}]},{"pref":"滋賀縣","city":"大津","spots":[{"name":"彥根城","cat":"文化"},{"name":"琵琶湖畔","cat":"自然"}]},{"pref":"京都府","city":"京都","spots":[{"name":"清水寺","cat":"文化"},{"name":"伏見稻荷大社","cat":"文化"},{"name":"嵐山竹林","cat":"自然"},{"name":"錦市場","cat":"美食"},{"name":"祇園花見小路","cat":"散步"},{"name":"金閣寺","cat":"文化"},{"name":"京都國際漫畫博物館","cat":"動漫"}]},{"pref":"大阪府","city":"大阪","spots":[{"name":"大阪城公園","cat":"文化"},{"name":"道頓堀","cat":"美食"},{"name":"心齋橋","cat":"購物"},{"name":"環球影城","cat":"娛樂"},{"name":"黑門市場","cat":"美食"},{"name":"通天閣","cat":"散步"},{"name":"日本橋電電街","cat":"動漫"},{"name":"海遊館","cat":"娛樂"}]},{"pref":"兵庫縣","city":"神戶","spots":[{"name":"神戶港塔","cat":"散步"},{"name":"北野異人館街","cat":"文化"},{"name":"南京町","cat":"美食"},{"name":"姬路城","cat":"文化"}]},{"pref":"奈良縣","city":"奈良","spots":[{"name":"奈良公園","cat":"自然"},{"name":"東大寺","cat":"文化"},{"name":"春日大社","cat":"文化"}]},{"pref":"和歌山縣","city":"和歌山","spots":[{"name":"和歌山城","cat":"文化"},{"name":"白濱海岸","cat":"自然"}]},{"pref":"鳥取縣","city":"鳥取","spots":[{"name":"鳥取砂丘","cat":"自然"},{"name":"砂之美術館","cat":"文化"}]},{"pref":"島根縣","city":"松江","spots":[{"name":"出雲大社","cat":"文化"},{"name":"松江城","cat":"文化"}]},{"pref":"岡山縣","city":"岡山","spots":[{"name":"岡山後樂園","cat":"自然"},{"name":"倉敷美觀地區","cat":"散步"}]},{"pref":"廣島縣","city":"廣島","spots":[{"name":"和平紀念公園","cat":"文化"},{"name":"宮島嚴島神社","cat":"文化"},{"name":"尾道老街","cat":"散步"}]},{"pref":"山口縣","city":"山口","spots":[{"name":"錦帶橋","cat":"文化"},{"name":"角島大橋","cat":"自然"}]},{"pref":"德島縣","city":"德島","spots":[{"name":"阿波舞會館","cat":"文化"},{"name":"鳴門漩渦","cat":"自然"}]},{"pref":"香川縣","city":"高松","spots":[{"name":"栗林公園","cat":"自然"},{"name":"金刀比羅宮","cat":"文化"}]},{"pref":"愛媛縣","city":"松山","spots":[{"name":"道後溫泉本館","cat":"文化"},{"name":"松山城","cat":"文化"}]},{"pref":"高知縣","city":"高知","spots":[{"name":"高知城","cat":"文化"},{"name":"桂濱","cat":"自然"}]},{"pref":"福岡縣","city":"福岡","spots":[{"name":"太宰府天滿宮","cat":"文化"},{"name":"櫛田神社","cat":"文化"},{"name":"博多運河城","cat":"購物"},{"name":"大濠公園","cat":"自然"},{"name":"中洲屋台街","cat":"美食"}]},{"pref":"佐賀縣","city":"佐賀","spots":[{"name":"吉野里歷史公園","cat":"文化"},{"name":"祐德稻荷神社","cat":"文化"}]},{"pref":"長崎縣","city":"長崎","spots":[{"name":"哥拉巴園","cat":"文化"},{"name":"稻佐山夜景","cat":"自然"},{"name":"豪斯登堡","cat":"娛樂"}]},{"pref":"熊本縣","city":"熊本","spots":[{"name":"熊本城","cat":"文化"},{"name":"水前寺成趣園","cat":"自然"},{"name":"阿蘇山","cat":"自然"}]},{"pref":"大分縣","city":"大分","spots":[{"name":"別府地獄巡禮","cat":"自然"},{"name":"由布院湯之坪街道","cat":"散步"}]},{"pref":"宮崎縣","city":"宮崎","spots":[{"name":"青島神社","cat":"文化"},{"name":"高千穗峽","cat":"自然"}]},{"pref":"鹿兒島縣","city":"鹿兒島","spots":[{"name":"櫻島展望所","cat":"自然"},{"name":"仙巖園","cat":"文化"}]},{"pref":"沖繩縣","city":"那霸","spots":[{"name":"國際通","cat":"購物"},{"name":"首里城公園","cat":"文化"},{"name":"美麗海水族館","cat":"娛樂"},{"name":"古宇利島","cat":"自然"},{"name":"瀨長島","cat":"散步"}]}];
+ const cats=['文化','自然','美食','購物','動漫','娛樂','散步'];
+ const storeKey='japanTripPlannerV2';
+ const byId=id=>document.getElementById(id);
+ const escapeHTML=str=>String(str).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+ const initial=()=>({stops:[{pref:'大阪府',days:3},{pref:'京都府',days:2}],prefs:['文化','美食','自然'],days:[]});
+ let state=initial();
+ try { const raw=JSON.parse(localStorage.getItem(storeKey)); if(raw && Array.isArray(raw.stops) && Array.isArray(raw.days)) state=raw; }catch{}
+ const save=()=>{try{localStorage.setItem(storeKey,JSON.stringify(state));}catch{}};
+ const showMessage=s=>byId('trip-status').textContent=s;
+ const select=byId('pref-select');
+ PREFECTURES.forEach((x,i)=>{let opt=document.createElement('option');opt.value=String(i);opt.textContent=x.pref+'（'+x.city+'）';select.append(opt)});
+ select.value=String(PREFECTURES.findIndex(x=>x.pref==='東京都'));
+ function renderStops(){
+  const el=byId('stop-list');el.innerHTML='';
+  state.stops.forEach((s,i)=>{
+   const row=document.createElement('div');row.className='stop';
+   const left=document.createElement('div');left.className='stop-left';
+   left.innerHTML=`<strong>${escapeHTML(s.pref)}</strong><br><small>${escapeHTML(PREFECTURES.find(p=>p.pref===s.pref)?.city||'')}</small>`;
+   const ctr=document.createElement('div');ctr.className='stop-controls';
+   const days=document.createElement('input');days.type='number';days.className='mini-input';days.min='1';days.max='30';days.step='1';days.value=s.days;days.setAttribute('aria-label',s.pref+' 停留天數');
+   days.addEventListener('change',()=>{const n=Number(days.value);if(!Number.isInteger(n)||n<1||n>30){days.value=s.days;showMessage('每個地區請輸入 1～30 天。');return;}s.days=n;state.days=[];save();renderDays();});
+   ctr.append(days,document.createTextNode('天'));
+   for(const [label,move] of [['↑',-1],['↓',1]]){const b=document.createElement('button');b.className='mini-btn';b.type='button';b.textContent=label;b.setAttribute('aria-label',s.pref+(move===-1?'往前':'往後'));b.disabled=i+move<0||i+move>=state.stops.length;b.addEventListener('click',()=>{[state.stops[i],state.stops[i+move]]=[state.stops[i+move],state.stops[i]];state.days=[];save();renderStops();renderDays()});ctr.append(b)}
+   const del=document.createElement('button');del.type='button';del.className='mini-btn danger';del.textContent='移除';del.addEventListener('click',()=>{state.stops.splice(i,1);state.days=[];save();renderStops();renderDays()});ctr.append(del);
+   row.append(left,ctr);el.append(row);
+  });
+  byId('trip-total').textContent=state.stops.reduce((a,b)=>a+Number(b.days||0),0)+' 天';
+ }
+ function renderPrefs(){
+  const el=byId('prefs');el.innerHTML='';
+  cats.forEach(c=>{const label=document.createElement('label');label.className='pref';const inp=document.createElement('input');inp.type='checkbox';inp.checked=state.prefs.includes(c);inp.addEventListener('change',()=>{state.prefs=inp.checked?[...new Set([...state.prefs,c])]:state.prefs.filter(x=>x!==c);save()});label.append(inp,document.createTextNode(c));el.append(label)})
+ }
+ function generate(){
+  const total=state.stops.reduce((a,s)=>a+s.days,0);
+  if(!state.stops.length){showMessage('請先加入至少一個目的地。');return;}
+  if(total>60){showMessage('為避免過長，單次行程上限為 60 天。');return;}
+  const output=[];
+  state.stops.forEach(s=>{
+   const region=PREFECTURES.find(p=>p.pref===s.pref);
+   const spots=[...region.spots].sort((a,b)=>Number(state.prefs.includes(b.cat))-Number(state.prefs.includes(a.cat)));
+   for(let d=0;d<s.days;d++){
+    const chosen=[];
+    // rotate attractions and avoid duplicates within the same day
+    for(let k=0;k<Math.min(3,spots.length);k++) chosen.push({...spots[(d*3+k)%spots.length]});
+    output.push({pref:s.pref,day:d+1,spots:chosen});
+   }
+  });
+  state.days=output;save();renderDays();showMessage('已產生 '+output.length+' 天行程。景點順序僅供參考，請自行確認位置、營業時間與交通。');
+ }
+ function renderDays(){
+  const el=byId('trip-days');el.innerHTML='';
+  if(!state.days.length){showMessage('尚未產生行程；修改目的地後請重新產生。');return;}
+  state.days.forEach((day,di)=>{
+   const wrap=document.createElement('article');wrap.className='itinerary-day';
+   const head=document.createElement('div');head.className='day-head';
+   const title=document.createElement('h3');title.textContent=`Day ${di+1} · ${day.pref}（當地第 ${day.day} 天）`;
+   const add=document.createElement('button');add.type='button';add.className='mini-btn';add.textContent='＋ 景點';add.addEventListener('click',()=>{
+    const name=prompt('新增景點名稱：');if(name===null)return;const val=name.trim();if(!val||val.length>80){showMessage('景點名稱請輸入 1～80 個字。');return;}day.spots.push({name:val,cat:'自訂'});save();renderDays();
+   });head.append(title,add);wrap.append(head);
+   if(!day.spots.length){const p=document.createElement('p');p.className='muted-note';p.textContent='這天還沒有景點，請點「＋ 景點」新增。';wrap.append(p)}
+   day.spots.forEach((spot,si)=>{
+    const row=document.createElement('div');row.className='spot-row';const desc=document.createElement('div');
+    const name=document.createElement('div');name.className='spot-title';name.textContent=`${si+1}. ${spot.name}`;
+    const cat=document.createElement('small');cat.textContent=spot.cat;desc.append(name,cat);
+    const actions=document.createElement('div');actions.className='spot-actions';
+    const make=(label,aria,fn,disabled=false)=>{const b=document.createElement('button');b.type='button';b.className='mini-btn';b.textContent=label;b.setAttribute('aria-label',aria);b.disabled=disabled;b.addEventListener('click',fn);actions.append(b)};
+    make('✎','編輯 '+spot.name,()=>{const name=prompt('編輯景點名稱：',spot.name);if(name===null)return;const val=name.trim();if(!val||val.length>80){showMessage('景點名稱請輸入 1～80 個字。');return;}spot.name=val;save();renderDays()});
+    make('↑','上移 '+spot.name,()=>{[day.spots[si-1],day.spots[si]]=[day.spots[si],day.spots[si-1]];save();renderDays()},si===0);
+    make('↓','下移 '+spot.name,()=>{[day.spots[si+1],day.spots[si]]=[day.spots[si],day.spots[si+1]];save();renderDays()},si===day.spots.length-1);
+    make('×','刪除 '+spot.name,()=>{day.spots.splice(si,1);save();renderDays()});
+    row.append(desc,actions);wrap.append(row);
+   });el.append(wrap);
+  });
+ }
+ byId('add-stop').addEventListener('click',()=>{
+  const region=PREFECTURES[Number(select.value)];if(!region)return;
+  if(state.stops.some(s=>s.pref===region.pref)){showMessage('這個都道府縣已在清單中，可直接調整停留天數。');return;}
+  state.stops.push({pref:region.pref,days:2});state.days=[];save();renderStops();renderDays();
+ });
+ byId('generate-trip').addEventListener('click',generate);
+ byId('reset-trip').addEventListener('click',()=>{if(!confirm('確定要重設行程規劃嗎？'))return;state=initial();save();renderStops();renderPrefs();renderDays()});
+ byId('copy-trip').addEventListener('click',async()=>{
+  if(!state.days.length){showMessage('請先產生行程。');return;}
+  const content=['日本自由行行程規劃（參考版）',...state.days.flatMap((d,i)=>[`Day ${i+1}｜${d.pref}`, ...d.spots.map((s,j)=>`  ${j+1}. ${s.name}（${s.cat}）`),'']), '提醒：景點與排序僅供參考，請查證交通、營業時間、預約需求。'].join('\n');
+  try{await navigator.clipboard.writeText(content);showMessage('行程已複製！')}catch{const area=document.createElement('textarea');area.value=content;document.body.append(area);area.select();try{const ok=document.execCommand('copy');showMessage(ok?'行程已複製！':'無法複製，請手動選取文字。')}catch{showMessage('無法複製，請手動選取文字。')}area.remove()}
+ });
+ const tabBudget=byId('tab-budget'),tabPlanner=byId('tab-planner');
+ function switchTab(which){const planner=which==='planner';byId('planner-view').hidden=!planner;byId('budget-view').hidden=planner;tabBudget.classList.toggle('active',!planner);tabPlanner.classList.toggle('active',planner);tabBudget.setAttribute('aria-selected',String(!planner));tabPlanner.setAttribute('aria-selected',String(planner));try{history.replaceState(null,'',planner?'#planner':'#budget')}catch{}}
+ tabBudget.addEventListener('click',()=>switchTab('budget'));tabPlanner.addEventListener('click',()=>switchTab('planner'));
+ renderStops();renderPrefs();renderDays();switchTab(location.hash==='#planner'?'planner':'budget');
+})();
+
+</script>
 </body>
 </html>
