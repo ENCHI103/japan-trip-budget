@@ -198,6 +198,11 @@
 .photo-fallback-title{font-size:14px;font-weight:750;color:#264638;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .photo-fallback-note{font-size:10px;color:#688278}
 </style>
+<style>
+.v414-flight{border:1px solid #bdd8cc;background:#f0f7f2;border-radius:14px;padding:14px 16px;margin:12px 0;color:#214e3f;line-height:1.65}
+.v414-flight p{margin:5px 0 8px;font-size:.92rem}.v414-flight a{color:#185b4a;text-decoration:underline;font-weight:600}
+@media(max-width:600px){.v414-flight{padding:12px}}
+</style>
 </head>
 <body>
   <main class="shell">
@@ -343,7 +348,7 @@
     </div>
 
 <section id="planner-view" class="view" hidden aria-labelledby="planner-title">
- <div class="section-head"><div><h2 id="planner-title">日本多城市行程規劃器</h2><p class="sub">全日本 47 都道府縣可選，依區域安排景點、時間軸與 Google Maps 導航。</p></div><span class="tag">V4.13 · 免費</span></div>
+ <div class="section-head"><div><h2 id="planner-title">日本多城市行程規劃器</h2><p class="sub">全日本 47 都道府縣可選，依區域安排景點、時間軸與 Google Maps 導航。</p></div><span class="tag">V4.14 · 免費</span></div>
  <div class="planner-grid">
   <section class="card stack" aria-label="行程設定">
    <div><h2>① 選擇旅行地區</h2><p class="sub">可新增多個都道府縣，並分別設定停留天數。順序就是旅行順序。</p></div>
@@ -365,6 +370,21 @@
    <label class="v4-toggle"><input type="checkbox" id="trip-smart" checked> 優先依景點位置安排順路動線（有座標時）</label>
    <p class="muted-note" id="trip-location-status">部分熱門景點提供參考座標；住宿可填 Google Maps 座標改善起點排序。座標距離不等於交通時間。</p>
    <p class="muted-note">交通時間不會自動讀取 Google Maps；請逐段查詢並填入分鐘數，且留意實際出發日期及班次。</p>
+
+   <div class="split-title">✈️ 航班與機場設定（日本當地時間）</div>
+   <div class="v4-settings">
+    <label>台灣出發機場<select class="select-control" id="flight-tw"><option value="TPE">桃園國際機場 TPE</option><option value="TSA">臺北松山機場 TSA</option><option value="KHH">高雄國際機場 KHH</option><option value="RMQ">臺中國際機場 RMQ</option><option value="OTHER">其他</option></select></label>
+    <label>日本抵達機場<select class="select-control" id="flight-arr"><option value="KIX">關西國際機場 KIX</option><option value="HND">東京羽田機場 HND</option><option value="NRT">東京成田機場 NRT</option><option value="NGO">中部國際機場 NGO</option><option value="FUK">福岡機場 FUK</option><option value="CTS">新千歲機場 CTS</option><option value="OKA">那霸機場 OKA</option><option value="ITM">大阪伊丹機場 ITM</option><option value="OTHER">其他</option></select></label>
+    <label>回程日本機場<select class="select-control" id="flight-dep"><option value="KIX">關西國際機場 KIX</option><option value="HND">東京羽田機場 HND</option><option value="NRT">東京成田機場 NRT</option><option value="NGO">中部國際機場 NGO</option><option value="FUK">福岡機場 FUK</option><option value="CTS">新千歲機場 CTS</option><option value="OKA">那霸機場 OKA</option><option value="ITM">大阪伊丹機場 ITM</option><option value="OTHER">其他</option></select></label>
+    <label>台灣回程抵達機場<select class="select-control" id="flight-tw-return"><option value="TPE">桃園國際機場 TPE</option><option value="TSA">臺北松山機場 TSA</option><option value="KHH">高雄國際機場 KHH</option><option value="RMQ">臺中國際機場 RMQ</option><option value="OTHER">其他</option></select></label>
+    <label>抵達日本時間<input class="select-control" type="time" id="flight-arr-time" value="13:30"></label>
+    <label>日本回程起飛時間<input class="select-control" type="time" id="flight-dep-time" value="18:00"></label>
+    <label>入境＋領行李預留（分鐘）<input class="select-control" type="number" id="flight-entry" min="0" max="360" step="10" value="90"></label>
+    <label>機場到市區交通預留（分鐘）<input class="select-control" type="number" id="flight-transfer" min="0" max="360" step="10" value="90"></label>
+    <label>回程提前抵達機場（分鐘）<input class="select-control" type="number" id="flight-checkin" min="60" max="360" step="10" value="180"></label>
+    <label>機場交通偏好<select class="select-control" id="flight-mode"><option value="transit">鐵路／大眾運輸</option><option value="bus">機場巴士</option><option value="driving">開車／包車</option></select></label>
+   </div>
+   <p class="muted-note">航班時間均填日本當地時間。交通分鐘數是自行設定的預留時間，不是即時路線查詢；跨城市與轉機請自行確認。</p>
    <div class="split-title">④ 產生與分享</div>
    <button class="btn btn-primary" id="generate-trip" type="button">自動產生每日行程（每天最多 4 個景點）</button>
    <button class="btn btn-secondary" id="manual-trip" type="button" style="width:100%;margin-top:10px">✏️ 手動自訂行程（建立空白每日行程）</button>
@@ -747,10 +767,11 @@
  const cats=['文化','自然','美食','購物','動漫','娛樂','散步'];
  const storeKey='japanTripPlannerV2';
  const escapeHTML=str=>String(str).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
- const initial=()=>({stops:[{pref:'大阪府',days:3},{pref:'京都府',days:2}],prefs:['文化','美食','自然'],days:[],settings:{start:'09:00',duration:90,transfer:0,base:'',coords:'',smart:true}});
+ const initial=()=>({flight:{tw:'TPE',arr:'KIX',dep:'KIX',twReturn:'TPE',arrTime:'13:30',depTime:'18:00',entry:90,transfer:90,checkin:180,mode:'transit'},stops:[{pref:'大阪府',days:3},{pref:'京都府',days:2}],prefs:['文化','美食','自然'],days:[],settings:{start:'09:00',duration:90,transfer:0,base:'',coords:'',smart:true}});
  let state=initial();
  try { const raw=JSON.parse(localStorage.getItem(storeKey)); if(raw && Array.isArray(raw.stops) && Array.isArray(raw.days)) state=raw; }catch{}
  state.settings={...initial().settings,...(state.settings||{})};
+ state.flight={...initial().flight,...(state.flight||{})};
  const save=()=>{try{localStorage.setItem(storeKey,JSON.stringify(state));}catch{}};
  function clearSegmentMinutes(day){day.spots.forEach(spot=>delete spot.travelMinutes)}
  function moveSpot(fromDay,fromIndex,toDay,toIndex){
@@ -784,6 +805,21 @@
    state=restored;activeDay=0;state.settings={...initial().settings,...(state.settings||{})};save();writeSettings();locationStatus();renderStops();renderPrefs();renderDays();showMessage('已還原行程備份。');
   }catch{showMessage('無法讀取 JSON 備份檔。')}
  });
+ const flightIds={tw:'flight-tw',arr:'flight-arr',dep:'flight-dep',twReturn:'flight-tw-return',arrTime:'flight-arr-time',depTime:'flight-dep-time',entry:'flight-entry',transfer:'flight-transfer',checkin:'flight-checkin',mode:'flight-mode'};
+ function readFlight(){for(const [key,id] of Object.entries(flightIds)){const raw=byId(id).value;state.flight[key]=['entry','transfer','checkin'].includes(key)?Math.max(0,Number(raw)||0):raw;}save();}
+ function writeFlight(){for(const [key,id] of Object.entries(flightIds))byId(id).value=String(state.flight[key]??'');}
+ for(const id of Object.values(flightIds))byId(id).addEventListener('change',()=>{readFlight();renderDays()});
+ writeFlight();
+ const clockMinutes=t=>{const m=/^(\d{2}):(\d{2})$/.exec(t||'');return m?Number(m[1])*60+Number(m[2]):0;};
+ const flightFirstStart=()=>clockMinutes(state.flight.arrTime)+Number(state.flight.entry)+Number(state.flight.transfer);
+ const flightLastCutoff=()=>clockMinutes(state.flight.depTime)-Number(state.flight.checkin)-Number(state.flight.transfer);
+ const flightMap=(airport,mode='transit')=>'https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(airport+' airport Japan')+'&travelmode='+(mode==='driving'?'driving':'transit');
+ function renderFlightPanel(wrap,di){const last=state.days.length-1,f=state.flight;if(di!==0&&di!==last)return;
+  const p=document.createElement('div');p.className='v414-flight';
+  if(di===0){const h=document.createElement('strong');h.textContent='✈️ 抵達日 · '+f.tw+' → '+f.arr;p.append(h);const t=document.createElement('p');t.textContent='日本 '+f.arrTime+' 抵達｜入境 '+f.entry+' 分＋進市區 '+f.transfer+' 分｜建議 '+minutesClock(flightFirstStart())+' 後開始市區行程（估算）';p.append(t);const a=document.createElement('a');a.href=flightMap(f.arr,f.mode);a.target='_blank';a.rel='noopener noreferrer';a.textContent='📍 機場地圖／交通查詢';p.append(a);}
+  if(di===last){const h=document.createElement('strong');h.textContent='🛫 回程日 · '+f.dep+' → '+f.twReturn;p.append(h);const t=document.createElement('p');t.textContent='日本 '+f.depTime+' 起飛｜提前 '+f.checkin+' 分到機場＋交通 '+f.transfer+' 分｜建議最晚 '+minutesClock(Math.max(0,flightLastCutoff()))+' 從市區出發（估算）';p.append(t);const a=document.createElement('a');a.href=flightMap(f.dep,f.mode);a.target='_blank';a.rel='noopener noreferrer';a.textContent='📍 回程機場地圖／交通查詢';p.append(a);}
+  wrap.append(p);
+ }
  function readSettings(){state.settings={start:byId('trip-start').value||'09:00',duration:Number(byId('trip-duration').value),transfer:0,base:byId('trip-base').value.trim(),coords:byId('trip-coords').value.trim(),smart:byId('trip-smart').checked};save()}
  function writeSettings(){byId('trip-start').value=state.settings.start;byId('trip-duration').value=String(state.settings.duration);byId('trip-base').value=state.settings.base;byId('trip-coords').value=state.settings.coords||'';byId('trip-smart').checked=state.settings.smart}
  for(const id of ['trip-start','trip-duration','trip-base','trip-coords','trip-smart'])byId(id).addEventListener('change',()=>{readSettings();locationStatus();renderDays()});
@@ -847,7 +883,7 @@
   return {distance,nearby,preferred};
  }
  function generate(){
-  readSettings();const total=state.stops.reduce((a,s)=>a+Number(s.days),0);
+  readSettings();readFlight();const total=state.stops.reduce((a,s)=>a+Number(s.days),0);
   if(!state.stops.length){showMessage('請先加入至少一個目的地。');return;}
   if(total>60){showMessage('為避免過長，單次行程上限為 60 天。');return;}
   if(state.days.length&&!confirm('重新產生行程會覆蓋目前已編輯的每日景點。確定繼續？'))return;
@@ -883,6 +919,16 @@
    }
    output.push(...days);
   });
+  // 首末日依航班可用時間調整景點數；同日來回同時受兩側限制。
+  if(output.length){const dailyMinutes=Math.max(60,Number(state.settings.duration)||90)+45;
+   const firstAvail=Math.max(0,21*60-Math.max(getStartMinutes(),flightFirstStart()));
+   const firstCap=Math.max(0,Math.min(DAILY_AUTO_LIMIT,Math.floor(firstAvail/dailyMinutes)));
+   output[0].spots=output[0].spots.slice(0,firstCap);
+   const lastIndex=output.length-1;
+   const lastAvail=Math.max(0,flightLastCutoff()-Math.max(getStartMinutes(),lastIndex===0?flightFirstStart():0));
+   const lastCap=Math.max(0,Math.min(DAILY_AUTO_LIMIT,Math.floor(lastAvail/dailyMinutes)));
+   output[lastIndex].spots=output[lastIndex].spots.slice(0,lastCap);
+  }
   state.days=output;activeDay=0;save();renderDays();
   showMessage('已產生 '+output.length+' 天行程，每天最多 4 個景點且不重複。'+(parseCoords(state.settings.coords)?'已依住宿座標優先選擇附近有座標的景點；其他景點以區域估計。':'如需更準確的住宿附近推薦，請在左側填入住宿座標；僅輸入地址時只能依文字／區域近似安排。')+' 交通時間仍需自行確認。');
  }
@@ -930,6 +976,7 @@
    const head=document.createElement('div');head.className='day-head';
    const title=document.createElement('h3');title.textContent=`Day ${di+1} · ${day.pref}（當地第 ${day.day} 天）`;
    const add=document.createElement('button');add.type='button';add.className='mini-btn';add.textContent='＋ 選擇景點';add.addEventListener('click',()=>openPicker(di));head.append(title,add);wrap.append(head);
+   renderFlightPanel(wrap,di);
    const basePanel=document.createElement('div');basePanel.className='v44-base';
    const baseLabel=document.createElement('label');baseLabel.textContent='🏨 當日住宿／出發地（留空沿用左側預設）';
    const baseInput=document.createElement('input');baseInput.type='text';baseInput.maxLength=180;baseInput.placeholder=state.settings.base||'例如：京都站附近飯店完整地址';baseInput.value=day.base||'';
@@ -999,7 +1046,7 @@
  });
  byId('generate-trip').addEventListener('click',generate);
  byId('manual-trip').addEventListener('click',createManualTrip);
- byId('reset-trip').addEventListener('click',()=>{if(!confirm('確定要重設行程規劃嗎？'))return;state=initial();activeDay=0;save();writeSettings();locationStatus();renderStops();renderPrefs();renderDays()});
+ byId('reset-trip').addEventListener('click',()=>{if(!confirm('確定要重設行程規劃嗎？'))return;state=initial();activeDay=0;save();writeSettings();writeFlight();locationStatus();renderStops();renderPrefs();renderDays()});
  byId('copy-trip').addEventListener('click',async()=>{
   if(!state.days.length){showMessage('請先產生行程。');return;}
   const content=['日本自由行行程規劃（參考版）',...state.days.flatMap((d,i)=>{let t=getStartMinutes(),known=true;return [`Day ${i+1}｜${d.pref}｜住宿：${d.base||state.settings.base||'未設定'}`, ...d.spots.map((spot,j)=>{const from=segmentBefore(d,j);if(from){if(spot.travelMinutes!==undefined&&spot.travelMinutes!==null&&spot.travelMinutes!=='')t+=Number(spot.travelMinutes);else known=false}const time=known?minutesClock(t):'時間待確認';const v=`  ${time} ${j+1}. ${spot.name}（${spot.cat}；${stayMinutes(spot)}分鐘） ${mapSearch(spot.name,spot.pref||d.pref)}`;if(known)t+=stayMinutes(spot);return v}),'']}), '提醒：未確認交通時間不會自動估算；請查證交通、營業時間、預約需求。'].join('\n');
