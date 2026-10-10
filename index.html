@@ -184,6 +184,13 @@
 .v49-night-total{font-weight:800;text-align:right;font-size:13px}
 @media(min-width:1100px){.summary-card{position:static}.v49-chart-wrap{gap:8px}.v49-donut{width:125px;height:125px}.v49-donut-center{width:90px;height:90px}.v49-donut-center strong{font-size:13px}}
 @media(max-width:520px){.v49-lodge-stat{grid-template-columns:1fr}.v49-donut{margin:auto}.v49-legend{min-width:100%}}
+
+/* V4.11 Taiwan-first travel mode and mobile navigation */
+.v411-entry{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:10px 0 14px}
+.v411-exchange{margin-top:24px;padding:22px}.v411-exchange h2{margin:0 0 8px}.v411-exchange-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:end;margin-top:15px}.v411-exchange-grid label{display:grid;gap:6px;font-size:13px;font-weight:700}.v411-exchange-grid input{width:100%;min-width:0;padding:12px;border:1px solid var(--line);border-radius:10px}.v411-exchange-result{background:#eaf5ed;border-radius:12px;padding:12px}.v411-exchange-result small{display:block;color:var(--muted)}.v411-exchange-result strong{font-size:22px}
+.v411-travel[hidden]{display:none!important}.v411-travel{position:fixed;inset:0;z-index:11000;background:#f4f8f5;overflow:auto;overscroll-behavior:contain}.v411-travel-inner{max-width:790px;margin:auto;padding:22px 16px 45px}.v411-travel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}.v411-travel-head h2{margin:4px 0 0}.v411-travel-head small{color:var(--muted)}.v411-travel-switch{display:grid;grid-template-columns:auto 1fr auto;gap:8px;margin-bottom:15px}.v411-travel-switch button{min-height:42px}.v411-travel-card{border:1px solid var(--line);border-radius:16px;background:white;padding:17px;margin-bottom:12px}.v411-travel-card h3{margin:0 0 8px;font-size:18px}.v411-travel-card p{margin:5px 0;color:var(--muted);font-size:13px}.v411-travel-card .v4-link{font-size:14px;padding:10px 12px;min-height:44px;align-items:center}.v411-travel-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.v411-travel-number{display:inline-grid;place-items:center;background:var(--green);color:white;width:30px;height:30px;border-radius:50%;margin-right:8px}.v411-travel-time{font-weight:800;color:var(--green);font-variant-numeric:tabular-nums}.v411-mobile-nav{display:none}
+@media(max-width:760px){body{padding-bottom:82px}.v411-mobile-nav{position:fixed;bottom:0;left:0;right:0;z-index:8000;display:grid;grid-template-columns:repeat(3,1fr);background:white;border-top:1px solid var(--line);padding:7px 8px calc(7px + env(safe-area-inset-bottom));box-shadow:0 -5px 25px #0000000d}.v411-mobile-nav button{border:0;background:transparent;border-radius:12px;padding:7px;color:var(--green);font-weight:800;font-size:21px;display:grid;justify-items:center;gap:3px;min-height:52px}.v411-mobile-nav button span{font-size:12px}.v411-mobile-nav button[aria-current="page"]{background:#e7f3ea}.v411-exchange-grid{grid-template-columns:1fr}.v411-travel-inner{padding:14px 12px 100px}.v411-travel-switch{grid-template-columns:90px minmax(0,1fr) 90px}.v411-travel-switch button{font-size:12px}.v411-travel-card{padding:14px}.v411-travel-actions a{flex:1;justify-content:center}.v411-travel-head h2{font-size:22px}.v411-travel-head .mini-btn{min-height:42px}}
+@media print{.v411-mobile-nav,.v411-entry,.v411-travel,.v411-exchange{display:none!important}}
 </style>
 </head>
 <body>
@@ -360,6 +367,7 @@
   <section class="card" aria-label="每日行程結果">
    <div class="section-head"><div><h2>每日行程</h2><p class="sub">一次查看一天；使用上方 Day 切換日期，景點可搜尋、編輯與跨天移動。</p></div><span class="tag" id="trip-total">0 天</span></div>
    <p class="planner-status" id="trip-status" role="status" aria-live="polite">請先設定地區並按「自動產生每日行程」。</p>
+   <div class="v411-entry"><button type="button" id="v411-open" class="btn btn-primary">🧳 開啟旅行模式</button><span class="muted-note">旅行途中專用：一次查看當天景點、住宿與導航</span></div>
    <nav id="day-switcher" class="day-switcher" aria-label="切換每日行程" hidden>
      <div class="day-switcher-top"><button id="day-prev" type="button" class="mini-btn">← 上一天</button><label for="day-jump" class="day-jump-label">查看日期 <select id="day-jump" class="select-control"></select></label><button id="day-next" type="button" class="mini-btn">下一天 →</button></div>
      <div id="day-pills" class="day-pills" aria-label="選擇第幾天"></div>
@@ -370,6 +378,7 @@
  </div>
 </section>
 
+    <section class="v411-exchange card" aria-labelledby="v411-exchange-title"><h2 id="v411-exchange-title">💴 日幣／台幣快速換算</h2><p class="sub">供台灣旅客估算購物、餐費與門票價格。匯率由你自行輸入，不是即時銀行報價。</p><div class="v411-exchange-grid"><label>日幣金額（JPY）<input id="v411-jpy" type="number" min="0" max="999999999" value="3000" inputmode="decimal"></label><label>每 1 日圓約等於多少台幣<input id="v411-rate" type="number" min="0.0001" max="10" step="0.0001" value="0.22" inputmode="decimal"></label><div class="v411-exchange-result"><small>約合新台幣</small><strong id="v411-twd">NT$ 660</strong></div></div></section>
     <section class="v4-guide" aria-labelledby="v4-guide-title">
       <h2 id="v4-guide-title">日本自由行規劃指南</h2>
       <p>第一次規劃日本自由行？先選擇目的地與停留天數，再勾選文化、美食、自然或購物等偏好。產生行程後，可以逐日調整景點、查看地圖，並使用旅費計算器估算機票、住宿、交通與餐飲費用。</p>
@@ -383,6 +392,8 @@
   </main>
 
 
+<div class="v411-mobile-nav" aria-label="手機快速導覽"><button type="button" data-v411-tab="budget">💰<span>旅費</span></button><button type="button" data-v411-tab="planner">🗺️<span>規劃</span></button><button type="button" id="v411-mobile-trip">🧳<span>旅行模式</span></button></div>
+<div id="v411-travel" class="v411-travel" hidden role="dialog" aria-modal="true" aria-labelledby="v411-travel-title"><div class="v411-travel-inner"><div class="v411-travel-head"><div><small>日本自由行 · 旅行模式</small><h2 id="v411-travel-title">今日行程</h2></div><button type="button" id="v411-close" class="mini-btn" aria-label="關閉旅行模式">✕ 關閉</button></div><div class="v411-travel-switch"><button id="v411-prev" type="button" class="mini-btn">← 前一天</button><select id="v411-day" class="select-control" aria-label="選擇旅行日"></select><button id="v411-next" type="button" class="mini-btn">下一天 →</button></div><div id="v411-travel-body" aria-live="polite"></div><p class="muted-note">交通時間僅使用你已確認的輸入；未填寫時不推測 Google Maps 車程。導航將開啟 Google Maps。</p><button type="button" id="v411-back-edit" class="btn btn-secondary">返回編輯行程</button></div></div>
 <div id="spot-picker" class="picker-overlay" hidden>
  <div class="picker-panel" role="dialog" aria-modal="true" aria-labelledby="picker-title">
   <div class="picker-top"><div><h2 id="picker-title" style="margin:0">挑選日本景點</h2><span id="picker-day-label" class="muted-note"></span></div><button id="picker-close" class="mini-btn picker-close" type="button" aria-label="關閉">×</button></div>
@@ -1009,6 +1020,54 @@ observer.observe(document.body,{childList:true,subtree:true,characterData:true})
 let saved='zh-Hant';try{saved=localStorage.getItem('japan-trip-language')||'zh-Hant'}catch(e){}
 if(!['zh-Hant','ja','en'].includes(saved))saved='zh-Hant';
 selector.value=saved;apply(saved);
+})();
+</script>
+<script>
+/* V4.11 travel view reads existing itinerary cards without changing saved trip data. */
+(()=>{
+'use strict';
+const by=id=>document.getElementById(id);
+const overlay=by('v411-travel'),daySelect=by('v411-day'),body=by('v411-travel-body');
+let index=0,previousFocus=null;
+function getDays(){return [...document.querySelectorAll('#trip-days > .itinerary-day')];}
+function safeLink(label,url){const a=document.createElement('a');a.className='v4-link';a.textContent=label;a.href=url;a.target='_blank';a.rel='noopener noreferrer';return a;}
+function item(text,cls){const p=document.createElement('p');p.textContent=text;p.className=cls||'';return p;}
+function build(){
+ const days=getDays();body.replaceChildren();daySelect.replaceChildren();
+ if(!days.length){body.append(item('目前還沒有行程。請先到「行程規劃器」選擇地區並產生每日行程。'));by('v411-travel-title').textContent='尚無行程';by('v411-prev').disabled=by('v411-next').disabled=true;return;}
+ index=Math.min(Math.max(index,0),days.length-1);
+ days.forEach((d,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=d.querySelector('.day-head h3')?.textContent||`Day ${i+1}`;daySelect.append(o)});
+ daySelect.value=String(index);by('v411-prev').disabled=index===0;by('v411-next').disabled=index===days.length-1;
+ const day=days[index];by('v411-travel-title').textContent=day.querySelector('.day-head h3')?.textContent||`Day ${index+1}`;
+ const hotel=day.querySelector('.v44-base input')?.value.trim()||by('trip-base')?.value.trim();
+ const hotelCard=document.createElement('section');hotelCard.className='v411-travel-card';const h=document.createElement('h3');h.textContent='🏨 當日住宿／出發地';hotelCard.append(h,item(hotel||'尚未設定住宿地址'));
+ if(hotel)hotelCard.append(safeLink('📍 開啟住宿地圖','https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(hotel+' 日本')));
+ body.append(hotelCard);
+ const rows=[...day.querySelectorAll('.spot-row')];
+ if(!rows.length){const empty=document.createElement('section');empty.className='v411-travel-card';empty.append(item('今天尚未安排景點。請返回行程規劃器新增。'));body.append(empty)}
+ rows.forEach((row,i)=>{
+  const card=document.createElement('section');card.className='v411-travel-card';
+  const title=document.createElement('h3');const n=document.createElement('span');n.className='v411-travel-number';n.textContent=String(i+1);title.append(n,document.createTextNode((row.querySelector('.spot-title')?.textContent||'景點').replace(/^\d+\.\s*/,'')));card.append(title);
+  const time=row.querySelector('.v4-time')?.textContent;if(time)card.append(item(time,'v411-travel-time'));
+  const detail=row.querySelector('.v4-spot-details')?.textContent;if(detail)card.append(item(detail));
+  const actions=document.createElement('div');actions.className='v411-travel-actions';
+  row.querySelectorAll('.v4-spot-actions a[href]').forEach(link=>{if(/^https:\/\/www\.google\.com\/maps\//.test(link.href))actions.append(safeLink(link.textContent,link.href))});
+  card.append(actions);body.append(card);
+ });
+}
+function open(){previousFocus=document.activeElement;index=Number(by('day-jump')?.value)||0;build();overlay.hidden=false;document.body.style.overflow='hidden';by('v411-close').focus();}
+function close(){overlay.hidden=true;document.body.style.overflow='';if(previousFocus?.isConnected)previousFocus.focus();}
+by('v411-open').addEventListener('click',open);by('v411-mobile-trip').addEventListener('click',open);
+by('v411-close').addEventListener('click',close);by('v411-back-edit').addEventListener('click',()=>{close();by('tab-planner').click();document.querySelector('#planner-view')?.scrollIntoView({behavior:'smooth'})});
+by('v411-prev').addEventListener('click',()=>{index--;build()});by('v411-next').addEventListener('click',()=>{index++;build()});daySelect.addEventListener('change',()=>{index=Number(daySelect.value);build()});
+overlay.addEventListener('keydown',e=>{if(e.key==='Escape')close();if(e.key==='Tab'){const focusable=[...overlay.querySelectorAll('button:not([disabled]),select,a[href]')];if(!focusable.length)return;const first=focusable[0],last=focusable[focusable.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}});
+for(const btn of document.querySelectorAll('[data-v411-tab]'))btn.addEventListener('click',()=>{by('tab-'+btn.dataset.v411Tab).click();window.scrollTo({top:0,behavior:'smooth'});updateTabs()});
+function updateTabs(){document.querySelectorAll('[data-v411-tab]').forEach(b=>b.setAttribute('aria-current',by('tab-'+b.dataset.v411Tab)?.classList.contains('active')?'page':'false'))}
+by('tab-budget').addEventListener('click',updateTabs);by('tab-planner').addEventListener('click',updateTabs);updateTabs();
+const jpy=by('v411-jpy'),rate=by('v411-rate'),result=by('v411-twd');
+try{const saved=localStorage.getItem('japan-trip-manual-rate');if(saved&&Number(saved)>0&&Number(saved)<=10)rate.value=saved}catch{}
+function exchange(){const amount=Number(jpy.value),r=Number(rate.value);result.textContent=Number.isFinite(amount)&&amount>=0&&Number.isFinite(r)&&r>0&&r<=10?'NT$ '+Math.round(amount*r).toLocaleString('zh-TW'):'請輸入有效金額與匯率'}
+jpy.addEventListener('input',exchange);rate.addEventListener('input',()=>{exchange();const r=Number(rate.value);if(r>0&&r<=10)try{localStorage.setItem('japan-trip-manual-rate',String(r))}catch{}});exchange();
 })();
 </script>
 </body>
