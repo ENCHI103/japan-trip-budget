@@ -298,9 +298,11 @@
     <label>每日出發時間<input class="select-control" type="time" id="trip-start" value="09:00"></label>
     <label>每個景點建議停留（分鐘）<select class="select-control" id="trip-duration"><option value="60">60 分鐘</option><option value="90" selected>90 分鐘</option><option value="120">120 分鐘</option></select></label>
     
-    <label>住宿／每日出發地（選填）<input class="select-control" id="trip-base" maxlength="80" placeholder="例如：大阪難波站"></label>
+    <label>住宿／每日出發地（選填）<input class="select-control" id="trip-base" maxlength="180" placeholder="建議填寫完整地址，例如：大阪市浪速區..."></label>
+    <label>住宿 Google Maps 座標（選填）<input class="select-control" id="trip-coords" maxlength="220" placeholder="貼上 34.665,135.502 或含 @座標 的地圖網址"></label>
    </div>
-   <label class="v4-toggle"><input type="checkbox" id="trip-smart" checked> 自動依同區域景點優先排序</label>
+   <label class="v4-toggle"><input type="checkbox" id="trip-smart" checked> 優先依景點位置安排順路動線（有座標時）</label>
+   <p class="muted-note" id="trip-location-status">部分熱門景點提供參考座標；住宿可填 Google Maps 座標改善起點排序。座標距離不等於交通時間。</p>
    <p class="muted-note">交通時間不會自動讀取 Google Maps；請逐段查詢並填入分鐘數，且留意實際出發日期及班次。</p>
    <div class="split-title">④ 產生與分享</div>
    <button class="btn btn-primary" id="generate-trip" type="button">自動產生每日行程</button>
@@ -597,15 +599,21 @@
  const cats=['文化','自然','美食','購物','動漫','娛樂','散步'];
  const storeKey='japanTripPlannerV2';
  const escapeHTML=str=>String(str).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
- const initial=()=>({stops:[{pref:'大阪府',days:3},{pref:'京都府',days:2}],prefs:['文化','美食','自然'],days:[],settings:{start:'09:00',duration:90,transfer:0,base:'',smart:true}});
+ const initial=()=>({stops:[{pref:'大阪府',days:3},{pref:'京都府',days:2}],prefs:['文化','美食','自然'],days:[],settings:{start:'09:00',duration:90,transfer:0,base:'',coords:'',smart:true}});
  let state=initial();
  try { const raw=JSON.parse(localStorage.getItem(storeKey)); if(raw && Array.isArray(raw.stops) && Array.isArray(raw.days)) state=raw; }catch{}
  state.settings={...initial().settings,...(state.settings||{})};
  const save=()=>{try{localStorage.setItem(storeKey,JSON.stringify(state));}catch{}};
- function readSettings(){state.settings={start:byId('trip-start').value||'09:00',duration:Number(byId('trip-duration').value),transfer:0,base:byId('trip-base').value.trim(),smart:byId('trip-smart').checked};save()}
- function writeSettings(){byId('trip-start').value=state.settings.start;byId('trip-duration').value=String(state.settings.duration);byId('trip-base').value=state.settings.base;byId('trip-smart').checked=state.settings.smart}
- for(const id of ['trip-start','trip-duration','trip-base','trip-smart'])byId(id).addEventListener('change',()=>{readSettings();renderDays()});
+ function readSettings(){state.settings={start:byId('trip-start').value||'09:00',duration:Number(byId('trip-duration').value),transfer:0,base:byId('trip-base').value.trim(),coords:byId('trip-coords').value.trim(),smart:byId('trip-smart').checked};save()}
+ function writeSettings(){byId('trip-start').value=state.settings.start;byId('trip-duration').value=String(state.settings.duration);byId('trip-base').value=state.settings.base;byId('trip-coords').value=state.settings.coords||'';byId('trip-smart').checked=state.settings.smart}
+ for(const id of ['trip-start','trip-duration','trip-base','trip-coords','trip-smart'])byId(id).addEventListener('change',()=>{readSettings();locationStatus();renderDays()});
  function areaOf(s,pref){return s.area&&s.area!==pref?s.area:(AREA[s.name]||PREFECTURES.find(p=>p.pref===pref)?.city||pref)}
+ const SPOT_COORDS={"大阪城公園":[34.6873,135.5262],"道頓堀":[34.6687,135.5013],"心齋橋":[34.6751,135.5013],"環球影城":[34.6654,135.4323],"黑門市場":[34.6663,135.5064],"通天閣":[34.6525,135.5063],"日本橋電電街":[34.6599,135.5055],"海遊館":[34.6545,135.4289],"難波八阪神社":[34.6611,135.4967],"清水寺":[34.9949,135.785],"伏見稻荷大社":[34.9671,135.7727],"嵐山竹林":[35.0172,135.6716],"錦市場":[35.005,135.7646],"祇園花見小路":[35.003,135.778],"金閣寺":[35.0394,135.7292],"京都國際漫畫博物館":[35.0105,135.7595],"淺草寺":[35.7148,139.7967],"上野公園":[35.7156,139.773],"秋葉原":[35.6984,139.7731],"澀谷十字路口":[35.6595,139.7005],"明治神宮":[35.6764,139.6993],"東京晴空塔":[35.7101,139.8107],"銀座":[35.6717,139.765],"新宿御苑":[35.6852,139.71]};
+ function parseCoords(raw){if(!raw)return null;const match=String(raw).match(/(?:@|^|[?&]query=)(-?\d{1,2}(?:\.\d+)?),\s*(-?\d{1,3}(?:\.\d+)?)/);if(!match)return null;const lat=Number(match[1]),lng=Number(match[2]);return lat>=24&&lat<=46&&lng>=122&&lng<=154?[lat,lng]:null}
+ function haversine(a,b){const r=Math.PI/180,dlat=(b[0]-a[0])*r,dlng=(b[1]-a[1])*r,x=Math.sin(dlat/2)**2+Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.sin(dlng/2)**2;return 6371*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x))}
+ function spotCoords(s){return SPOT_COORDS[s.name]||null}
+ function geoSort(spots,pref){if(!state.settings.smart||spots.length<2)return spots;const remaining=[...spots];const ordered=[];let current=parseCoords(state.settings.coords);if(!current){const known=remaining.find(s=>spotCoords(s));current=known?spotCoords(known):null}if(!current)return smartSort(spots,pref);while(remaining.length){let best=-1,dist=Infinity;remaining.forEach((s,i)=>{const c=spotCoords(s);if(c){const d=haversine(current,c);if(d<dist){best=i;dist=d}}});if(best<0){ordered.push(...smartSort(remaining,pref));break}const s=remaining.splice(best,1)[0];ordered.push(s);current=spotCoords(s)}return ordered}
+ function locationStatus(){const el=byId('trip-location-status');if(!el)return;const c=parseCoords(state.settings.coords);el.textContent=c?'✓ 已辨識住宿座標（'+c[0].toFixed(4)+', '+c[1].toFixed(4)+'）；有座標的景點將優先依直線距離排序。':'住宿座標未設定或無法辨識：仍可用地址開啟導航，排序使用既有景點區域資料。可貼上 Google Maps 網址中 @緯度,經度 的部分。'}
  function smartSort(spots,pref){if(!state.settings.smart)return spots;const indexed=spots.map((s,i)=>({...s,__i:i}));const count=new Map();indexed.forEach(s=>{const a=areaOf(s,pref);count.set(a,(count.get(a)||0)+1)});indexed.sort((a,b)=>(count.get(areaOf(b,pref))-count.get(areaOf(a,pref)))||(areaOf(a,pref).localeCompare(areaOf(b,pref),'zh-Hant'))||(a.__i-b.__i));return indexed.map(({__i,...s})=>s)}
  function minutesClock(n){const h=Math.floor(n/60)%24;return String(h).padStart(2,'0')+':'+String(n%60).padStart(2,'0')}
  function getStartMinutes(){const [h,m]=(state.settings.start||'09:00').split(':').map(Number);return (h||0)*60+(m||0)}
@@ -655,9 +663,9 @@
    const seen=new Set();let next=0;
    for(const group of batches){for(const s of group){if(seen.has(s.name))continue;seen.add(s.name);let idx=days.findIndex(d=>d.spots.length<3&&d.spots.some(x=>areaOf(x,stop.pref)===areaOf(s,stop.pref)));if(idx<0){idx=days.findIndex((d,i)=>d.spots.length<3&&i>=next);if(idx<0)idx=days.findIndex(d=>d.spots.length<3)}if(idx<0)break;days[idx].spots.push({...s});next=idx;}}
    // 景點不足時保留空白日，不重複塞入相同景點
-   days.forEach(d=>{d.spots=smartSort(d.spots,d.pref);output.push(d)});
+   days.forEach(d=>{d.spots=geoSort(d.spots,d.pref);output.push(d)});
   });
-  state.days=output;save();renderDays();showMessage('已產生 '+output.length+' 天行程：同區域景點優先安排，時間軸僅為估算。請確認跨城市交通、營業時間與預約。');
+  state.days=output;save();renderDays();showMessage('已產生 '+output.length+' 天行程：有座標的景點依地理距離排序，其餘依區域排序；請核對實際交通與營業時間。');
  }
  function renderDays(){
   const el=byId('trip-days');el.replaceChildren();
@@ -670,7 +678,7 @@
    const route=document.createElement('div');route.className='v4-route';
    if(day.spots.length>1){const note=document.createElement('strong');note.textContent='🚉 分段導航：';route.append(note)}
    const routeNote=document.createElement('span');routeNote.className='v4-route-note';routeNote.textContent='大眾運輸不支援多個途經點；請使用每段的「大眾運輸／步行／開車」按鈕';route.append(routeNote);wrap.append(route);
-   const meta=document.createElement('p');meta.className='v4-day-meta';meta.textContent='出發 '+state.settings.start+' · '+day.spots.length+' 個景點 · '+(state.settings.smart?'同區域優先':'手動順序');wrap.append(meta);
+   const meta=document.createElement('p');meta.className='v4-day-meta';meta.textContent='出發 '+state.settings.start+' · '+day.spots.length+' 個景點 · '+(state.settings.smart?'參考座標／區域排序':'手動順序');wrap.append(meta);
    if(!day.spots.length){const p=document.createElement('p');p.className='muted-note';p.textContent='這天尚無景點，可點「＋ 選擇景點」新增；資料不足時不會自動重複景點。';wrap.append(p)}
    let cursor=getStartMinutes();let clockKnown=true;
    day.spots.forEach((spot,si)=>{
@@ -710,7 +718,7 @@
   state.stops.push({pref:region.pref,days:2});state.days=[];save();renderStops();renderDays();
  });
  byId('generate-trip').addEventListener('click',generate);
- byId('reset-trip').addEventListener('click',()=>{if(!confirm('確定要重設行程規劃嗎？'))return;state=initial();save();writeSettings();renderStops();renderPrefs();renderDays()});
+ byId('reset-trip').addEventListener('click',()=>{if(!confirm('確定要重設行程規劃嗎？'))return;state=initial();save();writeSettings();locationStatus();renderStops();renderPrefs();renderDays()});
  byId('copy-trip').addEventListener('click',async()=>{
   if(!state.days.length){showMessage('請先產生行程。');return;}
   const content=['日本自由行行程規劃（參考版）',...state.days.flatMap((d,i)=>{let t=getStartMinutes();return [`Day ${i+1}｜${d.pref}`, ...d.spots.map((s,j)=>{const v=`  ${minutesClock(t)} ${j+1}. ${s.name}（${s.cat}；${stayMinutes(s)}分鐘） ${mapSearch(s.name,s.pref||d.pref)}`;t+=stayMinutes(s)+state.settings.transfer;return v}),'']}), '提醒：時間為估計值，請查證交通、營業時間、預約需求。'].join('\n');
@@ -720,7 +728,7 @@
  const tabBudget=byId('tab-budget'),tabPlanner=byId('tab-planner');
  function switchTab(which){const planner=which==='planner';byId('planner-view').hidden=!planner;byId('budget-view').hidden=planner;tabBudget.classList.toggle('active',!planner);tabPlanner.classList.toggle('active',planner);tabBudget.setAttribute('aria-selected',String(!planner));tabPlanner.setAttribute('aria-selected',String(planner));try{history.replaceState(null,'',planner?'#planner':'#budget')}catch{}}
  tabBudget.addEventListener('click',()=>switchTab('budget'));tabPlanner.addEventListener('click',()=>switchTab('planner'));
- writeSettings();renderStops();renderPrefs();renderDays();switchTab(location.hash==='#planner'?'planner':'budget');
+ writeSettings();locationStatus();renderStops();renderPrefs();renderDays();switchTab(location.hash==='#planner'?'planner':'budget');
 })();
 
 </script>
