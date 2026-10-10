@@ -343,7 +343,7 @@
     </div>
 
 <section id="planner-view" class="view" hidden aria-labelledby="planner-title">
- <div class="section-head"><div><h2 id="planner-title">日本多城市行程規劃器</h2><p class="sub">全日本 47 都道府縣可選，依區域安排景點、時間軸與 Google Maps 導航。</p></div><span class="tag">V4 · 免費</span></div>
+ <div class="section-head"><div><h2 id="planner-title">日本多城市行程規劃器</h2><p class="sub">全日本 47 都道府縣可選，依區域安排景點、時間軸與 Google Maps 導航。</p></div><span class="tag">V4.13 · 免費</span></div>
  <div class="planner-grid">
   <section class="card stack" aria-label="行程設定">
    <div><h2>① 選擇旅行地區</h2><p class="sub">可新增多個都道府縣，並分別設定停留天數。順序就是旅行順序。</p></div>
@@ -366,7 +366,9 @@
    <p class="muted-note" id="trip-location-status">部分熱門景點提供參考座標；住宿可填 Google Maps 座標改善起點排序。座標距離不等於交通時間。</p>
    <p class="muted-note">交通時間不會自動讀取 Google Maps；請逐段查詢並填入分鐘數，且留意實際出發日期及班次。</p>
    <div class="split-title">④ 產生與分享</div>
-   <button class="btn btn-primary" id="generate-trip" type="button">自動產生每日行程</button>
+   <button class="btn btn-primary" id="generate-trip" type="button">自動產生每日行程（每天最多 4 個景點）</button>
+   <button class="btn btn-secondary" id="manual-trip" type="button" style="width:100%;margin-top:10px">✏️ 手動自訂行程（建立空白每日行程）</button>
+   <p class="muted-note">手動模式先建立每天的空白行程，再逐日點「＋ 選擇景點」自由安排；不會強制推薦景點。</p>
    <div class="actions" style="margin-top:0"><button class="btn btn-secondary" id="copy-trip" type="button">複製行程</button><button class="btn btn-secondary" id="print-trip" type="button">列印行程</button><button class="btn btn-secondary" id="export-trip" type="button">⬇ 備份行程</button><button class="btn btn-secondary" id="import-trip" type="button">⬆ 還原行程</button><input type="file" id="import-trip-file" accept=".json,application/json" hidden><button class="btn btn-secondary" id="reset-trip" type="button">重設行程</button></div>
    <p class="muted-note">不使用付費 API，依內建景點資料及偏好排序；不提供即時營業時間、路線或車資。行程只儲存在此瀏覽器。</p>
   </section>
@@ -826,24 +828,71 @@
   const el=byId('prefs');el.innerHTML='';
   cats.forEach(c=>{const label=document.createElement('label');label.className='pref';const inp=document.createElement('input');inp.type='checkbox';inp.checked=state.prefs.includes(c);inp.addEventListener('change',()=>{state.prefs=inp.checked?[...new Set([...state.prefs,c])]:state.prefs.filter(x=>x!==c);save()});label.append(inp,document.createTextNode(c));el.append(label)})
  }
+ // V4.13：住宿位置優先推薦；只有提供有效座標才能做真正的距離比較。
+ const DAILY_AUTO_LIMIT=4;
+ function originForStop(stop){
+  const raw=(state.settings.base||'').toLowerCase();
+  const coord=parseCoords(state.settings.coords);
+  const city=PREFECTURES.find(p=>p.pref===stop.pref)?.city||'';
+  const keys=[...new Set([city,stop.pref,'難波','なんば','namba','梅田','umeda','天王寺','tennoji','心齋橋','shinsaibashi','京都站','京都駅','kyoto station','祇園','gion','四條','四条','shijo','嵐山','arashiyama','淺草','浅草','asakusa','上野','ueno','新宿','shinjuku','澀谷','渋谷','shibuya','東京站','東京駅','tokyo station','池袋','ikebukuro'].filter(Boolean))];
+  const hints=keys.filter(k=>raw.includes(k.toLowerCase()));
+  return {coord,hints};
+ }
+ function candidateRank(spot,stop,origin){
+  const coords=spotCoords(spot),area=areaOf(spot,stop.pref);
+  const nearby=origin.hints.some(h=>area.toLowerCase().includes(h.toLowerCase())||spot.name.toLowerCase().includes(h.toLowerCase()));
+  const distance=origin.coord&&coords?haversine(origin.coord,coords):null;
+  const preferred=state.prefs.includes(spot.cat)?1:0;
+  // 未收錄座標時，只能根據住宿文字／景點區域做近似推薦，不能聲稱精確距離。
+  return {distance,nearby,preferred};
+ }
  function generate(){
   readSettings();const total=state.stops.reduce((a,s)=>a+Number(s.days),0);
   if(!state.stops.length){showMessage('請先加入至少一個目的地。');return;}
   if(total>60){showMessage('為避免過長，單次行程上限為 60 天。');return;}
   if(state.days.length&&!confirm('重新產生行程會覆蓋目前已編輯的每日景點。確定繼續？'))return;
-  const output=[];
+  const output=[],used=new Set();
   state.stops.forEach(stop=>{
    const region=PREFECTURES.find(p=>p.pref===stop.pref);if(!region)return;
-   const sorted=[...region.spots].sort((a,b)=>Number(state.prefs.includes(b.cat))-Number(state.prefs.includes(a.cat)));
-   const groups=new Map();sorted.forEach(s=>{const area=areaOf(s,stop.pref);if(!groups.has(area))groups.set(area,[]);groups.get(area).push(s)});
-   const batches=[...groups.values()].sort((a,b)=>b.length-a.length);
+   const origin=originForStop(stop);
+   const candidates=region.spots.filter(s=>!used.has(stop.pref+'|'+s.name)).map((s,i)=>({s,i,rank:candidateRank(s,stop,origin)}));
+   candidates.sort((a,b)=>{
+    // 已有住宿座標且景點有座標時，先安排較近的景點。
+    if(origin.coord){if(a.rank.distance!==null&&b.rank.distance!==null)return a.rank.distance-b.rank.distance;if((a.rank.distance!==null)!==(b.rank.distance!==null))return a.rank.distance!==null?-1:1;}
+    if(a.rank.nearby!==b.rank.nearby)return a.rank.nearby?-1:1;
+    if(a.rank.preferred!==b.rank.preferred)return b.rank.preferred-a.rank.preferred;
+    return a.i-b.i;
+   });
    const days=Array.from({length:stop.days},(_,i)=>({pref:stop.pref,day:i+1,spots:[]}));
-   const seen=new Set();let next=0;
-   for(const group of batches){for(const s of group){if(seen.has(s.name))continue;seen.add(s.name);let idx=days.findIndex(d=>d.spots.length<3&&d.spots.some(x=>areaOf(x,stop.pref)===areaOf(s,stop.pref)));if(idx<0){idx=days.findIndex((d,i)=>d.spots.length<3&&i>=next);if(idx<0)idx=days.findIndex(d=>d.spots.length<3)}if(idx<0)break;days[idx].spots.push({...s});next=idx;}}
-   // 景點不足時保留空白日，不重複塞入相同景點
-   days.forEach(d=>{d.spots=geoSort(d.spots,d.pref);output.push(d)});
+   for(const d of days){
+    if(!candidates.length)break;
+    const first=candidates.shift();d.spots.push({...first.s});used.add(stop.pref+'|'+first.s.name);
+    const cluster=areaOf(first.s,stop.pref),firstCoords=spotCoords(first.s);
+    while(d.spots.length<DAILY_AUTO_LIMIT&&candidates.length){
+     let bestIndex=0,bestScore=Infinity;
+     candidates.forEach((c,i)=>{
+      const sc=spotCoords(c.s),sameArea=areaOf(c.s,stop.pref)===cluster;
+      const localDist=firstCoords&&sc?haversine(firstCoords,sc):null;
+      const score=(sameArea?0:200)+(localDist===null?80:Math.min(localDist,150))-(c.rank.preferred?5:0)+i*.0001;
+      if(score<bestScore){bestScore=score;bestIndex=i;}
+     });
+     const next=candidates.splice(bestIndex,1)[0];d.spots.push({...next.s});used.add(stop.pref+'|'+next.s.name);
+    }
+    // 保留「從住宿出發」的先後順序，未提供座標時以區域相近優先。
+    d.spots=geoSort(d.spots,d.pref,state.settings.coords);
+   }
+   output.push(...days);
   });
-  state.days=output;activeDay=0;save();renderDays();showMessage('已產生 '+output.length+' 天行程：有座標的景點依地理距離排序，其餘依區域排序；請核對實際交通與營業時間。');
+  state.days=output;activeDay=0;save();renderDays();
+  showMessage('已產生 '+output.length+' 天行程，每天最多 4 個景點且不重複。'+(parseCoords(state.settings.coords)?'已依住宿座標優先選擇附近有座標的景點；其他景點以區域估計。':'如需更準確的住宿附近推薦，請在左側填入住宿座標；僅輸入地址時只能依文字／區域近似安排。')+' 交通時間仍需自行確認。');
+ }
+ function createManualTrip(){
+  readSettings();const total=state.stops.reduce((a,s)=>a+Number(s.days),0);
+  if(!state.stops.length){showMessage('請先加入至少一個目的地。');return;}
+  if(total>60){showMessage('單次行程上限為 60 天。');return;}
+  if(state.days.length&&!confirm('建立手動空白行程會覆蓋目前每日景點。建議先備份，確定繼續？'))return;
+  state.days=state.stops.flatMap(stop=>Array.from({length:stop.days},(_,i)=>({pref:stop.pref,day:i+1,spots:[]})));
+  activeDay=0;save();renderDays();showMessage('已建立 '+state.days.length+' 天空白行程。請在右側逐日按「＋ 選擇景點」自由新增與排序。');
  }
  let draggedSpot=null;
  let activeDay=0;
@@ -949,6 +998,7 @@
   state.stops.push({pref:region.pref,days:2});state.days=[];save();renderStops();renderDays();
  });
  byId('generate-trip').addEventListener('click',generate);
+ byId('manual-trip').addEventListener('click',createManualTrip);
  byId('reset-trip').addEventListener('click',()=>{if(!confirm('確定要重設行程規劃嗎？'))return;state=initial();activeDay=0;save();writeSettings();locationStatus();renderStops();renderPrefs();renderDays()});
  byId('copy-trip').addEventListener('click',async()=>{
   if(!state.days.length){showMessage('請先產生行程。');return;}
