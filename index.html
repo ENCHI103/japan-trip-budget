@@ -191,6 +191,12 @@
 .v411-travel[hidden]{display:none!important}.v411-travel{position:fixed;inset:0;z-index:11000;background:#f4f8f5;overflow:auto;overscroll-behavior:contain}.v411-travel-inner{max-width:790px;margin:auto;padding:22px 16px 45px}.v411-travel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}.v411-travel-head h2{margin:4px 0 0}.v411-travel-head small{color:var(--muted)}.v411-travel-switch{display:grid;grid-template-columns:auto 1fr auto;gap:8px;margin-bottom:15px}.v411-travel-switch button{min-height:42px}.v411-travel-card{border:1px solid var(--line);border-radius:16px;background:white;padding:17px;margin-bottom:12px}.v411-travel-card h3{margin:0 0 8px;font-size:18px}.v411-travel-card p{margin:5px 0;color:var(--muted);font-size:13px}.v411-travel-card .v4-link{font-size:14px;padding:10px 12px;min-height:44px;align-items:center}.v411-travel-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.v411-travel-number{display:inline-grid;place-items:center;background:var(--green);color:white;width:30px;height:30px;border-radius:50%;margin-right:8px}.v411-travel-time{font-weight:800;color:var(--green);font-variant-numeric:tabular-nums}.v411-mobile-nav{display:none}
 @media(max-width:760px){body{padding-bottom:82px}.v411-mobile-nav{position:fixed;bottom:0;left:0;right:0;z-index:8000;display:grid;grid-template-columns:repeat(3,1fr);background:white;border-top:1px solid var(--line);padding:7px 8px calc(7px + env(safe-area-inset-bottom));box-shadow:0 -5px 25px #0000000d}.v411-mobile-nav button{border:0;background:transparent;border-radius:12px;padding:7px;color:var(--green);font-weight:800;font-size:21px;display:grid;justify-items:center;gap:3px;min-height:52px}.v411-mobile-nav button span{font-size:12px}.v411-mobile-nav button[aria-current="page"]{background:#e7f3ea}.v411-exchange-grid{grid-template-columns:1fr}.v411-travel-inner{padding:14px 12px 100px}.v411-travel-switch{grid-template-columns:90px minmax(0,1fr) 90px}.v411-travel-switch button{font-size:12px}.v411-travel-card{padding:14px}.v411-travel-actions a{flex:1;justify-content:center}.v411-travel-head h2{font-size:22px}.v411-travel-head .mini-btn{min-height:42px}}
 @media print{.v411-mobile-nav,.v411-entry,.v411-travel,.v411-exchange{display:none!important}}
+
+/* V4.12.1.1: graceful visual fallback when Wikimedia photo is unavailable */
+.picker-photo.photo-fallback{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:3px;padding:12px;text-align:center;isolation:isolate}
+.photo-fallback-decor{font-size:43px;line-height:1.05;opacity:.9}
+.photo-fallback-title{font-size:14px;font-weight:750;color:#264638;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.photo-fallback-note{font-size:10px;color:#688278}
 </style>
 </head>
 <body>
@@ -647,24 +653,49 @@
  '淺草寺':'淺草','東京晴空塔':'押上','明治神宮':'原宿','澀谷十字路口':'澀谷','築地場外市場':'築地','銀座':'銀座'
  };
  for(const p of PREFECTURES){p.spots=p.spots.map(s=>({...s,area:AREA[s.name]||p.city}));for(const [name,cat,area] of MORE_SPOTS[p.pref]||[])if(!p.spots.some(s=>s.name===name))p.spots.push({name,cat,area:AREA[name]||area});}
- // 維基共享資源搜尋圖片；不需付費 API 或密鑰。圖片失敗時保持文字卡片。
- const PHOTO_TERMS={'大阪城公園':'Osaka Castle','道頓堀':'Dotonbori','心齋橋':'Shinsaibashi','黑門市場':'Kuromon Ichiba','環球影城':'Universal Studios Japan','通天閣':'Tsutenkaku','海遊館':'Osaka Aquarium Kaiyukan','清水寺':'Kiyomizu dera','伏見稻荷大社':'Fushimi Inari Taisha','嵐山竹林':'Arashiyama bamboo grove','金閣寺':'Kinkakuji','淺草寺':'Sensoji','東京晴空塔':'Tokyo Skytree','秋葉原':'Akihabara','澀谷十字路口':'Shibuya crossing','奈良公園':'Nara Park deer','名古屋城':'Nagoya Castle','神戶港塔':'Kobe Port Tower','姬路城':'Himeji Castle','美麗海水族館':'Okinawa Churaumi Aquarium','太宰府天滿宮':'Dazaifu Tenmangu','大通公園':'Odori Park Sapporo'};
+ // 景點照片：優先 Wikimedia Commons；搜尋不到時顯示精美分類插畫，避免空白與破圖。
+ // 參考照片並非保證為景點實景；點擊「照片來源／授權」可查看原始檔案。
+ const PHOTO_TERMS={'大阪城公園':'Osaka Castle','道頓堀':'Dotonbori','心齋橋':'Shinsaibashi','黑門市場':'Kuromon Ichiba','環球影城':'Universal Studios Japan','通天閣':'Tsutenkaku','海遊館':'Osaka Aquarium Kaiyukan','清水寺':'Kiyomizu dera','伏見稻荷大社':'Fushimi Inari Taisha','嵐山竹林':'Arashiyama bamboo grove','金閣寺':'Kinkakuji','淺草寺':'Sensoji','東京晴空塔':'Tokyo Skytree','秋葉原':'Akihabara','澀谷十字路口':'Shibuya crossing','奈良公園':'Nara Park deer','名古屋城':'Nagoya Castle','神戶港塔':'Kobe Port Tower','姬路城':'Himeji Castle','美麗海水族館':'Okinawa Churaumi Aquarium','太宰府天滿宮':'Dazaifu Tenmangu','大通公園':'Odori Park Sapporo','日本橋電電街':'Nipponbashi Denden Town Osaka','大阪城天守閣':'Osaka Castle','大阪歷史博物館':'Osaka Museum of History','大阪城西之丸庭園':'Nishinomaru Garden Osaka Castle','梅田藍天大廈':'Umeda Sky Building','大阪中之島美術館':'Nakanoshima Museum of Art Osaka','大阪市中央公會堂':'Osaka City Central Public Hall','天神橋筋商店街':'Tenjinbashisuji Shopping Street','大阪天滿宮':'Osaka Tenmangu','住吉大社':'Sumiyoshi Taisha Osaka','四天王寺':'Shitennoji Osaka','法善寺橫丁':'Hozenji Yokocho Osaka','難波八阪神社':'Namba Yasaka Shrine','阿倍野HARUKAS':'Abeno Harukas','天保山大摩天輪':'Tempozan Ferris Wheel','八坂神社':'Yasaka Shrine Kyoto','二條城':'Nijo Castle Kyoto','南禪寺':'Nanzenji Kyoto','銀閣寺':'Ginkakuji Kyoto','哲學之道':'Philosophers Path Kyoto','渡月橋':'Togetsukyo Bridge','東寺':'Toji Kyoto','東京鐵塔':'Tokyo Tower','東京國立博物館':'Tokyo National Museum','築地場外市場':'Tsukiji Outer Market','東京車站':'Tokyo Station','澀谷 SKY':'Shibuya Sky','台場':'Odaiba Tokyo'};
  const photoCache=new Map();let photoObserver=null;
- async function loadPhoto(name,pref,el){
+ const FALLBACK_STYLE={文化:['#e8eee9','#7b9c88','⛩'],自然:['#e1f1e8','#5b9b7b','🌿'],美食:['#fff1df','#d6a16d','🍜'],購物:['#f0e7f6','#9d83b5','🛍'],動漫:['#e5eaff','#8293c6','🎮'],娛樂:['#e4f2f7','#74a9bf','🎡'],散步:['#e9f0ed','#86a69c','🚶'],自訂:['#edf2ef','#829d92','📍']};
+ function fallbackPhoto(el,name,cat){
+  const [bg,accent,symbol]=FALLBACK_STYLE[cat]||FALLBACK_STYLE['自訂'];
+  el.replaceChildren();el.classList.add('photo-fallback');el.style.background=bg;
+  const decor=document.createElement('div');decor.className='photo-fallback-decor';decor.style.color=accent;decor.textContent=symbol;
+  const text=document.createElement('div');text.className='photo-fallback-title';text.textContent=name;
+  const note=document.createElement('div');note.className='photo-fallback-note';note.textContent='景點插畫示意';
+  el.append(decor,text,note);
+ }
+ async function commonsPhoto(query){
+  const url='https://commons.wikimedia.org/w/api.php?'+new URLSearchParams({action:'query',generator:'search',gsrsearch:'filetype:bitmap '+query,gsrnamespace:'6',gsrlimit:'8',prop:'imageinfo',iiprop:'url|mime',iiurlwidth:'520',format:'json',origin:'*'});
+  const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),9000);
+  try{
+   const r=await fetch(url,{signal:controller.signal});if(!r.ok)throw Error('photo search failed');
+   const data=await r.json();const pages=Object.values(data.query?.pages||{});
+   const valid=pages.filter(p=>{const info=p.imageinfo?.[0];return info?.thumburl&&/^image\/(jpeg|png|webp)$/i.test(info.mime||'')&&/\.(jpe?g|png|webp)$/i.test(p.title||'');});
+   if(!valid.length)return null;
+   // 以景點關鍵字的檔名匹配優先，避免搜尋結果順序導致不相干照片。
+   const words=query.toLowerCase().split(/\s+/).filter(w=>w.length>2);
+   valid.sort((x,y)=>{const score=p=>words.reduce((n,w)=>n+(decodeURIComponent(p.title).toLowerCase().includes(w)?1:0),0);return score(y)-score(x)});
+   const selected=valid[0],info=selected.imageinfo[0];
+   return {url:info.thumburl,source:info.descriptionurl||'https://commons.wikimedia.org/wiki/'+encodeURIComponent(selected.title)};
+  }finally{clearTimeout(timer)}
+ }
+ async function loadPhoto(name,pref,el,cat){
   if(!el.isConnected)return;
   const key=pref+'|'+name;
   if(!photoCache.has(key)){
-   const query=PHOTO_TERMS[name]||name+' Japan';
-   const url='https://commons.wikimedia.org/w/api.php?'+new URLSearchParams({action:'query',generator:'search',gsrsearch:'filetype:bitmap '+query,gsrnamespace:'6',gsrlimit:'4',prop:'imageinfo',iiprop:'url|extmetadata',iiurlwidth:'350',format:'json',origin:'*'});
-   photoCache.set(key,fetch(url).then(r=>{if(!r.ok)throw Error('network');return r.json()}).then(j=>{
-    const pages=Object.values(j.query?.pages||{});const usable=pages.find(p=>{const i=p.imageinfo?.[0];return i?.thumburl&&/\.(jpg|jpeg|png|webp)$/i.test((p.title||'').split('?')[0]);});if(!usable)return null;
-    const i=usable.imageinfo[0];return {url:i.thumburl,source:i.descriptionurl||'https://commons.wikimedia.org/wiki/'+encodeURIComponent(usable.title)};
-   }).catch(()=>null));
+   const first=PHOTO_TERMS[name]||name+' Japan';
+   // 查不到英文／日文名稱時，再用原始景點名稱搜尋一次。
+   const task=(async()=>{for(const term of [...new Set([first,name+' '+pref])]){try{const found=await commonsPhoto(term);if(found)return found;}catch(e){/* 網路失敗時改用下一個搜尋詞 */}}return null})();
+   photoCache.set(key,task);
   }
   const photo=await photoCache.get(key);if(!el.isConnected||el.dataset.key!==key)return;
-  if(!photo){el.textContent='📍 景點照片暫無';return;}
-  const img=document.createElement('img');img.loading='lazy';img.alt=name+'（Wikimedia Commons 參考照片）';img.src=photo.url;img.onerror=()=>{img.remove();el.prepend(document.createTextNode('📍 照片無法載入'));};
-  const a=document.createElement('a');a.href=photo.source;a.target='_blank';a.rel='noopener noreferrer';a.textContent='照片來源／授權';el.replaceChildren(img,a);
+  if(!photo){fallbackPhoto(el,name,cat);return;}
+  const img=document.createElement('img');img.loading='lazy';img.alt=name+'（Wikimedia Commons 參考照片）';
+  img.onerror=()=>fallbackPhoto(el,name,cat);
+  const a=document.createElement('a');a.href=photo.source;a.target='_blank';a.rel='noopener noreferrer';a.textContent='照片來源／授權';
+  el.classList.remove('photo-fallback');el.style.background='';el.replaceChildren(img,a);img.src=photo.url;
  }
  let pickerDay=-1,pickerRegion='',pickerCategory='全部',pickerChosen=new Map();
  const byId=id=>document.getElementById(id);
@@ -691,8 +722,8 @@
   for(const s of scored){
    const key=pickerRegion+'|'+s.name;const inDays=chosen.filter(x=>x.name===s.name&&x.pref===pickerRegion);const alreadyToday=inDays.some(x=>x.day===pickerDay);const other=inDays.filter(x=>x.day!==pickerDay);const picked=pickerChosen.has(key);
    const card=document.createElement('div');card.className='picker-card'+(picked?' selected':'');
-   const photo=document.createElement('div');photo.className='picker-photo';photo.dataset.key=key;photo.textContent='🗾 照片載入中…';
-   if(photoObserver)photoObserver.observe(photo);else loadPhoto(s.name,pickerRegion,photo);
+   const photo=document.createElement('div');photo.className='picker-photo';photo.dataset.key=key;photo.dataset.cat=s.cat;photo.textContent='🗾 照片載入中…';
+   if(photoObserver)photoObserver.observe(photo);else loadPhoto(s.name,pickerRegion,photo,s.cat);
    const info=document.createElement('div');info.className='picker-info';const name=document.createElement('strong');name.textContent=s.name;const meta=document.createElement('span');meta.className='picker-meta';meta.textContent=`${s.cat} · ${s.area||pickerRegion}${s.near?' · 同區推薦':''}`;info.append(name,meta);
    if(alreadyToday||other.length){const warn=document.createElement('span');warn.className='picker-warning';warn.textContent=alreadyToday?'已在本日行程':`已安排 Day ${other.map(x=>x.day+1).join('、')}`;info.append(warn)}
    const b=document.createElement('button');b.type='button';b.className='mini-btn';b.disabled=alreadyToday;b.textContent=alreadyToday?'已加入本日':picked?'✓ 已勾選':'＋ 勾選景點';b.addEventListener('click',()=>{if(pickerChosen.has(key))pickerChosen.delete(key);else pickerChosen.set(key,{name:s.name,cat:s.cat,area:s.area,pref:pickerRegion});renderPicker()});info.append(b);card.append(photo,info);grid.append(card);
@@ -709,7 +740,7 @@
   for(const s of pickerChosen.values()){if(day.spots.some(x=>x.name===s.name))continue;day.spots.push({...s});count++}
   save();closePicker();renderDays();showMessage(`已加入 ${count} 個景點；其他天已有的景點會提示，但仍允許加入。`);
  });
- if('IntersectionObserver' in window){photoObserver=new IntersectionObserver(entries=>{for(const e of entries)if(e.isIntersecting){photoObserver.unobserve(e.target);const [pref,...rest]=e.target.dataset.key.split('|');loadPhoto(rest.join('|'),pref,e.target)}},{root:byId('picker-grid').closest('.picker-body'),rootMargin:'180px'});}
+ if('IntersectionObserver' in window){photoObserver=new IntersectionObserver(entries=>{for(const e of entries)if(e.isIntersecting){photoObserver.unobserve(e.target);const [pref,...rest]=e.target.dataset.key.split('|');loadPhoto(rest.join('|'),pref,e.target,e.target.dataset.cat)}},{root:byId('picker-grid').closest('.picker-body'),rootMargin:'180px'});}
 
  const cats=['文化','自然','美食','購物','動漫','娛樂','散步'];
  const storeKey='japanTripPlannerV2';
