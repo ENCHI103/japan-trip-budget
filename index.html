@@ -242,6 +242,10 @@
               <div class="input-wrap"><input id="hotel" name="hotel" type="number" min="0" max="1000000" step="100" value="1800" inputmode="decimal" required><span class="unit">NT$</span></div>
               <div class="hint" id="hotel-hint">整間房每晚，不是每人</div><div class="error">請輸入 0～1,000,000 的金額。</div>
             </div>
+          </div>
+
+          <div class="split-title">其他預算</div>
+          <div class="field-grid">
             <div class="field" data-field="food">
               <label for="food">每人每日餐費</label>
               <div class="input-wrap"><input id="food" name="food" type="number" min="0" max="100000" step="100" value="1200" inputmode="decimal" required><span class="unit">NT$</span></div>
@@ -252,10 +256,7 @@
               <div class="input-wrap"><input id="transport" name="transport" type="number" min="0" max="100000" step="100" value="500" inputmode="decimal" required><span class="unit">NT$</span></div>
               <div class="hint">市區交通與預估車資</div><div class="error">請輸入 0～100,000 的金額。</div>
             </div>
-          </div>
 
-          <div class="split-title">其他預算</div>
-          <div class="field-grid">
             <div class="field" data-field="tickets">
               <label for="tickets">每人門票／體驗總額</label>
               <div class="input-wrap"><input id="tickets" name="tickets" type="number" min="0" max="1000000" step="100" value="0" inputmode="decimal" required><span class="unit">NT$</span></div>
@@ -303,7 +304,7 @@
           <div class="v49-chart-panel">
             <h3>費用分類</h3>
             <div class="v49-chart-wrap">
-              <div id="v49-donut" class="v49-donut" role="img" aria-label="預算費用分類圖"><div class="v49-donut-center"><small>全團總計</small><strong id="v49-donut-total">NT$ 0</strong></div></div>
+              <div id="v49-donut" class="v49-donut" role="img" aria-label="預算費用分類圖"><div class="v49-donut-center"><small id="v49-donut-label">全團總計</small><strong id="v49-donut-total">NT$ 0</strong></div></div>
               <div id="v49-legend" class="v49-legend"></div>
             </div>
           </div>
@@ -507,10 +508,11 @@
           ['門票／活動',costs.tickets,'#dc7991'],['購物',costs.shopping,'#98a4ae'],['預備金',costs.buffer,'#c1c99e']
         ].filter(row=>row[1]>0);
         let offset=0;
-        const segments=chartData.map(([name,amount,color])=>{const end=offset+amount/costs.total*100;const part=`${color} ${offset}% ${end}%`;offset=end;return part});
+        const segments=chartData.map(([name,amount,color])=>{const end=offset+(costs.total?amount/costs.total*100:0);const part=`${color} ${offset}% ${end}%`;offset=end;return part});
         document.getElementById('v49-donut').style.background=`conic-gradient(${segments.join(',')||'#e7eee8 0% 100%'})`;
-        document.getElementById('v49-donut-total').textContent=money(costs.total);
-        document.getElementById('v49-legend').innerHTML=chartData.map(([name,amount,color])=>`<div class="v49-legend-row"><span class="v49-dot" style="background:${color}"></span><span>${name}</span><span>${(amount/costs.total*100).toFixed(1)}%</span><strong>${money(amount)}</strong></div>`).join('');
+        document.getElementById('v49-donut-total').textContent=money(summaryMode==='group'?costs.total:perPerson);
+        document.getElementById('v49-donut-label').textContent=summaryMode==='group'?'全團總計':'平均每人';
+        document.getElementById('v49-legend').innerHTML=chartData.map(([name,amount,color])=>`<div class="v49-legend-row"><span class="v49-dot" style="background:${color}"></span><span>${name}</span><span>${((costs.total?amount/costs.total*100:0)).toFixed(1)}%</span><strong>${money(summaryMode==='group'?amount:amount/v.people)}</strong></div>`).join('');
         lodgeTotalBtn.classList.toggle('v48-selected',lodgingView==='total');
         lodgeNightBtn.classList.toggle('v48-selected',lodgingView==='night');
         const nightCosts=customNights&&customNights.length===nights?customNights:Array.from({length:nights},()=>nights?costs.hotel/nights:0);
@@ -532,7 +534,7 @@
         ];
         $("cost-list").innerHTML = rows.map(([icon, name, desc, amount]) => `
           <div class="cost-row">
-            <div class="cost-name"><span class="cost-icon" aria-hidden="true">${icon}</span><div><strong>${name}</strong><small>${desc}</small></div></div>
+            <div class="cost-name"><span class="cost-icon" aria-hidden="true">${icon}</span><div><strong>${name}</strong><small>${summaryMode==='group'?desc:(name==='來回機票'?`每人機票 ${money(v.flight)}`:name==='住宿'?`全團住宿 ${money(costs.hotel)} ÷ ${v.people} 人`:name==='餐飲'?`每人每日 ${money(v.food)} × ${v.days} 天`:name==='交通'?`每人每日 ${money(v.transport)} × ${v.days} 天`:name==='門票／體驗'?`每人 ${money(v.tickets)}`:name==='購物'?`每人 ${money(v.shopping)}`:`基本費用 ${money(subtotal/v.people)} × ${v.buffer}%`)}</small></div></div>
             <div class="cost-value">${money(summaryMode==='group'?amount:amount/v.people)}</div>
           </div>`).join("") + `
           <div class="cost-row cost-total">
