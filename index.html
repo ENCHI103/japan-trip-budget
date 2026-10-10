@@ -148,7 +148,7 @@
 
 /* V3 景點選擇器 */
 .picker-overlay[hidden]{display:none!important}.picker-overlay{position:fixed;inset:0;z-index:1000;background:rgba(18,34,29,.65);display:flex;align-items:center;justify-content:center;padding:18px}.picker-panel{width:min(1020px,100%);max-height:min(92vh,940px);background:#fff;border-radius:20px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 25px 70px #0004}.picker-top,.picker-bottom{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line)}.picker-bottom{border-top:1px solid var(--line);border-bottom:0;flex-wrap:wrap}.picker-body{padding:18px 20px;overflow:auto}.picker-tools{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}.picker-cats{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.picker-chip{border:1px solid var(--line);border-radius:999px;padding:7px 12px;background:white;font-size:13px}.picker-chip.active{background:var(--green);color:white}.picker-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.picker-card{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:white;display:flex;flex-direction:column}.picker-photo{height:125px;background:#edf2ef;display:flex;align-items:center;justify-content:center;color:#56756a;font-size:12px;position:relative;overflow:hidden}.picker-photo img{width:100%;height:100%;object-fit:cover}.picker-info{padding:10px;display:grid;gap:6px;flex:1}.picker-info strong{font-size:14px}.picker-meta{font-size:12px;color:var(--muted)}.picker-card .mini-btn{width:100%;padding:9px}.picker-card.selected{border-color:var(--green);box-shadow:0 0 0 1px var(--green)}.picker-warning{font-size:12px;color:#a55b16}.picker-photo a{position:absolute;right:5px;bottom:5px;background:#ffffffe8;padding:3px 6px;border-radius:6px;font-size:10px}.picker-hint{font-size:12px;color:var(--muted);margin:10px 0}.picker-custom{display:flex;gap:8px;margin-top:15px;flex-wrap:wrap}.picker-custom input{flex:1;min-width:160px;border:1px solid var(--line);border-radius:10px;padding:10px}.picker-close{font-size:20px;min-width:36px}.picker-summary{font-size:13px;color:var(--muted)}@media(max-width:750px){.picker-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.picker-tools{grid-template-columns:1fr}.picker-photo{height:110px}.picker-panel{max-height:94vh}.picker-body{padding:12px}.picker-top,.picker-bottom{padding:12px}}
-.v41-explain{display:grid;gap:4px;padding:10px;background:#eef4f0;border-radius:10px;font-size:13px}.v41-explain small{font-size:12px;color:#65776e}.v41-minutes{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:#355e4b}.v41-minutes input{width:76px;padding:6px;border:1px solid #ccd7cf;border-radius:8px;font-size:13px}.v44-base{display:grid;grid-template-columns:1fr 1fr;gap:9px;background:#f0f5f1;border:1px solid #dbe8df;padding:12px;border-radius:12px;margin:12px 0}.v44-base label{font-size:12px;color:#315947;display:grid;gap:5px}.v44-base input{width:100%;min-width:0;box-sizing:border-box;border:1px solid #cbd7ce;border-radius:8px;padding:9px;background:white;font-size:13px}.v44-base button{grid-column:1/-1;justify-self:start}@media(max-width:640px){.v44-base{grid-template-columns:1fr}} </style>
+.v41-explain{display:grid;gap:4px;padding:10px;background:#eef4f0;border-radius:10px;font-size:13px}.v41-explain small{font-size:12px;color:#65776e}.v41-minutes{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:#355e4b}.v41-minutes input{width:76px;padding:6px;border:1px solid #ccd7cf;border-radius:8px;font-size:13px}.v44-base{display:grid;grid-template-columns:1fr 1fr;gap:9px;background:#f0f5f1;border:1px solid #dbe8df;padding:12px;border-radius:12px;margin:12px 0}.v44-base label{font-size:12px;color:#315947;display:grid;gap:5px}.v44-base input{width:100%;min-width:0;box-sizing:border-box;border:1px solid #cbd7ce;border-radius:8px;padding:9px;background:white;font-size:13px}.v44-base button{grid-column:1/-1;justify-self:start}@media(max-width:640px){.v44-base{grid-template-columns:1fr}}.v45-drag{cursor:grab;touch-action:auto}.v45-drag:active{cursor:grabbing}.v45-drag.dragging{opacity:.42}.v45-target{outline:2px dashed #2b7156;outline-offset:3px;background:#f2faf5}.v45-move{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:7px}.v45-move label{font-size:12px;color:#49695a}.v45-move select{max-width:150px;border:1px solid #cbd7ce;border-radius:8px;padding:6px;background:white}.v45-hint{font-size:12px;color:#60766b;margin:8px 0}.v45-warning{background:#fff8ec;border-left:3px solid #c48229;padding:8px 10px;border-radius:7px;font-size:12px;color:#805719;margin-top:8px} </style>
 </head>
 <body>
   <main class="shell">
@@ -306,7 +306,7 @@
    <p class="muted-note">交通時間不會自動讀取 Google Maps；請逐段查詢並填入分鐘數，且留意實際出發日期及班次。</p>
    <div class="split-title">④ 產生與分享</div>
    <button class="btn btn-primary" id="generate-trip" type="button">自動產生每日行程</button>
-   <div class="actions" style="margin-top:0"><button class="btn btn-secondary" id="copy-trip" type="button">複製行程</button><button class="btn btn-secondary" id="print-trip" type="button">列印行程</button><button class="btn btn-secondary" id="reset-trip" type="button">重設行程</button></div>
+   <div class="actions" style="margin-top:0"><button class="btn btn-secondary" id="copy-trip" type="button">複製行程</button><button class="btn btn-secondary" id="print-trip" type="button">列印行程</button><button class="btn btn-secondary" id="export-trip" type="button">⬇ 備份行程</button><button class="btn btn-secondary" id="import-trip" type="button">⬆ 還原行程</button><input type="file" id="import-trip-file" accept=".json,application/json" hidden><button class="btn btn-secondary" id="reset-trip" type="button">重設行程</button></div>
    <p class="muted-note">不使用付費 API，依內建景點資料及偏好排序；不提供即時營業時間、路線或車資。行程只儲存在此瀏覽器。</p>
   </section>
   <section class="card" aria-label="每日行程結果">
@@ -604,6 +604,38 @@
  try { const raw=JSON.parse(localStorage.getItem(storeKey)); if(raw && Array.isArray(raw.stops) && Array.isArray(raw.days)) state=raw; }catch{}
  state.settings={...initial().settings,...(state.settings||{})};
  const save=()=>{try{localStorage.setItem(storeKey,JSON.stringify(state));}catch{}};
+ function clearSegmentMinutes(day){day.spots.forEach(spot=>delete spot.travelMinutes)}
+ function moveSpot(fromDay,fromIndex,toDay,toIndex){
+  if(!state.days[fromDay]||!state.days[toDay]||!state.days[fromDay].spots[fromIndex])return;
+  const source=state.days[fromDay],target=state.days[toDay];
+  const [spot]=source.spots.splice(fromIndex,1);
+  if(fromDay===toDay&&toIndex>fromIndex)toIndex--;
+  target.spots.splice(Math.max(0,Math.min(toIndex,target.spots.length)),0,spot);
+  clearSegmentMinutes(source);if(source!==target)clearSegmentMinutes(target);
+  save();renderDays();showMessage('已移動景點；受影響日的交通分鐘數已清除，請重新查詢。');
+ }
+ function validateBackup(obj){
+  if(!obj||typeof obj!=='object'||!Array.isArray(obj.stops)||!Array.isArray(obj.days)||!obj.settings||typeof obj.settings!=='object')return false;
+  if(obj.stops.length>47||obj.days.length>60||JSON.stringify(obj).length>500000)return false;
+  if(!obj.stops.every(x=>x&&typeof x.pref==='string'&&Number.isInteger(Number(x.days))&&Number(x.days)>=1&&Number(x.days)<=60))return false;
+  if(!obj.days.every(d=>d&&typeof d.pref==='string'&&Array.isArray(d.spots)&&d.spots.length<=100&&d.spots.every(p=>p&&typeof p.name==='string'&&p.name.length>0&&p.name.length<=120)))return false;
+  return true;
+ }
+ byId('export-trip').addEventListener('click',()=>{
+  const blob=new Blob([JSON.stringify({format:'japan-trip-planner',version:'4.5',exportedAt:new Date().toISOString(),data:state},null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='japan-trip-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
+  showMessage('行程備份已下載，請妥善保管 JSON 檔案。');
+ });
+ byId('import-trip').addEventListener('click',()=>byId('import-trip-file').click());
+ byId('import-trip-file').addEventListener('change',async e=>{
+  const file=e.target.files?.[0];e.target.value='';if(!file)return;
+  if(file.size>500000){showMessage('備份檔過大（上限 500 KB）。');return}
+  try{const payload=JSON.parse(await file.text());const restored=payload?.format==='japan-trip-planner'?payload.data:payload;
+   if(!validateBackup(restored)){showMessage('檔案格式不正確或超過資料限制，無法還原。');return}
+   if(!confirm('還原備份會覆蓋目前行程（不影響旅費計算器）。確定嗎？'))return;
+   state=restored;state.settings={...initial().settings,...(state.settings||{})};save();writeSettings();locationStatus();renderStops();renderPrefs();renderDays();showMessage('已還原行程備份。');
+  }catch{showMessage('無法讀取 JSON 備份檔。')}
+ });
  function readSettings(){state.settings={start:byId('trip-start').value||'09:00',duration:Number(byId('trip-duration').value),transfer:0,base:byId('trip-base').value.trim(),coords:byId('trip-coords').value.trim(),smart:byId('trip-smart').checked};save()}
  function writeSettings(){byId('trip-start').value=state.settings.start;byId('trip-duration').value=String(state.settings.duration);byId('trip-base').value=state.settings.base;byId('trip-coords').value=state.settings.coords||'';byId('trip-smart').checked=state.settings.smart}
  for(const id of ['trip-start','trip-duration','trip-base','trip-coords','trip-smart'])byId(id).addEventListener('change',()=>{readSettings();locationStatus();renderDays()});
@@ -667,11 +699,15 @@
   });
   state.days=output;save();renderDays();showMessage('已產生 '+output.length+' 天行程：有座標的景點依地理距離排序，其餘依區域排序；請核對實際交通與營業時間。');
  }
+ let draggedSpot=null;
  function renderDays(){
   const el=byId('trip-days');el.replaceChildren();
   if(!state.days.length){showMessage('尚未產生行程；修改目的地後請重新產生。');return;}
   state.days.forEach((day,di)=>{
    const wrap=document.createElement('article');wrap.className='itinerary-day';
+   wrap.addEventListener('dragover',e=>{if(draggedSpot){e.preventDefault();wrap.classList.add('v45-target')}});
+   wrap.addEventListener('dragleave',e=>{if(!wrap.contains(e.relatedTarget))wrap.classList.remove('v45-target')});
+   wrap.addEventListener('drop',e=>{e.preventDefault();wrap.classList.remove('v45-target');if(draggedSpot){const from=draggedSpot;draggedSpot=null;moveSpot(from.day,from.index,di,day.spots.length)}});
    const head=document.createElement('div');head.className='day-head';
    const title=document.createElement('h3');title.textContent=`Day ${di+1} · ${day.pref}（當地第 ${day.day} 天）`;
    const add=document.createElement('button');add.type='button';add.className='mini-btn';add.textContent='＋ 選擇景點';add.addEventListener('click',()=>openPicker(di));head.append(title,add);wrap.append(head);
@@ -687,11 +723,17 @@
    const route=document.createElement('div');route.className='v4-route';
    if(day.spots.length>1){const note=document.createElement('strong');note.textContent='🚉 分段導航：';route.append(note)}
    const routeNote=document.createElement('span');routeNote.className='v4-route-note';routeNote.textContent='大眾運輸不支援多個途經點；請使用每段的「大眾運輸／步行／開車」按鈕';route.append(routeNote);wrap.append(route);
+   const hint=document.createElement('p');hint.className='v45-hint';hint.textContent='💡 電腦可拖曳景點到其他天；手機可用「移至 Day」選單。';wrap.append(hint);
    const meta=document.createElement('p');meta.className='v4-day-meta';meta.textContent='出發 '+state.settings.start+' · '+day.spots.length+' 個景點 · '+(state.settings.smart?'參考座標／區域排序':'手動順序');wrap.append(meta);
    if(!day.spots.length){const p=document.createElement('p');p.className='muted-note';p.textContent='這天尚無景點，可點「＋ 選擇景點」新增；資料不足時不會自動重複景點。';wrap.append(p)}
    let cursor=getStartMinutes();let clockKnown=true;
    day.spots.forEach((spot,si)=>{
-    const stay=stayMinutes(spot);const row=document.createElement('div');row.className='spot-row';const desc=document.createElement('div');
+    const stay=stayMinutes(spot);const row=document.createElement('div');row.className='spot-row v45-drag';row.draggable=true;
+    row.addEventListener('dragstart',e=>{draggedSpot={day:di,index:si};row.classList.add('dragging');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',String(di)+':'+String(si))});
+    row.addEventListener('dragend',()=>{draggedSpot=null;row.classList.remove('dragging');document.querySelectorAll('.v45-target').forEach(x=>x.classList.remove('v45-target'))});
+    row.addEventListener('dragover',e=>{if(draggedSpot){e.preventDefault();e.stopPropagation();row.classList.add('v45-target')}});
+    row.addEventListener('dragleave',()=>row.classList.remove('v45-target'));
+    row.addEventListener('drop',e=>{if(!draggedSpot)return;e.preventDefault();e.stopPropagation();row.classList.remove('v45-target');const from=draggedSpot;draggedSpot=null;moveSpot(from.day,from.index,di,si)});const desc=document.createElement('div');
     const from=segmentBefore(day,si);
     if(from){const n=Number(spot.travelMinutes);if(Number.isFinite(n)&&n>=0&&spot.travelMinutes!==undefined&&spot.travelMinutes!==null&&spot.travelMinutes!==''){if(clockKnown)cursor+=n}else{clockKnown=false}}
     const clock=document.createElement('div');clock.className='v4-time';clock.textContent=clockKnown?minutesClock(cursor)+' – '+minutesClock(cursor+stay):'時間待確認（請先填交通分鐘）';desc.append(clock);
@@ -709,6 +751,12 @@
       travelLabel.append(travelInput);links.append(travelLabel);
     }
     const durationBtn=document.createElement('button');durationBtn.type='button';durationBtn.className='mini-btn';durationBtn.textContent='⏱ 修改停留';durationBtn.addEventListener('click',()=>{const n=prompt('景點停留分鐘數（15～720）：',String(stay));if(n===null)return;const v=Number(n);if(!Number.isInteger(v)||v<15||v>720){showMessage('請輸入 15～720 分鐘。');return;}spot.minutes=v;save();renderDays()});links.append(durationBtn);desc.append(links);
+    const moveControls=document.createElement('div');moveControls.className='v45-move';
+    const moveLabel=document.createElement('label');moveLabel.textContent='移至';
+    const moveSelect=document.createElement('select');moveSelect.setAttribute('aria-label','移動 '+spot.name+' 到指定天數');
+    state.days.forEach((d,i)=>{const option=document.createElement('option');option.value=String(i);option.textContent='Day '+(i+1)+' · '+d.pref;option.selected=i===di;moveSelect.append(option)});
+    const moveBtn=document.createElement('button');moveBtn.type='button';moveBtn.className='mini-btn';moveBtn.textContent='移動';moveBtn.addEventListener('click',()=>moveSpot(di,si,Number(moveSelect.value),state.days[Number(moveSelect.value)].spots.length));
+    moveLabel.append(moveSelect);moveControls.append(moveLabel,moveBtn);desc.append(moveControls);
     const actions=document.createElement('div');actions.className='spot-actions';
     const make=(label,aria,fn,disabled=false)=>{const b=document.createElement('button');b.type='button';b.className='mini-btn';b.textContent=label;b.setAttribute('aria-label',aria);b.disabled=disabled;b.addEventListener('click',fn);actions.append(b)};
     make('✎','編輯 '+spot.name,()=>{const name=prompt('編輯景點名稱：',spot.name);if(name===null)return;const val=name.trim();if(!val||val.length>80){showMessage('景點名稱請輸入 1～80 個字。');return;}spot.name=val;save();renderDays()});
@@ -717,6 +765,9 @@
     make('×','刪除 '+spot.name,()=>{day.spots.splice(si,1);save();renderDays()});
     row.append(desc,actions);wrap.append(row);if(clockKnown)cursor+=stay;
    });
+   const regions=new Set(day.spots.map(p=>p.pref||day.pref));
+   const totalStay=day.spots.reduce((sum,p)=>sum+stayMinutes(p),0);
+   if(regions.size>1||totalStay>540||day.spots.length>6){const warn=document.createElement('p');warn.className='v45-warning';warn.textContent=(regions.size>1?'⚠️ 同一天包含不同都道府縣，請確認跨區交通時間。 ':'')+(totalStay>540?'⚠️ 景點停留合計超過 9 小時，尚未計入交通與用餐。 ':'')+(day.spots.length>6?'⚠️ 當天超過 6 個景點，可能較趕。':'');wrap.append(warn)}
    if(day.spots.length>1||day.base||state.settings.base){const warning=document.createElement('p');warning.className='v4-time-alert';warning.textContent='交通分鐘數請以 Google Maps 對應交通方式與出發日期查詢後填入；未確認的路段不會自動猜測時間。';wrap.append(warning)}
    el.append(wrap);
   });
