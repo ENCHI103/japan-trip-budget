@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f4ed">
+  <meta name="description" content="免費日本旅費與行程規劃器，支援 47 都道府縣、多城市行程及旅費估算。">
+  <title>日本自由行旅費與行程規劃器</title>
+  <style>
+    :root {
+      --bg: #f7f4ed;
+      --panel: #ffffff;
+      --ink: #202820;
+      --muted: #68736b;
+      --line: #e4e7df;
+      --green: #275b46;
+      --green-dark: #1c4535;
+      --mint: #e8f1e9;
+      --orange: #d77745;
+      --danger: #b42318;
+      --shadow: 0 12px 34px rgba(35, 54, 42, .07);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "PingFang TC", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 95% 0%, rgba(215,119,69,.10), transparent 27rem),
+        var(--bg);
+      line-height: 1.55;
+    }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    .shell { width: min(1080px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 44px; }
+    .topline { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 24px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: .02em; }
+    .brand-mark { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 14px; color: white; background: var(--green); font-size: 21px; }
+    .tag { color: var(--green); background: var(--mint); border-radius: 999px; padding: 6px 11px; font-size: 12px; font-weight: 750; }
+    .hero { display: grid; grid-template-columns: 1.3fr .7fr; gap: 22px; align-items: stretch; margin-bottom: 22px; }
+    .hero-copy { padding: 20px 0; }
+    .eyebrow { color: var(--orange); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; font-weight: 850; }
+    h1 { font-size: clamp(30px, 5vw, 49px); line-height: 1.12; letter-spacing: -.04em; margin: 10px 0 14px; max-width: 650px; }
+    .hero-copy p { color: var(--muted); max-width: 580px; margin: 0; }
+    .hero-note { background: var(--green); color: white; border-radius: 22px; padding: 23px; display: flex; flex-direction: column; justify-content: space-between; min-height: 190px; box-shadow: var(--shadow); }
+    .hero-note .big { font-size: 30px; font-weight: 850; letter-spacing: -.03em; }
+    .hero-note p { margin: 4px 0 0; color: rgba(255,255,255,.76); font-size: 13px; }
+    .hero-note .note-bottom { border-top: 1px solid rgba(255,255,255,.22); padding-top: 14px; margin-top: 22px; font-size: 13px; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1.04fr) minmax(0, .96fr); gap: 22px; align-items: start; }
+    .card { background: var(--panel); border: 1px solid rgba(35,54,42,.06); border-radius: 22px; padding: 23px; box-shadow: var(--shadow); min-width: 0; }
+    .section-head { display: flex; justify-content: space-between; align-items: start; gap: 12px; margin-bottom: 20px; }
+    h2 { font-size: 20px; margin: 0; letter-spacing: -.02em; }
+    .sub { color: var(--muted); font-size: 13px; margin: 5px 0 0; }
+    .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px; }
+    .field { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+    label { font-size: 13px; font-weight: 750; }
+    .input-wrap { display: flex; align-items: center; border: 1px solid var(--line); border-radius: 12px; background: #fff; transition: border .15s, box-shadow .15s; }
+    .input-wrap:focus-within { border-color: var(--green); box-shadow: 0 0 0 3px rgba(39,91,70,.12); }
+    .input-wrap input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; padding: 12px 11px; color: var(--ink); }
+    .unit { padding: 0 11px; color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .hint { color: var(--muted); font-size: 11px; min-height: 15px; }
+    .error { display: none; color: var(--danger); font-size: 12px; margin-top: 2px; }
+    .field.invalid .input-wrap { border-color: var(--danger); }
+    .field.invalid .error { display: block; }
+    .full { grid-column: 1 / -1; }
+    .split-title { display: flex; align-items: center; gap: 8px; margin: 22px 0 13px; font-size: 14px; font-weight: 850; }
+    .split-title:after { content: ""; height: 1px; background: var(--line); flex: 1; }
+    .check-row { display: flex; align-items: flex-start; gap: 10px; background: #f8faf7; border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin-top: 16px; }
+    .check-row input { margin-top: 4px; accent-color: var(--green); }
+    .check-row label { font-weight: 600; line-height: 1.4; }
+    .check-row small { display: block; font-weight: 400; color: var(--muted); margin-top: 3px; }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 21px; }
+    .btn { border: 0; border-radius: 12px; padding: 12px 16px; font-weight: 800; transition: transform .12s, background .12s; }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary { background: var(--green); color: #fff; flex: 1; }
+    .btn-primary:hover { background: var(--green-dark); }
+    .btn-secondary { background: #f0f3ef; color: var(--ink); }
+    .btn-secondary:hover { background: #e6ebe5; }
+    .summary-card { position: sticky; top: 18px; overflow: hidden; }
+    .total-panel { background: var(--mint); border-radius: 17px; padding: 19px; margin-bottom: 20px; }
+    .total-label { color: var(--green); font-size: 12px; font-weight: 800; }
+    .total { font-size: clamp(30px, 4vw, 42px); font-weight: 900; line-height: 1.15; letter-spacing: -.045em; margin: 7px 0 8px; overflow-wrap: anywhere; }
+    .per-person { color: var(--muted); font-size: 13px; }
+    .summary-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
+    .pill { background: rgba(255,255,255,.8); color: var(--green-dark); border-radius: 999px; padding: 6px 9px; font-size: 12px; font-weight: 750; }
+    .cost-list { display: flex; flex-direction: column; gap: 0; }
+    .cost-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .cost-row:last-child { border-bottom: 0; }
+    .cost-name { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .cost-icon { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 11px; background: #f5f4ef; flex-shrink: 0; }
+    .cost-name strong { display: block; font-size: 14px; }
+    .cost-name small { display: block; color: var(--muted); font-size: 11px; margin-top: 2px; }
+    .cost-value { font-weight: 850; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .cost-total { background: #fafbf9; margin: 10px -8px 0; padding: 15px 8px; border-radius: 12px; }
+    .cost-total .cost-value { color: var(--green); font-size: 18px; }
+    .breakdown { background: #fbfaf7; border: 1px solid var(--line); border-radius: 14px; padding: 14px; margin-top: 17px; }
+    .breakdown h3 { margin: 0 0 10px; font-size: 14px; }
+    .breakdown-line { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--muted); margin-top: 7px; }
+    .breakdown-line strong { color: var(--ink); text-align: right; }
+    .disclaimer { color: var(--muted); font-size: 11px; margin: 15px 0 0; line-height: 1.65; }
+    .toast { display: none; margin-top: 12px; padding: 10px 12px; background: var(--mint); color: var(--green-dark); border-radius: 10px; font-size: 13px; font-weight: 700; }
+    .toast.show { display: block; }
+    footer { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; color: var(--muted); font-size: 12px; margin-top: 25px; padding: 0 3px; }
+    footer a { color: var(--green); }
+    @media (max-width: 760px) {
+      .shell { width: min(100% - 22px, 600px); padding-top: 15px; }
+      .topline { margin-bottom: 12px; }
+      .hero { grid-template-columns: 1fr; gap: 14px; margin-bottom: 14px; }
+      .hero-copy { padding: 12px 2px 0; }
+      .hero-note { min-height: 0; padding: 17px; }
+      .hero-note .big { font-size: 25px; }
+      .hero-note .note-bottom { margin-top: 15px; }
+      .layout { grid-template-columns: 1fr; gap: 14px; }
+      .card { padding: 17px; border-radius: 18px; }
+      .summary-card { position: static; }
+      .total { font-size: 34px; }
+      .field-grid { gap: 12px; }
+    }
+    @media (max-width: 390px) {
+      .field-grid { grid-template-columns: 1fr; }
+      .full { grid-column: auto; }
+      .tag { display: none; }
+      .cost-value { font-size: 13px; }
+    }
+    @media print {
+      body { background: white; }
+      .shell { width: 100%; padding: 0; }
+      .hero-note, .card { box-shadow: none; }
+      .actions, .topline .tag, footer { display: none !important; }
+      .layout { grid-template-columns: 1fr 1fr; }
+      .summary-card { position: static; }
+    }
+  
+
+/* V2 itinerary planner */
+.nav-tabs{display:flex;gap:9px;flex-wrap:wrap;margin:0 0 20px}.tab-btn{border:1px solid var(--line);background:white;color:var(--ink);padding:11px 17px;border-radius:12px;font-weight:800}.tab-btn.active{background:var(--green);color:white;border-color:var(--green)}.view[hidden]{display:none!important}.planner-grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:20px;align-items:start}.planner-grid .card{min-width:0}.stack{display:grid;gap:12px}.select-control{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;background:white;color:var(--ink)}.stop-list{display:grid;gap:9px;margin:13px 0}.stop{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#f7faf7;border:1px solid var(--line);padding:10px;border-radius:12px}.stop small,.spot-row small{color:var(--muted)}.stop-left{min-width:0}.stop-controls{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.mini-input{width:60px;border:1px solid var(--line);border-radius:8px;padding:6px}.mini-btn{border:1px solid var(--line);background:white;border-radius:8px;padding:6px 9px;font-size:12px;font-weight:700}.mini-btn:hover{background:var(--mint)}.mini-btn.danger{color:var(--danger)}.prefs{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}.pref{display:flex;align-items:center;gap:5px;background:#f5f7f3;border-radius:999px;padding:7px 10px;font-size:13px}.pref input{accent-color:var(--green)}.itinerary-day{border:1px solid var(--line);border-radius:16px;padding:15px;margin:0 0 13px;background:#fff}.day-head{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:10px}.day-head h3{font-size:16px;margin:0}.spot-row{display:flex;justify-content:space-between;gap:8px;align-items:center;border-top:1px solid var(--line);padding:11px 0}.spot-row .spot-title{font-weight:700;font-size:14px}.spot-actions{display:flex;gap:4px;flex-shrink:0}.spot-actions button{min-width:27px;padding:5px}.muted-note{font-size:12px;color:var(--muted)}.planner-status{margin:10px 0;color:var(--muted);font-size:13px}.planner-result{max-height:900px;overflow-y:auto;padding-right:2px}.btn[disabled]{opacity:.5;cursor:not-allowed}@media(max-width:760px){.planner-grid{grid-template-columns:1fr}.planner-result{max-height:none}.stop{align-items:flex-start;flex-direction:column}.stop-controls{width:100%;justify-content:flex-start}}
+
+
+/* V3 景點選擇器 */
+.picker-overlay[hidden]{display:none!important}.picker-overlay{position:fixed;inset:0;z-index:1000;background:rgba(18,34,29,.65);display:flex;align-items:center;justify-content:center;padding:18px}.picker-panel{width:min(1020px,100%);max-height:min(92vh,940px);background:#fff;border-radius:20px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 25px 70px #0004}.picker-top,.picker-bottom{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line)}.picker-bottom{border-top:1px solid var(--line);border-bottom:0;flex-wrap:wrap}.picker-body{padding:18px 20px;overflow:auto}.picker-tools{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}.picker-cats{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.picker-chip{border:1px solid var(--line);border-radius:999px;padding:7px 12px;background:white;font-size:13px}.picker-chip.active{background:var(--green);color:white}.picker-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.picker-card{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:white;display:flex;flex-direction:column}.picker-photo{height:125px;background:#edf2ef;display:flex;align-items:center;justify-content:center;color:#56756a;font-size:12px;position:relative;overflow:hidden}.picker-photo img{width:100%;height:100%;object-fit:cover}.picker-info{padding:10px;display:grid;gap:6px;flex:1}.picker-info strong{font-size:14px}.picker-meta{font-size:12px;color:var(--muted)}.picker-card .mini-btn{width:100%;padding:9px}.picker-card.selected{border-color:var(--green);box-shadow:0 0 0 1px var(--green)}.picker-warning{font-size:12px;color:#a55b16}.picker-photo a{position:absolute;right:5px;bottom:5px;background:#ffffffe8;padding:3px 6px;border-radius:6px;font-size:10px}.picker-hint{font-size:12px;color:var(--muted);margin:10px 0}.picker-custom{display:flex;gap:8px;margin-top:15px;flex-wrap:wrap}.picker-custom input{flex:1;min-width:160px;border:1px solid var(--line);border-radius:10px;padding:10px}.picker-close{font-size:20px;min-width:36px}.picker-summary{font-size:13px;color:var(--muted)}@media(max-width:750px){.picker-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.picker-tools{grid-template-columns:1fr}.picker-photo{height:110px}.picker-panel{max-height:94vh}.picker-body{padding:12px}.picker-top,.picker-bottom{padding:12px}}
+</style>
+</head>
+<body>
+  <main class="shell">
+    <div class="topline">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">旅</span><span>自由行小幫手</span></div>
+      <span class="tag">免費工具 · 無需登入</span>
+    </div>
+
+    <nav class="nav-tabs" role="tablist" aria-label="網站功能"><button type="button" id="tab-budget" class="tab-btn active" role="tab" aria-selected="true">💰 旅費計算器</button><button type="button" id="tab-planner" class="tab-btn" role="tab" aria-selected="false">🗺️ 行程規劃器</button></nav>
+    <div id="budget-view" class="view">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-copy">
+        <div class="eyebrow">YOUR JAPAN TRIP BUDGET</div>
+        <h1 id="page-title">日本自由行<br>旅費計算器</h1>
+        <p>出發前先把預算算清楚。輸入人數、天數與花費，就能快速估算整趟旅程的費用，並複製摘要分享給旅伴。</p>
+      </div>
+      <aside class="hero-note">
+        <div>
+          <div class="big">規劃得更安心。</div>
+          <p>機票、住宿、餐飲、交通與其他費用，一次拆分。</p>
+        </div>
+        <div class="note-bottom">適用：日本自由行預算初估 · 金額以新台幣計算</div>
+      </aside>
+    </section>
+
+    <div class="layout">
+      <section class="card" aria-labelledby="input-title">
+        <div class="section-head">
+          <div>
+            <h2 id="input-title">設定你的旅程</h2>
+            <p class="sub">修改欄位後，總預算會自動更新。</p>
+          </div>
+          <span class="tag">可自訂</span>
+        </div>
+
+        <form id="budget-form" novalidate>
+          <div class="field-grid">
+            <div class="field" data-field="people">
+              <label for="people">旅遊人數</label>
+              <div class="input-wrap"><input id="people" name="people" type="number" min="1" max="30" step="1" value="3" inputmode="numeric" required><span class="unit">人</span></div>
+              <div class="hint">1～30 人</div><div class="error">請輸入 1～30 的整數。</div>
+            </div>
+            <div class="field" data-field="days">
+              <label for="days">旅遊天數</label>
+              <div class="input-wrap"><input id="days" name="days" type="number" min="1" max="60" step="1" value="5" inputmode="numeric" required><span class="unit">天</span></div>
+              <div class="hint">1～60 天</div><div class="error">請輸入 1～60 的整數。</div>
+            </div>
+            <div class="field" data-field="flight">
+              <label for="flight">每人來回機票</label>
+              <div class="input-wrap"><input id="flight" name="flight" type="number" min="0" max="1000000" step="100" value="10000" inputmode="decimal" required><span class="unit">NT$</span></div>
+              <div class="hint">每人總價</div><div class="error">請輸入 0～1,000,000 的金額。</div>
+            </div>
+            <div class="field" data-field="hotel">
+              <label for="hotel">住宿每晚總價</label>
+              <div class="input-wrap"><input id="hotel" name="hotel" type="number" min="0" max="1000000" step="100" value="1800" inputmode="decimal" required><span class="unit">NT$</span></div>
+              <div class="hint">整間房每晚，不是每人</div><div class="error">請輸入 0～1,000,000 的金額。</div>
+            </div>
+            <div class="field" data-field="food">
+              <label for="food">每人每日餐費</label>
+              <div class="input-wrap"><input id="food" name="food" type="number" min="0" max="100000" step="100" value="1200" inputmode="decimal" required><span class="unit">NT$</span></div>
+              <div class="hint">早餐、午餐、晚餐等</div><div class="error">請輸入 0～100,000 的金額。</div>
+            </div>
+            <div class="field" data-field="transport">
+              <label for="transport">每人每日交通</label>
+              <div class="input-wrap"><input id="transport" name="transport" type="number" min="0" max="100000" step="100" value="500" inputmode="decimal" required><span class="unit">NT$</span></div>
+              <div class="hint">市區交通與預估車資</div><div class="error">請輸入 0～100,000 的金額。</div>
+            </div>
+          </div>
+
+          <div class="split-title">其他預算</div>
+          <div class="field-grid">
+            <div class="field" data-field="tickets">
+              <label for="tickets">每人門票／體驗總額</label>
+              <div class="input-wrap"><input id="tickets" name="tickets" type="number" min="0" max="1000000" step="100" value="0" inputmode="decimal" required><span class="unit">NT$</span></div>
+              <div class="hint">整趟旅程每人合計</div><div class="error">請輸入 0～1,000,000 的金額。</div>
+            </div>
+            <div class="field" data-field="shopping">
+              <label for="shopping">每人購物預算</label>
+              <div class="input-wrap"><input id="shopping" name="shopping" type="number" min="0" max="1000000" step="100" value="0" inputmode="decimal" required><span class="unit">NT$</span></div>
+              <div class="hint">伴手禮、個人購物等</div><div class="error">請輸入 0～1,000,000 的金額。</div>
+            </div>
+            <div class="field full" data-field="buffer">
+              <label for="buffer">預備金比例</label>
+              <div class="input-wrap"><input id="buffer" name="buffer" type="number" min="0" max="100" step="1" value="10" inputmode="numeric" required><span class="unit">%</span></div>
+              <div class="hint">按機票、住宿、餐飲、交通、門票與購物小計計算，預留突發支出。</div><div class="error">請輸入 0～100 的比例。</div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-primary" type="button" id="copy-btn">複製預算摘要</button>
+            <button class="btn btn-secondary" type="button" id="reset-btn">重設</button>
+            <button class="btn btn-secondary" type="button" id="print-btn">列印／存成 PDF</button>
+          </div>
+          <div class="toast" id="toast" role="status" aria-live="polite"></div>
+        </form>
+      </section>
+
+      <section class="card summary-card" aria-labelledby="summary-title">
+        <div class="section-head">
+          <div>
+            <h2 id="summary-title">你的預算摘要</h2>
+            <p class="sub">依目前輸入即時估算</p>
+          </div>
+          <span class="tag">NTD</span>
+        </div>
+        <div class="total-panel">
+          <div class="total-label">全團預估總費用</div>
+          <div class="total" id="grand-total" aria-live="polite">NT$ 0</div>
+          <div class="per-person" id="per-person">平均每人 NT$ 0</div>
+          <div class="summary-meta">
+            <span class="pill" id="meta-people">3 位旅客</span>
+            <span class="pill" id="meta-days">5 天</span>
+            <span class="pill" id="meta-buffer">含 10% 預備金</span>
+          </div>
+        </div>
+
+        <div class="cost-list" id="cost-list">
+          <div class="cost-row"><div class="cost-name"><span class="cost-icon">✈️</span><div><strong>來回機票</strong><small>每人機票 × 人數</small></div></div><div class="cost-value">NT$ 30,000</div></div>
+        </div>
+
+        <div class="breakdown">
+          <h3>計算方式</h3>
+          <div class="breakdown-line"><span>住宿</span><strong id="formula-hotel">每晚總價 × 住宿晚數</strong></div>
+          <div class="breakdown-line"><span>餐飲與交通</span><strong id="formula-daily">每人每日 × 天數 × 人數</strong></div>
+          <div class="breakdown-line"><span>預備金</span><strong id="formula-buffer">按基本費用小計計算</strong></div>
+        </div>
+        <p class="disclaimer">這是規劃用估算，不是即時報價。預設住宿晚數＝旅遊天數－1；若實際住宿晚數不同，請調整天數或住宿金額。費用不包含未輸入的保險、行李、匯率差、城市間交通等支出。出發前請再次確認航空公司、住宿與交通業者的實際價格。</p>
+      </section>
+    </div>
+
+    </div>
+
+<section id="planner-view" class="view" hidden aria-labelledby="planner-title">
+ <div class="section-head"><div><h2 id="planner-title">日本多城市行程規劃器</h2><p class="sub">全日本 47 都道府縣可選，先建立路線，再產生每日景點安排。</p></div><span class="tag">V3 · 免費</span></div>
+ <div class="planner-grid">
+  <section class="card stack" aria-label="行程設定">
+   <div><h2>① 選擇旅行地區</h2><p class="sub">可新增多個都道府縣，並分別設定停留天數。順序就是旅行順序。</p></div>
+   <label for="pref-select">目的地（都道府縣）</label>
+   <select class="select-control" id="pref-select"></select>
+   <button class="btn btn-secondary" id="add-stop" type="button">＋ 加入目的地</button>
+   <div class="stop-list" id="stop-list" aria-live="polite"></div>
+   <p class="muted-note">目前以都道府縣為規劃單位；縣內景點可能相距很遠，請確認交通時間。</p>
+   <div class="split-title">② 選擇景點偏好</div>
+   <div class="prefs" id="prefs"></div>
+   <div class="split-title">③ 產生與分享</div>
+   <button class="btn btn-primary" id="generate-trip" type="button">自動產生每日行程</button>
+   <div class="actions" style="margin-top:0"><button class="btn btn-secondary" id="copy-trip" type="button">複製行程</button><button class="btn btn-secondary" id="reset-trip" type="button">重設行程</button></div>
+   <p class="muted-note">不使用付費 API，依內建景點資料及偏好排序；不提供即時營業時間、路線或車資。行程只儲存在此瀏覽器。</p>
+  </section>
+  <section class="card" aria-label="每日行程結果">
+   <div class="section-head"><div><h2>每日行程</h2><p class="sub">點「＋ 景點」可依地區、類型搜尋並一次勾選多個景點，也能自訂。</p></div><span class="tag" id="trip-total">0 天</span></div>
+   <p class="planner-status" id="trip-status" role="status" aria-live="polite">請先設定地區並按「自動產生每日行程」。</p>
+   <div id="trip-days" class="planner-result"></div>
+  </section>
+ </div>
+</section>
+
+    <footer>
+      <span>自由行小幫手 · 免費旅費估算工具</span>
+      <span>不會把輸入資料傳送至伺服器；計算完全在你的瀏覽器中進行。</span>
+    </footer>
+  </main>
+
+
+<div id="spot-picker" class="picker-overlay" hidden>
+ <div class="picker-panel" role="dialog" aria-modal="true" aria-labelledby="picker-title">
+  <div class="picker-top"><div><h2 id="picker-title" style="margin:0">挑選日本景點</h2><span id="picker-day-label" class="muted-note"></span></div><button id="picker-close" class="mini-btn picker-close" type="button" aria-label="關閉">×</button></div>
+  <div class="picker-body">
+   <div class="picker-tools"><label>顯示地區<select id="picker-region" class="select-control"></select></label><label>搜尋景點<input id="picker-search" class="select-control" type="search" placeholder="搜尋名稱、類型或區域"></label></div>
+   <div id="picker-categories" class="picker-cats"></div>
+   <p id="picker-nearby" class="picker-hint"></p>
+   <div id="picker-grid" class="picker-grid"></div>
+   <div class="picker-custom"><input id="picker-custom-name" maxlength="80" placeholder="找不到景點？輸入自訂景點名稱"><button id="picker-custom-add" class="mini-btn" type="button">＋加入自訂景點</button></div>
+   <p class="picker-hint">景點照片來自 Wikimedia Commons 公開搜尋結果（可能不完全對應景點）；照片需連線載入，點「照片來源」可查看作者及授權。行程資料只儲存在你的瀏覽器。</p>
+  </div>
+  <div class="picker-bottom"><span id="picker-count" class="picker-summary">已勾選 0 個</span><div style="display:flex;gap:8px"><button id="picker-cancel" class="btn btn-secondary" type="button">取消</button><button id="picker-apply" class="btn btn-primary" type="button">加入所選景點</button></div></div>
+ </div>
+</div>
+
+  <script>
+    (() => {
+      "use strict";
+      const defaults = {
+        people: 3, days: 5, flight: 10000, hotel: 1800,
+        food: 1200, transport: 500, tickets: 0, shopping: 0, buffer: 10
+      };
+      const fields = Object.keys(defaults);
+      const form = document.getElementById("budget-form");
+      const toast = document.getElementById("toast");
+      let toastTimer;
+
+      const $ = id => document.getElementById(id);
+      const numberFormat = new Intl.NumberFormat("zh-TW", { maximumFractionDigits: 0 });
+      const money = value => "NT$ " + numberFormat.format(Math.round(value));
+      const getValues = () => Object.fromEntries(fields.map(key => [key, Number($(key).value)]));
+
+      function validate() {
+        let valid = true;
+        fields.forEach(key => {
+          const input = $(key);
+          const wrapper = document.querySelector(`[data-field="${key}"]`);
+          const value = input.value.trim() === "" ? NaN : Number(input.value);
+          const min = Number(input.min);
+          const max = Number(input.max);
+          const isInteger = ["people", "days", "buffer"].includes(key);
+          const ok = Number.isFinite(value) && value >= min && value <= max && (!isInteger || Number.isInteger(value));
+          wrapper.classList.toggle("invalid", !ok);
+          input.setAttribute("aria-invalid", String(!ok));
+          if (!ok) valid = false;
+        });
+        return valid;
+      }
+
+      function calculate(v) {
+        const nights = Math.max(0, v.days - 1);
+        const costs = {
+          flight: v.flight * v.people,
+          hotel: v.hotel * nights,
+          food: v.food * v.days * v.people,
+          transport: v.transport * v.days * v.people,
+          tickets: v.tickets * v.people,
+          shopping: v.shopping * v.people
+        };
+        const subtotal = Object.values(costs).reduce((sum, value) => sum + value, 0);
+        costs.buffer = subtotal * v.buffer / 100;
+        costs.total = subtotal + costs.buffer;
+        return { nights, costs, subtotal, perPerson: costs.total / v.people };
+      }
+
+      function render() {
+        if (!validate()) {
+          $("grand-total").textContent = "請檢查輸入";
+          $("per-person").textContent = "請修正標示的欄位後查看估算";
+          return null;
+        }
+        const v = getValues();
+        const { nights, costs, subtotal, perPerson } = calculate(v);
+        $("grand-total").textContent = money(costs.total);
+        $("per-person").textContent = `平均每人 ${money(perPerson)}`;
+        $("meta-people").textContent = `${v.people} 位旅客`;
+        $("meta-days").textContent = `${v.days} 天`;
+        $("meta-buffer").textContent = `含 ${v.buffer}% 預備金`;
+
+        const rows = [
+          ["✈️", "來回機票", `每人 ${money(v.flight)} × ${v.people} 人`, costs.flight],
+          ["🏨", "住宿", `${money(v.hotel)}／晚 × ${nights} 晚（整間房）`, costs.hotel],
+          ["🍜", "餐飲", `每人每日 ${money(v.food)} × ${v.days} 天 × ${v.people} 人`, costs.food],
+          ["🚆", "交通", `每人每日 ${money(v.transport)} × ${v.days} 天 × ${v.people} 人`, costs.transport],
+          ["🎟️", "門票／體驗", `每人 ${money(v.tickets)} × ${v.people} 人`, costs.tickets],
+          ["🛍️", "購物", `每人 ${money(v.shopping)} × ${v.people} 人`, costs.shopping],
+          ["🧰", "預備金", `基本費用 ${money(subtotal)} × ${v.buffer}%`, costs.buffer]
+        ];
+        $("cost-list").innerHTML = rows.map(([icon, name, desc, amount]) => `
+          <div class="cost-row">
+            <div class="cost-name"><span class="cost-icon" aria-hidden="true">${icon}</span><div><strong>${name}</strong><small>${desc}</small></div></div>
+            <div class="cost-value">${money(amount)}</div>
+          </div>`).join("") + `
+          <div class="cost-row cost-total">
+            <div class="cost-name"><span class="cost-icon">＝</span><div><strong>全團總預算</strong><small>基本費用＋預備金</small></div></div>
+            <div class="cost-value">${money(costs.total)}</div>
+          </div>`;
+        $("formula-hotel").textContent = `${money(v.hotel)} × ${nights} 晚 = ${money(costs.hotel)}`;
+        $("formula-daily").textContent = `(${money(v.food)} + ${money(v.transport)}) × ${v.days} 天 × ${v.people} 人`;
+        $("formula-buffer").textContent = `${money(subtotal)} × ${v.buffer}% = ${money(costs.buffer)}`;
+        return { v, nights, costs, subtotal, perPerson };
+      }
+
+      function makeSummary(data) {
+        const { v, nights, costs, subtotal, perPerson } = data;
+        return [
+          "日本自由行旅費預算摘要",
+          `旅遊人數：${v.people} 人`,
+          `旅遊天數：${v.days} 天（估算住宿 ${nights} 晚）`,
+          "",
+          `來回機票：${money(costs.flight)}`,
+          `住宿：${money(costs.hotel)}（${money(v.hotel)}／晚 × ${nights} 晚）`,
+          `餐飲：${money(costs.food)}`,
+          `交通：${money(costs.transport)}`,
+          `門票／體驗：${money(costs.tickets)}`,
+          `購物：${money(costs.shopping)}`,
+          `基本費用小計：${money(subtotal)}`,
+          `預備金（${v.buffer}%）：${money(costs.buffer)}`,
+          `全團預估總費用：${money(costs.total)}`,
+          `平均每人：${money(perPerson)}`,
+          "",
+          "提醒：以上為自行輸入的預算估算，並非即時報價。"
+        ].join("\n");
+      }
+
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("show"), 3000);
+      }
+
+      fields.forEach(key => $(key).addEventListener("input", render));
+
+      $("reset-btn").addEventListener("click", () => {
+        fields.forEach(key => $(key).value = defaults[key]);
+        render();
+        showToast("已恢復預設旅費設定。");
+      });
+
+      $("copy-btn").addEventListener("click", async () => {
+        const data = render();
+        if (!data) {
+          showToast("請先修正輸入欄位。");
+          return;
+        }
+        const summary = makeSummary(data);
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(summary);
+          } else {
+            const area = document.createElement("textarea");
+            area.value = summary;
+            area.style.position = "fixed";
+            area.style.opacity = "0";
+            document.body.appendChild(area);
+            area.select();
+            const copied = document.execCommand("copy");
+            area.remove();
+            if (!copied) throw new Error("clipboard unavailable");
+          }
+          showToast("預算摘要已複製，可以貼給旅伴了！");
+        } catch {
+          showToast("無法自動複製，請改用「列印／存成 PDF」。");
+        }
+      });
+
+      $("print-btn").addEventListener("click", () => {
+        if (render()) window.print();
+        else showToast("請先修正輸入欄位。");
+      });
+
+      form.addEventListener("submit", event => event.preventDefault());
+      render();
+    })();
+  </script>
+<script>
+
+(() => {
+ 'use strict';
+ const PREFECTURES = [{"pref":"北海道","city":"札幌","spots":[{"name":"大通公園","cat":"自然"},{"name":"北海道神宮","cat":"文化"},{"name":"小樽運河","cat":"散步"},{"name":"藻岩山","cat":"自然"},{"name":"狸小路商店街","cat":"購物"}]},{"pref":"青森縣","city":"青森","spots":[{"name":"睡魔之家 WA RASSE","cat":"文化"},{"name":"弘前公園","cat":"自然"}]},{"pref":"岩手縣","city":"盛岡","spots":[{"name":"盛岡城跡公園","cat":"自然"},{"name":"中尊寺","cat":"文化"}]},{"pref":"宮城縣","city":"仙台","spots":[{"name":"仙台城跡","cat":"文化"},{"name":"瑞鳳殿","cat":"文化"},{"name":"松島灣","cat":"自然"}]},{"pref":"秋田縣","city":"秋田","spots":[{"name":"千秋公園","cat":"自然"},{"name":"角館武家屋敷","cat":"文化"}]},{"pref":"山形縣","city":"山形","spots":[{"name":"山寺立石寺","cat":"文化"},{"name":"霞城公園","cat":"自然"}]},{"pref":"福島縣","city":"福島","spots":[{"name":"鶴之城","cat":"文化"},{"name":"大內宿","cat":"散步"}]},{"pref":"茨城縣","city":"水戶","spots":[{"name":"偕樂園","cat":"自然"},{"name":"國營常陸海濱公園","cat":"自然"}]},{"pref":"栃木縣","city":"宇都宮","spots":[{"name":"日光東照宮","cat":"文化"},{"name":"華嚴瀑布","cat":"自然"}]},{"pref":"群馬縣","city":"前橋","spots":[{"name":"草津溫泉街","cat":"散步"},{"name":"富岡製絲廠","cat":"文化"}]},{"pref":"埼玉縣","city":"埼玉","spots":[{"name":"川越一番街","cat":"散步"},{"name":"冰川神社","cat":"文化"}]},{"pref":"千葉縣","city":"千葉","spots":[{"name":"東京迪士尼度假區","cat":"娛樂"},{"name":"成田山新勝寺","cat":"文化"},{"name":"佐原老街","cat":"散步"}]},{"pref":"東京都","city":"東京","spots":[{"name":"淺草寺","cat":"文化"},{"name":"上野公園","cat":"自然"},{"name":"秋葉原","cat":"動漫"},{"name":"澀谷十字路口","cat":"散步"},{"name":"明治神宮","cat":"文化"},{"name":"東京晴空塔","cat":"娛樂"},{"name":"銀座","cat":"購物"},{"name":"新宿御苑","cat":"自然"}]},{"pref":"神奈川縣","city":"橫濱","spots":[{"name":"橫濱紅磚倉庫","cat":"購物"},{"name":"山下公園","cat":"自然"},{"name":"鎌倉大佛","cat":"文化"},{"name":"江之島","cat":"自然"}]},{"pref":"新潟縣","city":"新潟","spots":[{"name":"萬代橋","cat":"散步"},{"name":"彌彥神社","cat":"文化"}]},{"pref":"富山縣","city":"富山","spots":[{"name":"富岩運河環水公園","cat":"自然"},{"name":"立山黑部阿爾卑斯路線","cat":"自然"}]},{"pref":"石川縣","city":"金澤","spots":[{"name":"兼六園","cat":"自然"},{"name":"東茶屋街","cat":"散步"},{"name":"近江町市場","cat":"美食"}]},{"pref":"福井縣","city":"福井","spots":[{"name":"福井縣立恐龍博物館","cat":"娛樂"},{"name":"東尋坊","cat":"自然"}]},{"pref":"山梨縣","city":"甲府","spots":[{"name":"河口湖","cat":"自然"},{"name":"忍野八海","cat":"自然"}]},{"pref":"長野縣","city":"長野","spots":[{"name":"善光寺","cat":"文化"},{"name":"松本城","cat":"文化"},{"name":"上高地","cat":"自然"}]},{"pref":"岐阜縣","city":"岐阜","spots":[{"name":"白川鄉","cat":"文化"},{"name":"高山老街","cat":"散步"}]},{"pref":"靜岡縣","city":"靜岡","spots":[{"name":"三保松原","cat":"自然"},{"name":"熱海溫泉街","cat":"散步"}]},{"pref":"愛知縣","city":"名古屋","spots":[{"name":"名古屋城","cat":"文化"},{"name":"熱田神宮","cat":"文化"},{"name":"大須商店街","cat":"購物"},{"name":"吉卜力公園","cat":"娛樂"}]},{"pref":"三重縣","city":"津","spots":[{"name":"伊勢神宮","cat":"文化"},{"name":"御蔭橫丁","cat":"散步"}]},{"pref":"滋賀縣","city":"大津","spots":[{"name":"彥根城","cat":"文化"},{"name":"琵琶湖畔","cat":"自然"}]},{"pref":"京都府","city":"京都","spots":[{"name":"清水寺","cat":"文化"},{"name":"伏見稻荷大社","cat":"文化"},{"name":"嵐山竹林","cat":"自然"},{"name":"錦市場","cat":"美食"},{"name":"祇園花見小路","cat":"散步"},{"name":"金閣寺","cat":"文化"},{"name":"京都國際漫畫博物館","cat":"動漫"}]},{"pref":"大阪府","city":"大阪","spots":[{"name":"大阪城公園","cat":"文化"},{"name":"道頓堀","cat":"美食"},{"name":"心齋橋","cat":"購物"},{"name":"環球影城","cat":"娛樂"},{"name":"黑門市場","cat":"美食"},{"name":"通天閣","cat":"散步"},{"name":"日本橋電電街","cat":"動漫"},{"name":"海遊館","cat":"娛樂"}]},{"pref":"兵庫縣","city":"神戶","spots":[{"name":"神戶港塔","cat":"散步"},{"name":"北野異人館街","cat":"文化"},{"name":"南京町","cat":"美食"},{"name":"姬路城","cat":"文化"}]},{"pref":"奈良縣","city":"奈良","spots":[{"name":"奈良公園","cat":"自然"},{"name":"東大寺","cat":"文化"},{"name":"春日大社","cat":"文化"}]},{"pref":"和歌山縣","city":"和歌山","spots":[{"name":"和歌山城","cat":"文化"},{"name":"白濱海岸","cat":"自然"}]},{"pref":"鳥取縣","city":"鳥取","spots":[{"name":"鳥取砂丘","cat":"自然"},{"name":"砂之美術館","cat":"文化"}]},{"pref":"島根縣","city":"松江","spots":[{"name":"出雲大社","cat":"文化"},{"name":"松江城","cat":"文化"}]},{"pref":"岡山縣","city":"岡山","spots":[{"name":"岡山後樂園","cat":"自然"},{"name":"倉敷美觀地區","cat":"散步"}]},{"pref":"廣島縣","city":"廣島","spots":[{"name":"和平紀念公園","cat":"文化"},{"name":"宮島嚴島神社","cat":"文化"},{"name":"尾道老街","cat":"散步"}]},{"pref":"山口縣","city":"山口","spots":[{"name":"錦帶橋","cat":"文化"},{"name":"角島大橋","cat":"自然"}]},{"pref":"德島縣","city":"德島","spots":[{"name":"阿波舞會館","cat":"文化"},{"name":"鳴門漩渦","cat":"自然"}]},{"pref":"香川縣","city":"高松","spots":[{"name":"栗林公園","cat":"自然"},{"name":"金刀比羅宮","cat":"文化"}]},{"pref":"愛媛縣","city":"松山","spots":[{"name":"道後溫泉本館","cat":"文化"},{"name":"松山城","cat":"文化"}]},{"pref":"高知縣","city":"高知","spots":[{"name":"高知城","cat":"文化"},{"name":"桂濱","cat":"自然"}]},{"pref":"福岡縣","city":"福岡","spots":[{"name":"太宰府天滿宮","cat":"文化"},{"name":"櫛田神社","cat":"文化"},{"name":"博多運河城","cat":"購物"},{"name":"大濠公園","cat":"自然"},{"name":"中洲屋台街","cat":"美食"}]},{"pref":"佐賀縣","city":"佐賀","spots":[{"name":"吉野里歷史公園","cat":"文化"},{"name":"祐德稻荷神社","cat":"文化"}]},{"pref":"長崎縣","city":"長崎","spots":[{"name":"哥拉巴園","cat":"文化"},{"name":"稻佐山夜景","cat":"自然"},{"name":"豪斯登堡","cat":"娛樂"}]},{"pref":"熊本縣","city":"熊本","spots":[{"name":"熊本城","cat":"文化"},{"name":"水前寺成趣園","cat":"自然"},{"name":"阿蘇山","cat":"自然"}]},{"pref":"大分縣","city":"大分","spots":[{"name":"別府地獄巡禮","cat":"自然"},{"name":"由布院湯之坪街道","cat":"散步"}]},{"pref":"宮崎縣","city":"宮崎","spots":[{"name":"青島神社","cat":"文化"},{"name":"高千穗峽","cat":"自然"}]},{"pref":"鹿兒島縣","city":"鹿兒島","spots":[{"name":"櫻島展望所","cat":"自然"},{"name":"仙巖園","cat":"文化"}]},{"pref":"沖繩縣","city":"那霸","spots":[{"name":"國際通","cat":"購物"},{"name":"首里城公園","cat":"文化"},{"name":"美麗海水族館","cat":"娛樂"},{"name":"古宇利島","cat":"自然"},{"name":"瀨長島","cat":"散步"}]}];
+
+ // 熱門地區補充景點（其他都道府縣沿用原始資料庫）
+ const MORE_SPOTS={
+ '大阪府':[['梅田藍天大廈','娛樂','梅田'],['大阪天滿宮','文化','天滿'],['新世界商店街','美食','新世界'],['天王寺公園','自然','天王寺'],['中之島公園','自然','中之島'],['美國村','購物','心齋橋'],['難波八阪神社','文化','難波'],['大阪生活今昔館','文化','天滿'],['阿倍野HARUKAS','娛樂','天王寺']],
+ '京都府':[['八坂神社','文化','祇園'],['二年坂三年坂','散步','東山'],['南禪寺','文化','東山'],['銀閣寺','文化','東山'],['哲學之道','散步','東山'],['二條城','文化','中京'],['平安神宮','文化','岡崎'],['天龍寺','文化','嵐山'],['渡月橋','自然','嵐山'],['東寺','文化','京都站']],
+ '東京都':[['東京鐵塔','娛樂','港區'],['築地場外市場','美食','築地'],['豐洲市場','美食','豐洲'],['台場','娛樂','台場'],['東京車站','文化','丸之內'],['六本木新城','購物','六本木'],['原宿竹下通','購物','原宿'],['新宿歌舞伎町','娛樂','新宿'],['池袋陽光城','動漫','池袋'],['吉祥寺井之頭公園','自然','吉祥寺']],
+ '兵庫縣':[['神戶布引香草園','自然','新神戶'],['生田神社','文化','三宮'],['美利堅公園','散步','神戶港'],['神戶動物王國','娛樂','港島']],
+ '奈良縣':[['興福寺','文化','奈良市'],['奈良町','散步','奈良市'],['依水園','自然','奈良市'],['唐招提寺','文化','西之京']],
+ '愛知縣':[['名古屋港水族館','娛樂','名古屋港'],['德川園','自然','東區'],['豐田產業技術紀念館','文化','榮生'],['榮商圈','購物','榮']],
+ '北海道':[['札幌電視塔','娛樂','札幌'],['白色戀人公園','美食','札幌'],['二條市場','美食','札幌'],['札幌啤酒博物館','文化','札幌']],
+ '福岡縣':[['博多車站','購物','博多'],['福岡塔','娛樂','百道'],['天神地下街','購物','天神'],['海之中道海濱公園','自然','東區']],
+ '沖繩縣':[['波上宮','文化','那霸'],['牧志公設市場','美食','那霸'],['萬座毛','自然','恩納'],['美國村','購物','北谷']]
+ };
+ const AREA={
+ '道頓堀':'難波','心齋橋':'難波','黑門市場':'難波','難波八阪神社':'難波','美國村':'難波','日本橋電電街':'難波',
+ '通天閣':'新世界','新世界商店街':'新世界','天王寺公園':'天王寺','阿倍野HARUKAS':'天王寺','大阪城公園':'大阪城','海遊館':'大阪港','環球影城':'此花',
+ '清水寺':'東山','二年坂三年坂':'東山','八坂神社':'東山','祇園花見小路':'東山','南禪寺':'東山','銀閣寺':'東山','哲學之道':'東山','嵐山竹林':'嵐山','天龍寺':'嵐山','渡月橋':'嵐山',
+ '淺草寺':'淺草','東京晴空塔':'押上','明治神宮':'原宿','澀谷十字路口':'澀谷','築地場外市場':'築地','銀座':'銀座'
+ };
+ for(const p of PREFECTURES){p.spots=p.spots.map(s=>({...s,area:AREA[s.name]||p.city}));for(const [name,cat,area] of MORE_SPOTS[p.pref]||[])if(!p.spots.some(s=>s.name===name))p.spots.push({name,cat,area:AREA[name]||area});}
+ // 維基共享資源搜尋圖片；不需付費 API 或密鑰。圖片失敗時保持文字卡片。
+ const PHOTO_TERMS={'大阪城公園':'Osaka Castle','道頓堀':'Dotonbori','心齋橋':'Shinsaibashi','黑門市場':'Kuromon Ichiba','環球影城':'Universal Studios Japan','通天閣':'Tsutenkaku','海遊館':'Osaka Aquarium Kaiyukan','清水寺':'Kiyomizu dera','伏見稻荷大社':'Fushimi Inari Taisha','嵐山竹林':'Arashiyama bamboo grove','金閣寺':'Kinkakuji','淺草寺':'Sensoji','東京晴空塔':'Tokyo Skytree','秋葉原':'Akihabara','澀谷十字路口':'Shibuya crossing','奈良公園':'Nara Park deer','名古屋城':'Nagoya Castle','神戶港塔':'Kobe Port Tower','姬路城':'Himeji Castle','美麗海水族館':'Okinawa Churaumi Aquarium','太宰府天滿宮':'Dazaifu Tenmangu','大通公園':'Odori Park Sapporo'};
+ const photoCache=new Map();let photoObserver=null;
+ async function loadPhoto(name,pref,el){
+  if(!el.isConnected)return;
+  const key=pref+'|'+name;
+  if(!photoCache.has(key)){
+   const query=PHOTO_TERMS[name]||name+' Japan';
+   const url='https://commons.wikimedia.org/w/api.php?'+new URLSearchParams({action:'query',generator:'search',gsrsearch:'filetype:bitmap '+query,gsrnamespace:'6',gsrlimit:'4',prop:'imageinfo',iiprop:'url|extmetadata',iiurlwidth:'350',format:'json',origin:'*'});
+   photoCache.set(key,fetch(url).then(r=>{if(!r.ok)throw Error('network');return r.json()}).then(j=>{
+    const pages=Object.values(j.query?.pages||{});const usable=pages.find(p=>{const i=p.imageinfo?.[0];return i?.thumburl&&/\.(jpg|jpeg|png|webp)$/i.test((p.title||'').split('?')[0]);});if(!usable)return null;
+    const i=usable.imageinfo[0];return {url:i.thumburl,source:i.descriptionurl||'https://commons.wikimedia.org/wiki/'+encodeURIComponent(usable.title)};
+   }).catch(()=>null));
+  }
+  const photo=await photoCache.get(key);if(!el.isConnected||el.dataset.key!==key)return;
+  if(!photo){el.textContent='📍 景點照片暫無';return;}
+  const img=document.createElement('img');img.loading='lazy';img.alt=name+'（Wikimedia Commons 參考照片）';img.src=photo.url;img.onerror=()=>{img.remove();el.prepend(document.createTextNode('📍 照片無法載入'));};
+  const a=document.createElement('a');a.href=photo.source;a.target='_blank';a.rel='noopener noreferrer';a.textContent='照片來源／授權';el.replaceChildren(img,a);
+ }
+ let pickerDay=-1,pickerRegion='',pickerCategory='全部',pickerChosen=new Map();
+ const picker=byId('spot-picker');
+ function allChosen(){return state.days.flatMap((d,i)=>d.spots.map(s=>({name:s.name,pref:d.pref,day:i})));}
+ function openPicker(di){
+  pickerDay=di;pickerRegion=state.days[di].pref;pickerCategory='全部';pickerChosen.clear();
+  byId('picker-day-label').textContent=`Day ${di+1} · ${pickerRegion}｜可一次選擇多個景點`;
+  const sel=byId('picker-region');sel.replaceChildren();
+  for(const p of PREFECTURES){const o=document.createElement('option');o.value=p.pref;o.textContent=p.pref;sel.append(o)}sel.value=pickerRegion;
+  byId('picker-search').value='';byId('picker-custom-name').value='';picker.hidden=false;document.body.style.overflow='hidden';renderPicker();byId('picker-search').focus();
+ }
+ function closePicker(){picker.hidden=true;document.body.style.overflow='';pickerDay=-1;}
+ function renderPicker(){
+  if(pickerDay<0)return;
+  const catsEl=byId('picker-categories');catsEl.replaceChildren();
+  for(const c of ['全部',...cats]){const b=document.createElement('button');b.type='button';b.className='picker-chip'+(c===pickerCategory?' active':'');b.textContent=c;b.addEventListener('click',()=>{pickerCategory=c;renderPicker()});catsEl.append(b)}
+  const region=PREFECTURES.find(p=>p.pref===pickerRegion);const q=byId('picker-search').value.trim().toLowerCase();const chosen=allChosen();
+  const current=state.days[pickerDay];const areas=current.spots.map(s=>s.area||AREA[s.name]).filter(Boolean);
+  const scored=(region?.spots||[]).filter(s=>(pickerCategory==='全部'||s.cat===pickerCategory)&&(!q||(s.name+' '+s.cat+' '+s.area).toLowerCase().includes(q))).map(s=>({...s,near:areas.includes(s.area)})).sort((a,b)=>Number(b.near)-Number(a.near));
+  byId('picker-nearby').textContent=areas.length?'優先顯示與本日已選景點同區域的地點（僅供參考，非實際步行時間）。':'依所選地區顯示景點；可以跨地區瀏覽，但請注意交通距離。';
+  const grid=byId('picker-grid');grid.replaceChildren();
+  if(!scored.length){const p=document.createElement('p');p.textContent='找不到符合條件的景點，試試其他分類或下方自訂新增。';grid.append(p)}
+  for(const s of scored){
+   const key=pickerRegion+'|'+s.name;const inDays=chosen.filter(x=>x.name===s.name&&x.pref===pickerRegion);const alreadyToday=inDays.some(x=>x.day===pickerDay);const other=inDays.filter(x=>x.day!==pickerDay);const picked=pickerChosen.has(key);
+   const card=document.createElement('div');card.className='picker-card'+(picked?' selected':'');
+   const photo=document.createElement('div');photo.className='picker-photo';photo.dataset.key=key;photo.textContent='🗾 照片載入中…';
+   if(photoObserver)photoObserver.observe(photo);else loadPhoto(s.name,pickerRegion,photo);
+   const info=document.createElement('div');info.className='picker-info';const name=document.createElement('strong');name.textContent=s.name;const meta=document.createElement('span');meta.className='picker-meta';meta.textContent=`${s.cat} · ${s.area||pickerRegion}${s.near?' · 同區推薦':''}`;info.append(name,meta);
+   if(alreadyToday||other.length){const warn=document.createElement('span');warn.className='picker-warning';warn.textContent=alreadyToday?'已在本日行程':`已安排 Day ${other.map(x=>x.day+1).join('、')}`;info.append(warn)}
+   const b=document.createElement('button');b.type='button';b.className='mini-btn';b.disabled=alreadyToday;b.textContent=alreadyToday?'已加入本日':picked?'✓ 已勾選':'＋ 勾選景點';b.addEventListener('click',()=>{if(pickerChosen.has(key))pickerChosen.delete(key);else pickerChosen.set(key,{name:s.name,cat:s.cat,area:s.area,pref:pickerRegion});renderPicker()});info.append(b);card.append(photo,info);grid.append(card);
+  }
+  byId('picker-count').textContent=`已勾選 ${pickerChosen.size} 個景點`;
+ }
+ byId('picker-region').addEventListener('change',e=>{pickerRegion=e.target.value;renderPicker()});
+ byId('picker-search').addEventListener('input',renderPicker);
+ byId('picker-close').addEventListener('click',closePicker);byId('picker-cancel').addEventListener('click',closePicker);
+ picker.addEventListener('click',e=>{if(e.target===picker)closePicker()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!picker.hidden)closePicker()});
+ byId('picker-custom-add').addEventListener('click',()=>{const name=byId('picker-custom-name').value.trim();if(!name||name.length>80){alert('請輸入 1～80 個字的景點名稱。');return;}const key=pickerRegion+'|'+name;pickerChosen.set(key,{name,cat:'自訂',area:pickerRegion,pref:pickerRegion});byId('picker-custom-name').value='';renderPicker()});
+ byId('picker-apply').addEventListener('click',()=>{
+  if(pickerDay<0)return;const day=state.days[pickerDay];let count=0;
+  for(const s of pickerChosen.values()){if(day.spots.some(x=>x.name===s.name))continue;day.spots.push({...s});count++}
+  save();closePicker();renderDays();showMessage(`已加入 ${count} 個景點；其他天已有的景點會提示，但仍允許加入。`);
+ });
+ if('IntersectionObserver' in window){photoObserver=new IntersectionObserver(entries=>{for(const e of entries)if(e.isIntersecting){photoObserver.unobserve(e.target);const [pref,...rest]=e.target.dataset.key.split('|');loadPhoto(rest.join('|'),pref,e.target)}},{root:byId('picker-grid').closest('.picker-body'),rootMargin:'180px'});}
+
+ const cats=['文化','自然','美食','購物','動漫','娛樂','散步'];
+ const storeKey='japanTripPlannerV2';
+ const byId=id=>document.getElementById(id);
+ const escapeHTML=str=>String(str).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+ const initial=()=>({stops:[{pref:'大阪府',days:3},{pref:'京都府',days:2}],prefs:['文化','美食','自然'],days:[]});
+ let state=initial();
+ try { const raw=JSON.parse(localStorage.getItem(storeKey)); if(raw && Array.isArray(raw.stops) && Array.isArray(raw.days)) state=raw; }catch{}
+ const save=()=>{try{localStorage.setItem(storeKey,JSON.stringify(state));}catch{}};
+ const showMessage=s=>byId('trip-status').textContent=s;
+ const select=byId('pref-select');
+ PREFECTURES.forEach((x,i)=>{let opt=document.createElement('option');opt.value=String(i);opt.textContent=x.pref+'（'+x.city+'）';select.append(opt)});
+ select.value=String(PREFECTURES.findIndex(x=>x.pref==='東京都'));
+ function renderStops(){
+  const el=byId('stop-list');el.innerHTML='';
+  state.stops.forEach((s,i)=>{
+   const row=document.createElement('div');row.className='stop';
+   const left=document.createElement('div');left.className='stop-left';
+   left.innerHTML=`<strong>${escapeHTML(s.pref)}</strong><br><small>${escapeHTML(PREFECTURES.find(p=>p.pref===s.pref)?.city||'')}</small>`;
+   const ctr=document.createElement('div');ctr.className='stop-controls';
+   const days=document.createElement('input');days.type='number';days.className='mini-input';days.min='1';days.max='30';days.step='1';days.value=s.days;days.setAttribute('aria-label',s.pref+' 停留天數');
+   days.addEventListener('change',()=>{const n=Number(days.value);if(!Number.isInteger(n)||n<1||n>30){days.value=s.days;showMessage('每個地區請輸入 1～30 天。');return;}s.days=n;state.days=[];save();renderDays();});
+   ctr.append(days,document.createTextNode('天'));
+   for(const [label,move] of [['↑',-1],['↓',1]]){const b=document.createElement('button');b.className='mini-btn';b.type='button';b.textContent=label;b.setAttribute('aria-label',s.pref+(move===-1?'往前':'往後'));b.disabled=i+move<0||i+move>=state.stops.length;b.addEventListener('click',()=>{[state.stops[i],state.stops[i+move]]=[state.stops[i+move],state.stops[i]];state.days=[];save();renderStops();renderDays()});ctr.append(b)}
+   const del=document.createElement('button');del.type='button';del.className='mini-btn danger';del.textContent='移除';del.addEventListener('click',()=>{state.stops.splice(i,1);state.days=[];save();renderStops();renderDays()});ctr.append(del);
+   row.append(left,ctr);el.append(row);
+  });
+  byId('trip-total').textContent=state.stops.reduce((a,b)=>a+Number(b.days||0),0)+' 天';
+ }
+ function renderPrefs(){
+  const el=byId('prefs');el.innerHTML='';
+  cats.forEach(c=>{const label=document.createElement('label');label.className='pref';const inp=document.createElement('input');inp.type='checkbox';inp.checked=state.prefs.includes(c);inp.addEventListener('change',()=>{state.prefs=inp.checked?[...new Set([...state.prefs,c])]:state.prefs.filter(x=>x!==c);save()});label.append(inp,document.createTextNode(c));el.append(label)})
+ }
+ function generate(){
+  const total=state.stops.reduce((a,s)=>a+s.days,0);
+  if(!state.stops.length){showMessage('請先加入至少一個目的地。');return;}
+  if(total>60){showMessage('為避免過長，單次行程上限為 60 天。');return;}
+  const output=[];
+  state.stops.forEach(s=>{
+   const region=PREFECTURES.find(p=>p.pref===s.pref);
+   const spots=[...region.spots].sort((a,b)=>Number(state.prefs.includes(b.cat))-Number(state.prefs.includes(a.cat)));
+   for(let d=0;d<s.days;d++){
+    const chosen=[];
+    // rotate attractions and avoid duplicates within the same day
+    for(let k=0;k<Math.min(3,spots.length);k++) chosen.push({...spots[(d*3+k)%spots.length]});
+    output.push({pref:s.pref,day:d+1,spots:chosen});
+   }
+  });
+  state.days=output;save();renderDays();showMessage('已產生 '+output.length+' 天行程。景點順序僅供參考，請自行確認位置、營業時間與交通。');
+ }
+ function renderDays(){
+  const el=byId('trip-days');el.innerHTML='';
+  if(!state.days.length){showMessage('尚未產生行程；修改目的地後請重新產生。');return;}
+  state.days.forEach((day,di)=>{
+   const wrap=document.createElement('article');wrap.className='itinerary-day';
+   const head=document.createElement('div');head.className='day-head';
+   const title=document.createElement('h3');title.textContent=`Day ${di+1} · ${day.pref}（當地第 ${day.day} 天）`;
+   const add=document.createElement('button');add.type='button';add.className='mini-btn';add.textContent='＋ 選擇景點';add.addEventListener('click',()=>openPicker(di));head.append(title,add);wrap.append(head);
+   if(!day.spots.length){const p=document.createElement('p');p.className='muted-note';p.textContent='這天還沒有景點，請點「＋ 景點」新增。';wrap.append(p)}
+   day.spots.forEach((spot,si)=>{
+    const row=document.createElement('div');row.className='spot-row';const desc=document.createElement('div');
+    const name=document.createElement('div');name.className='spot-title';name.textContent=`${si+1}. ${spot.name}`;
+    const cat=document.createElement('small');cat.textContent=spot.cat;desc.append(name,cat);
+    const actions=document.createElement('div');actions.className='spot-actions';
+    const make=(label,aria,fn,disabled=false)=>{const b=document.createElement('button');b.type='button';b.className='mini-btn';b.textContent=label;b.setAttribute('aria-label',aria);b.disabled=disabled;b.addEventListener('click',fn);actions.append(b)};
+    make('✎','編輯 '+spot.name,()=>{const name=prompt('編輯景點名稱：',spot.name);if(name===null)return;const val=name.trim();if(!val||val.length>80){showMessage('景點名稱請輸入 1～80 個字。');return;}spot.name=val;save();renderDays()});
+    make('↑','上移 '+spot.name,()=>{[day.spots[si-1],day.spots[si]]=[day.spots[si],day.spots[si-1]];save();renderDays()},si===0);
+    make('↓','下移 '+spot.name,()=>{[day.spots[si+1],day.spots[si]]=[day.spots[si],day.spots[si+1]];save();renderDays()},si===day.spots.length-1);
+    make('×','刪除 '+spot.name,()=>{day.spots.splice(si,1);save();renderDays()});
+    row.append(desc,actions);wrap.append(row);
+   });el.append(wrap);
+  });
+ }
+ byId('add-stop').addEventListener('click',()=>{
+  const region=PREFECTURES[Number(select.value)];if(!region)return;
+  if(state.stops.some(s=>s.pref===region.pref)){showMessage('這個都道府縣已在清單中，可直接調整停留天數。');return;}
+  state.stops.push({pref:region.pref,days:2});state.days=[];save();renderStops();renderDays();
+ });
+ byId('generate-trip').addEventListener('click',generate);
+ byId('reset-trip').addEventListener('click',()=>{if(!confirm('確定要重設行程規劃嗎？'))return;state=initial();save();renderStops();renderPrefs();renderDays()});
+ byId('copy-trip').addEventListener('click',async()=>{
+  if(!state.days.length){showMessage('請先產生行程。');return;}
+  const content=['日本自由行行程規劃（參考版）',...state.days.flatMap((d,i)=>[`Day ${i+1}｜${d.pref}`, ...d.spots.map((s,j)=>`  ${j+1}. ${s.name}（${s.cat}）`),'']), '提醒：景點與排序僅供參考，請查證交通、營業時間、預約需求。'].join('\n');
+  try{await navigator.clipboard.writeText(content);showMessage('行程已複製！')}catch{const area=document.createElement('textarea');area.value=content;document.body.append(area);area.select();try{const ok=document.execCommand('copy');showMessage(ok?'行程已複製！':'無法複製，請手動選取文字。')}catch{showMessage('無法複製，請手動選取文字。')}area.remove()}
+ });
+ const tabBudget=byId('tab-budget'),tabPlanner=byId('tab-planner');
+ function switchTab(which){const planner=which==='planner';byId('planner-view').hidden=!planner;byId('budget-view').hidden=planner;tabBudget.classList.toggle('active',!planner);tabPlanner.classList.toggle('active',planner);tabBudget.setAttribute('aria-selected',String(!planner));tabPlanner.setAttribute('aria-selected',String(planner));try{history.replaceState(null,'',planner?'#planner':'#budget')}catch{}}
+ tabBudget.addEventListener('click',()=>switchTab('budget'));tabPlanner.addEventListener('click',()=>switchTab('planner'));
+ renderStops();renderPrefs();renderDays();switchTab(location.hash==='#planner'?'planner':'budget');
+})();
+
+</script>
+</body>
+</html>
