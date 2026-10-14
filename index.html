@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f7f4ed">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23245e49'/%3E%3Ctext x='8' y='12' text-anchor='middle' font-size='10' fill='white' font-family='sans-serif'%3E%E6%97%A5%3C/text%3E%3C/svg%3E">
+  <meta name="theme-color" content="#c2185b">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23c2185b'/%3E%3Ctext x='8' y='12' text-anchor='middle' font-size='10' fill='white' font-family='sans-serif'%3E%E6%97%A5%3C/text%3E%3C/svg%3E">
   <meta name="description" content="免費日本自由行規劃器：47 都道府縣景點、多城市安排、每日時間軸、Google Maps 導航與旅費估算。">
   <title>日本自由行行程規劃器｜47 都道府縣景點、旅費試算與路線安排</title>
   <link rel="canonical" href="https://enchi103.github.io/japan-trip-budget/">
@@ -16,14 +16,14 @@
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"日本自由行小幫手","url":"https://enchi103.github.io/japan-trip-budget/","applicationCategory":"TravelApplication","operatingSystem":"Web","inLanguage":"zh-Hant","offers":{"@type":"Offer","price":"0","priceCurrency":"TWD"},"description":"日本自由行旅費試算與多地區景點行程規劃工具"}</script>
   <style>
     :root {
-      --bg: #f7f4ed;
+      --bg: #fff8fa;
       --panel: #ffffff;
-      --ink: #202820;
-      --muted: #68736b;
-      --line: #e4e7df;
-      --green: #275b46;
-      --green-dark: #1c4535;
-      --mint: #e8f1e9;
+      --ink: #2a1c22;
+      --muted: #7a6570;
+      --line: #f3d4e0;
+      --green: #c2185b;
+      --green-dark: #9b1348;
+      --mint: #fff0f5;
       --orange: #d77745;
       --danger: #b42318;
       --shadow: 0 12px 34px rgba(35, 54, 42, .07);
@@ -149,7 +149,7 @@
 
 /* V3 景點選擇器 */
 .picker-overlay[hidden]{display:none!important}.picker-overlay{position:fixed;inset:0;z-index:1000;background:rgba(18,34,29,.65);display:flex;align-items:center;justify-content:center;padding:18px}.picker-panel{width:min(1020px,100%);max-height:min(92vh,940px);background:#fff;border-radius:20px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 25px 70px #0004}.picker-top,.picker-bottom{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line)}.picker-bottom{border-top:1px solid var(--line);border-bottom:0;flex-wrap:wrap}.picker-body{padding:18px 20px;overflow:auto}.picker-tools{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}.picker-cats{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.picker-chip{border:1px solid var(--line);border-radius:999px;padding:7px 12px;background:white;font-size:13px}.picker-chip.active{background:var(--green);color:white}.picker-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.picker-card{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:white;display:flex;flex-direction:column}.picker-photo{height:125px;background:#edf2ef;display:flex;align-items:center;justify-content:center;color:#56756a;font-size:12px;position:relative;overflow:hidden}.picker-photo img{width:100%;height:100%;object-fit:cover}.picker-info{padding:10px;display:grid;gap:6px;flex:1}.picker-info strong{font-size:14px}.picker-meta{font-size:12px;color:var(--muted)}.picker-card .mini-btn{width:100%;padding:9px}.picker-card.selected{border-color:var(--green);box-shadow:0 0 0 1px var(--green)}.picker-warning{font-size:12px;color:#a55b16}.picker-photo a{position:absolute;right:5px;bottom:5px;background:#ffffffe8;padding:3px 6px;border-radius:6px;font-size:12px}.picker-hint{font-size:12px;color:var(--muted);margin:10px 0}.picker-custom{display:flex;gap:8px;margin-top:15px;flex-wrap:wrap}.picker-custom input{flex:1;min-width:160px;border:1px solid var(--line);border-radius:10px;padding:10px}.picker-close{font-size:20px;min-width:36px}.picker-summary{font-size:13px;color:var(--muted)}@media(max-width:750px){.picker-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.picker-tools{grid-template-columns:1fr}.picker-photo{height:110px}.picker-panel{max-height:94vh}.picker-body{padding:12px}.picker-top,.picker-bottom{padding:12px}}
-.v41-explain{display:grid;gap:4px;padding:10px;background:#eef4f0;border-radius:10px;font-size:13px}.v41-explain small{font-size:12px;color:#65776e}.v41-minutes{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:#355e4b}.v41-minutes input{width:76px;padding:6px;border:1px solid #ccd7cf;border-radius:8px;font-size:13px}.v44-base{display:grid;grid-template-columns:1fr 1fr;gap:9px;background:#f0f5f1;border:1px solid #dbe8df;padding:12px;border-radius:12px;margin:12px 0}.v44-base label{font-size:12px;color:#315947;display:grid;gap:5px}.v44-base input{width:100%;min-width:0;box-sizing:border-box;border:1px solid #cbd7ce;border-radius:8px;padding:9px;background:white;font-size:13px}.v44-base button{grid-column:1/-1;justify-self:start}@media(max-width:640px){.v44-base{grid-template-columns:1fr}}.v45-drag{cursor:grab;touch-action:auto}.v45-drag:active{cursor:grabbing}.v45-drag.dragging{opacity:.42}.v45-target{outline:2px dashed #2b7156;outline-offset:3px;background:#f2faf5}.v45-move{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:7px}.v45-move label{font-size:12px;color:#49695a}.v45-move select{max-width:150px;border:1px solid #cbd7ce;border-radius:8px;padding:6px;background:white}.v45-hint{font-size:12px;color:#60766b;margin:8px 0}.v45-warning{background:#fff8ec;border-left:3px solid #c48229;padding:8px 10px;border-radius:7px;font-size:12px;color:#805719;margin-top:8px} .top-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.lang-control{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#245a46}.lang-control select{max-width:170px;background:white;border:1px solid #dce6dd;border-radius:10px;padding:9px 7px;color:#173f31;font:inherit}.topline{gap:10px}@media(max-width:650px){.top-right .tag{display:none}.lang-control select{max-width:145px}}@media print{.lang-control{display:none}} .itinerary-day[hidden]{display:none!important}.day-switcher{margin:12px 0 16px;padding:12px;background:#f2f7f3;border:1px solid var(--line);border-radius:14px}.day-switcher[hidden]{display:none!important}.day-switcher-top{display:flex;gap:9px;align-items:center;justify-content:space-between}.day-switcher-top>.mini-btn{padding:10px 12px;font-size:13px}.day-switcher-top>.mini-btn:disabled{opacity:.35}.day-jump-label{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700}.day-jump-label select{max-width:170px;padding:9px;font-size:13px}.day-pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}.day-pill{border:1px solid #d2ded6;background:white;border-radius:10px;padding:8px 12px;font-weight:750;color:#285742;cursor:pointer}.day-pill[aria-current="page"]{background:#245a46;color:white;border-color:#245a46}.planner-result{max-height:none;overflow:visible}.itinerary-day{margin-bottom:0}@media(max-width:520px){.day-switcher-top{gap:5px}.day-switcher-top>.mini-btn{font-size:12px;padding:8px}.day-jump-caption{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.day-jump-label select{max-width:120px;font-size:12px}.day-pills{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}.day-pill{flex:0 0 auto}}@media print{.day-switcher{display:none!important}.planner-result .itinerary-day{display:block!important;break-inside:avoid}} .v48-toggle{display:flex;flex-wrap:wrap;gap:5px;margin:7px 0 9px;padding:4px;background:#edf3ee;border-radius:11px}.v48-toggle button{flex:1;min-width:105px;border:0;background:transparent;color:#285846;padding:8px;border-radius:8px;cursor:pointer;font-weight:650;font-size:12px}.v48-toggle button.v48-selected{background:#255e48;color:white}.v48-summary-switch{margin-bottom:12px}.v48-summary-switch button{font-size:14px;padding:11px}.v48-summary-note{font-size:12px;color:#617b6d;margin:8px 0 0}
+.v41-explain{display:grid;gap:4px;padding:10px;background:#eef4f0;border-radius:10px;font-size:13px}.v41-explain small{font-size:12px;color:#65776e}.v41-minutes{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:#355e4b}.v41-minutes input{width:76px;padding:6px;border:1px solid #ccd7cf;border-radius:8px;font-size:13px}.v44-base{display:grid;grid-template-columns:1fr 1fr;gap:9px;background:#f0f5f1;border:1px solid #dbe8df;padding:12px;border-radius:12px;margin:12px 0}.v44-base label{font-size:12px;color:#315947;display:grid;gap:5px}.v44-base input{width:100%;min-width:0;box-sizing:border-box;border:1px solid #cbd7ce;border-radius:8px;padding:9px;background:white;font-size:13px}.v44-base button{grid-column:1/-1;justify-self:start}@media(max-width:640px){.v44-base{grid-template-columns:1fr}}.v45-drag{cursor:grab;touch-action:auto}.v45-drag:active{cursor:grabbing}.v45-drag.dragging{opacity:.42}.v45-target{outline:2px dashed #2b7156;outline-offset:3px;background:#f2faf5}.v45-move{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:7px}.v45-move label{font-size:12px;color:#49695a}.v45-move select{max-width:150px;border:1px solid #cbd7ce;border-radius:8px;padding:6px;background:white}.v45-hint{font-size:12px;color:#60766b;margin:8px 0}.v45-warning{background:#fff8ec;border-left:3px solid #c48229;padding:8px 10px;border-radius:7px;font-size:12px;color:#805719;margin-top:8px} .top-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.lang-control{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#245a46}.lang-control select{max-width:170px;background:white;border:1px solid #dce6dd;border-radius:10px;padding:9px 7px;color:#173f31;font:inherit}.topline{gap:10px}@media(max-width:650px){.top-right .tag{display:none}.lang-control select{max-width:145px}}@media print{.lang-control{display:none}} .itinerary-day[hidden]{display:none!important}.day-switcher{margin:12px 0 16px;padding:12px;background:#f2f7f3;border:1px solid var(--line);border-radius:14px}.day-switcher[hidden]{display:none!important}.day-switcher-top{display:flex;gap:9px;align-items:center;justify-content:space-between}.day-switcher-top>.mini-btn{padding:10px 12px;font-size:13px}.day-switcher-top>.mini-btn:disabled{opacity:.35}.day-jump-label{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700}.day-jump-label select{max-width:170px;padding:9px;font-size:13px}.day-pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}.day-pill{border:1px solid #d2ded6;background:white;border-radius:10px;padding:8px 12px;font-weight:750;color:#285742;cursor:pointer}.day-pill[aria-current="page"]{background:#c2185b;color:white;border-color:#c2185b}.planner-result{max-height:none;overflow:visible}.itinerary-day{margin-bottom:0}@media(max-width:520px){.day-switcher-top{gap:5px}.day-switcher-top>.mini-btn{font-size:12px;padding:8px}.day-jump-caption{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.day-jump-label select{max-width:120px;font-size:12px}.day-pills{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}.day-pill{flex:0 0 auto}}@media print{.day-switcher{display:none!important}.planner-result .itinerary-day{display:block!important;break-inside:avoid}} .v48-toggle{display:flex;flex-wrap:wrap;gap:5px;margin:7px 0 9px;padding:4px;background:#fff0f5;border-radius:11px}.v48-toggle button{flex:1;min-width:105px;border:0;background:transparent;color:#9b1348;padding:8px;border-radius:8px;cursor:pointer;font-weight:650;font-size:12px}.v48-toggle button.v48-selected{background:#c2185b;color:white}.v48-summary-switch{margin-bottom:12px}.v48-summary-switch button{font-size:14px;padding:11px}.v48-summary-note{font-size:12px;color:#617b6d;margin:8px 0 0}
 /* V4.9: responsive budget dashboard */
 .v49-overview{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
 .v49-overview .total-panel{margin:0}
@@ -190,7 +190,7 @@
 .v411-entry{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:10px 0 14px}
 .v411-exchange{margin-top:24px;padding:22px}.v411-exchange h2{margin:0 0 8px}.v411-exchange-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:end;margin-top:15px}.v411-exchange-grid label{display:grid;gap:6px;font-size:13px;font-weight:700}.v411-exchange-grid input{width:100%;min-width:0;padding:12px;border:1px solid var(--line);border-radius:10px}.v411-exchange-result{background:#eaf5ed;border-radius:12px;padding:12px}.v411-exchange-result small{display:block;color:var(--muted)}.v411-exchange-result strong{font-size:22px}
 .v411-travel[hidden]{display:none!important}.v411-travel{position:fixed;inset:0;z-index:11000;background:#f4f8f5;overflow:auto;overscroll-behavior:contain}.v411-travel-inner{max-width:790px;margin:auto;padding:22px 16px 45px}.v411-travel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}.v411-travel-head h2{margin:4px 0 0}.v411-travel-head small{color:var(--muted)}.v411-travel-switch{display:grid;grid-template-columns:auto 1fr auto;gap:8px;margin-bottom:15px}.v411-travel-switch button{min-height:42px}.v411-travel-card{border:1px solid var(--line);border-radius:16px;background:white;padding:17px;margin-bottom:12px}.v411-travel-card h3{margin:0 0 8px;font-size:18px}.v411-travel-card p{margin:5px 0;color:var(--muted);font-size:13px}.v411-travel-card .v4-link{font-size:14px;padding:10px 12px;min-height:44px;align-items:center}.v411-travel-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.v411-travel-number{display:inline-grid;place-items:center;background:var(--green);color:white;width:30px;height:30px;border-radius:50%;margin-right:8px}.v411-travel-time{font-weight:800;color:var(--green);font-variant-numeric:tabular-nums}.v411-mobile-nav{display:none}
-@media(max-width:760px){body{padding-bottom:calc(120px + env(safe-area-inset-bottom))}.v411-mobile-nav{position:fixed;bottom:0;left:0;right:0;z-index:8000;display:grid;grid-template-columns:repeat(3,1fr);background:white;border-top:1px solid var(--line);padding:7px 8px calc(7px + env(safe-area-inset-bottom));box-shadow:0 -5px 25px #0000000d}.v411-mobile-nav button{border:0;background:transparent;border-radius:12px;padding:7px;color:var(--green);font-weight:800;font-size:21px;display:grid;justify-items:center;gap:3px;min-height:52px}.v411-mobile-nav button span{font-size:12px}.v411-mobile-nav button[aria-current="page"]{background:#e7f3ea}.v411-exchange-grid{grid-template-columns:1fr}.v411-travel-inner{padding:14px 12px 100px}.v411-travel-switch{grid-template-columns:90px minmax(0,1fr) 90px}.v411-travel-switch button{font-size:12px}.v411-travel-card{padding:14px}.v411-travel-actions a{flex:1;justify-content:center}.v411-travel-head h2{font-size:22px}.v411-travel-head .mini-btn{min-height:42px}}
+@media(max-width:760px){body{padding-bottom:calc(120px + env(safe-area-inset-bottom))}.v411-mobile-nav{position:fixed;bottom:0;left:0;right:0;z-index:8000;display:grid;grid-template-columns:repeat(3,1fr);background:white;border-top:1px solid var(--line);padding:7px 8px calc(7px + env(safe-area-inset-bottom));box-shadow:0 -5px 25px #0000000d}.v411-mobile-nav button{border:0;background:transparent;border-radius:12px;padding:7px;color:var(--green);font-weight:800;font-size:21px;display:grid;justify-items:center;gap:3px;min-height:52px}.v411-mobile-nav button span{font-size:12px}.v411-mobile-nav button[aria-current="page"]{background:#fff0f5}.v411-exchange-grid{grid-template-columns:1fr}.v411-travel-inner{padding:14px 12px 100px}.v411-travel-switch{grid-template-columns:90px minmax(0,1fr) 90px}.v411-travel-switch button{font-size:12px}.v411-travel-card{padding:14px}.v411-travel-actions a{flex:1;justify-content:center}.v411-travel-head h2{font-size:22px}.v411-travel-head .mini-btn{min-height:42px}}
 @media print{.v411-mobile-nav,.v411-entry,.v411-travel,.v411-exchange{display:none!important}}
 
 /* V4.12.1.1: graceful visual fallback when Wikimedia photo is unavailable */
@@ -233,7 +233,7 @@
 .plan-saved{color:var(--muted);font-size:12px}
 .cert-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:6px;font-size:12px;color:#315947}
 .cert-row button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:700}
-.cert-row button[aria-pressed="true"]{background:#255e48;color:#fff;border-color:#255e48}
+.cert-row button[aria-pressed="true"]{background:#c2185b;color:#fff;border-color:#c2185b}
 .day-alert{background:#fff4e5;border:1px solid #f0d2a8;color:#7a4a12;border-radius:12px;padding:10px 12px;margin:0 0 10px;font-size:13px;line-height:1.55}
 .meal-row{padding:8px 0;border-top:1px dashed var(--line);color:#355e4b;font-size:13px;font-weight:700}
 .spot-meta{font-size:12px;color:#4d6458;margin-top:4px;line-height:1.5}
@@ -273,7 +273,18 @@ body.overlay-open .v411-mobile-nav{display:none!important}
 }
 .plan-bar,.stop,.checklist li,.v49-person{border-width:2px}
 .hero-note{background:linear-gradient(160deg,#e989b0,#c2185b);box-shadow:0 12px 28px rgba(194,24,91,.2)}
-.brand-mark,.btn-primary,.tab-btn.active,.v48-toggle button.v48-selected,.day-pill[aria-current="page"]{background:#c2185b;border-color:#c2185b;color:#fff}
+.brand-mark,.btn-primary,.tab-btn.active,.v48-toggle button.v48-selected,.day-pill[aria-current="page"],.cert-row button[aria-pressed="true"],.trip-cal-grid button.trip-selected{background:#c2185b;border-color:#c2185b;color:#fff}
+.v411-mobile-nav button[aria-current="page"]{background:#fff0f5;color:#9b1348}
+.region-setup-panel{width:min(640px,100%);max-height:min(92dvh,920px);overflow:hidden;display:flex;flex-direction:column}
+.region-setup-list{overflow:auto;display:grid;gap:14px;min-height:0;padding-right:2px}
+.region-group h3{margin:0 0 6px;font-size:14px;color:#9b1348}
+.region-choice{display:grid;grid-template-columns:minmax(0,1fr) 22px 76px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-weight:650}
+.region-choice label{display:flex;align-items:center;gap:8px;min-width:0}
+.region-choice input[type="checkbox"]{width:22px;height:22px;accent-color:#c2185b;flex:0 0 auto}
+.region-order{width:22px;text-align:center;font-size:12px;font-weight:800;color:#9b1348}
+.region-choice input[type="number"]{width:76px;padding:8px;border:1px solid var(--line);border-radius:8px}
+.region-setup .app-dialog-actions{position:sticky;bottom:0;background:#fff;padding-top:8px}
+@media(max-width:420px){.region-setup.app-dialog{padding:0;align-items:flex-end}.region-setup-panel{max-height:calc(100dvh - env(safe-area-inset-bottom));border-radius:16px 16px 0 0;padding-bottom:calc(12px + env(safe-area-inset-bottom))}.region-choice{grid-template-columns:minmax(0,1fr) 22px 68px;font-size:14px}}
 .btn-primary:hover{background:#9b1348}
 .tab-btn{border:2px solid #e56a9c}
 .total-panel,.tag{background:#fff0f5}
@@ -338,7 +349,7 @@ body{background:radial-gradient(circle at 100% 0%,rgba(229,106,156,.18),transpar
           <div class="field-grid">
             <div class="field" data-field="people">
               <label for="people">旅遊人數</label>
-              <div class="input-wrap"><input id="people" name="people" type="number" min="1" max="30" step="1" value="3" inputmode="numeric" required><span class="unit">人</span></div>
+              <div class="input-wrap"><input id="people" name="people" type="number" min="1" max="30" step="1" value="1" inputmode="numeric" required><span class="unit">人</span></div>
               <div class="hint">1～30 人</div><div class="error">請輸入 1～30 的整數。</div>
             </div>
             <div class="field" data-field="days">
@@ -350,12 +361,12 @@ body{background:radial-gradient(circle at 100% 0%,rgba(229,106,156,.18),transpar
             </div>
             <div class="field" data-field="flight">
               <label for="flight">每人來回機票</label>
-              <div class="input-wrap"><input id="flight" name="flight" type="number" min="0" max="1000000" step="100" value="10000" inputmode="decimal" required><span class="unit">NT$</span></div>
+              <div class="input-wrap"><input id="flight" name="flight" type="number" min="0" max="1000000" step="100" value="0" inputmode="decimal" placeholder="0" required><span class="unit">NT$</span></div>
               <div class="hint">每人總價</div><div class="error">請輸入 0～1,000,000 的金額。</div>
             </div>
             <div class="field" data-field="hotel">
               <label for="hotel" id="hotel-field-label">住宿每晚總價</label><div class="v48-toggle" role="group" aria-label="住宿費用輸入方式"><button type="button" class="v48-selected" id="hotel-night-btn">每晚費用</button><button type="button" id="hotel-total-btn">整趟住宿總費用</button></div>
-              <div class="input-wrap"><input id="hotel" name="hotel" type="number" min="0" max="1000000" step="100" value="1800" inputmode="decimal" required><span class="unit">NT$</span></div>
+              <div class="input-wrap"><input id="hotel" name="hotel" type="number" min="0" max="1000000" step="100" value="0" inputmode="decimal" placeholder="0" required><span class="unit">NT$</span></div>
               <div class="hint" id="hotel-hint">整間房每晚，不是每人</div>
               <div class="cert-row" role="group" aria-label="住宿金額狀態"><span>住宿金額</span><button type="button" data-cert="hotel" data-cert-value="estimate" aria-pressed="true">預估</button><button type="button" data-cert="hotel" data-cert-value="confirmed" aria-pressed="false">已確定</button></div>
               <div class="error" id="hotel-error">請輸入 0～1,000,000 的金額。</div>
@@ -366,32 +377,32 @@ body{background:radial-gradient(circle at 100% 0%,rgba(229,106,156,.18),transpar
           <div class="field-grid">
             <div class="field" data-field="food">
               <label for="food">每人每日餐費</label>
-              <div class="input-wrap"><input id="food" name="food" type="number" min="0" max="100000" step="100" value="1200" inputmode="decimal" required><span class="unit">NT$</span></div>
+              <div class="input-wrap"><input id="food" name="food" type="number" min="0" max="100000" step="100" value="0" inputmode="decimal" placeholder="0" required><span class="unit">NT$</span></div>
               <div class="hint">早餐、午餐、晚餐等</div><div class="error">請輸入 0～100,000 的金額。</div>
             </div>
             <div class="field" data-field="transport">
               <label for="transport">每人每日交通</label>
-              <div class="input-wrap"><input id="transport" name="transport" type="number" min="0" max="100000" step="100" value="500" inputmode="decimal" required><span class="unit">NT$</span></div>
+              <div class="input-wrap"><input id="transport" name="transport" type="number" min="0" max="100000" step="100" value="0" inputmode="decimal" placeholder="0" required><span class="unit">NT$</span></div>
               <div class="hint">市區交通與預估車資</div><div class="error">請輸入 0～100,000 的金額。</div>
             </div>
 
             <div class="field" data-field="airport">
               <label for="airport">每人機場往返交通</label>
-              <div class="input-wrap"><input id="airport" name="airport" type="number" min="0" max="1000000" step="100" value="0" inputmode="decimal" required><span class="unit">NT$</span></div>
+              <div class="input-wrap"><input id="airport" name="airport" type="number" min="0" max="1000000" step="100" value="0" inputmode="decimal" placeholder="0" required><span class="unit">NT$</span></div>
               <div class="hint">機場與市區之間的往返，不含每日市區交通</div>
               <div class="cert-row" role="group" aria-label="機場交通金額狀態"><span>機場交通</span><button type="button" data-cert="airport" data-cert-value="estimate" aria-pressed="true">預估</button><button type="button" data-cert="airport" data-cert-value="confirmed" aria-pressed="false">已確定</button></div>
               <div class="error">請輸入 0～1,000,000 的金額。</div>
             </div>
             <div class="field" data-field="tickets">
               <label for="tickets">每人門票／體驗總額</label>
-              <div class="input-wrap"><input id="tickets" name="tickets" type="number" min="0" max="1000000" step="1" value="0" inputmode="decimal" required><span class="unit">NT$</span></div>
+              <div class="input-wrap"><input id="tickets" name="tickets" type="number" min="0" max="1000000" step="1" value="0" inputmode="decimal" placeholder="0" required><span class="unit">NT$</span></div>
               <div class="hint" id="tickets-hint">預估時會依行程中已查證的門票加總；沒有資料的景點不計入。</div>
               <div class="cert-row" role="group" aria-label="門票金額狀態"><span>景點門票</span><button type="button" data-cert="tickets" data-cert-value="estimate" aria-pressed="true">預估</button><button type="button" data-cert="tickets" data-cert-value="confirmed" aria-pressed="false">已確定</button></div>
               <div class="error">請輸入 0～1,000,000 的金額。</div>
             </div>
             <div class="field" data-field="shopping">
               <label for="shopping">每人購物預算</label>
-              <div class="input-wrap"><input id="shopping" name="shopping" type="number" min="0" max="1000000" step="100" value="0" inputmode="decimal" required><span class="unit">NT$</span></div>
+              <div class="input-wrap"><input id="shopping" name="shopping" type="number" min="0" max="1000000" step="100" value="0" inputmode="decimal" placeholder="0" required><span class="unit">NT$</span></div>
               <div class="hint">伴手禮、個人購物等</div><div class="error">請輸入 0～1,000,000 的金額。</div>
             </div>
             <div class="field full" data-field="buffer">
@@ -460,7 +471,7 @@ body{background:radial-gradient(circle at 100% 0%,rgba(229,106,156,.18),transpar
  <div class="section-head"><div><h2 id="planner-title">日本多城市行程規劃器</h2><p class="sub">全日本 47 都道府縣可選。旅行日期、航班日期、住宿晚數與每日行程使用同一組出發／回程日，改期會一起更新。</p></div><span class="tag">日期同步 · 免費</span></div>
  <div class="planner-grid">
   <section class="card stack" aria-label="行程設定">
-   <div><h2>① 選擇旅行地區</h2><p class="sub">可新增多個都道府縣，並分別設定停留天數。順序就是旅行順序。</p></div>
+   <div><h2>① 選擇旅行地區</h2><p class="sub">可新增多個都道府縣，並分別設定停留天數。順序就是旅行順序。</p><button class="btn btn-secondary" id="open-region-setup" type="button">一次選擇多個地區</button></div>
    <label for="pref-select">目的地（都道府縣）</label>
    <select class="select-control" id="pref-select"></select>
    <button class="btn btn-secondary" id="add-stop" type="button">＋ 加入目的地</button>
@@ -491,12 +502,14 @@ body{background:radial-gradient(circle at 100% 0%,rgba(229,106,156,.18),transpar
     <label>抵達日本時間<input class="select-control" type="time" id="flight-arr-time" value="13:30"></label>
     <label>日本回程起飛時間<input class="select-control" type="time" id="flight-dep-time" value="18:00"></label>
     <label>入境＋領行李預留（分鐘）<input class="select-control" type="number" id="flight-entry" min="0" max="360" step="10" value="90"></label>
-    <label>機場到市區交通預留（分鐘）<input class="select-control" type="number" id="flight-transfer" min="0" max="360" step="10" value="90"></label>
+    <label>抵達機場到第一個地區（分鐘）<input class="select-control" type="number" id="flight-transfer" min="0" max="360" step="10" value="90"></label>
+    <label>最後一個地區到回程機場（分鐘）<input class="select-control" type="number" id="flight-transfer-back" min="0" max="360" step="10" value="90"></label>
     <label>回程提前抵達機場（分鐘）<input class="select-control" type="number" id="flight-checkin" min="60" max="360" step="10" value="180"></label>
     <label>機場交通偏好<select class="select-control" id="flight-mode"><option value="transit">鐵路／大眾運輸</option><option value="bus">機場巴士</option><option value="driving">開車／包車</option></select></label>
    </div>
    <p class="muted-note" id="flight-date-note">去程與回程日期跟上方旅行日期是同一組。改其中一邊，天數、住宿晚數與每日行程會一起改。</p>
-   <p class="muted-note">航班時間均填日本當地時間。交通分鐘數是自行設定的預留時間，不是即時路線查詢；跨城市與轉機請自行確認。</p>
+   <p class="muted-note" id="airport-suggest-note">抵達機場依第一個地區建議，回程機場依最後一個地區建議。下拉選單可改選其他機場。</p>
+   <p class="muted-note">航班時間均填日本當地時間。交通分鐘數是自行設定的預留時間，不是即時路線查詢；跨城市與轉機請自行確認。第一天開始時間含入境與進市區，最後一天結束時間含回程機場交通。</p>
    <div class="split-title">④ 產生與分享</div>
    <button class="btn btn-primary" id="generate-trip" type="button">自動產生智慧行程（依節奏 2／4／6 個景點）</button>
    <button class="btn btn-secondary" id="manual-trip" type="button" style="width:100%;margin-top:10px">✏️ 手動自訂行程（建立空白每日行程）</button>
@@ -520,7 +533,6 @@ body{background:radial-gradient(circle at 100% 0%,rgba(229,106,156,.18),transpar
  </div>
 </section>
 
-    <section class="v411-exchange card" aria-labelledby="v411-exchange-title"><h2 id="v411-exchange-title">💴 日幣／台幣快速換算</h2><p class="sub">供台灣旅客估算購物、餐費與門票價格。匯率由你自行輸入，不是即時銀行報價。</p><div class="v411-exchange-grid"><label>日幣金額（JPY）<input id="v411-jpy" type="number" min="0" max="999999999" value="3000" inputmode="decimal"></label><label>每 1 日圓約等於多少台幣<input id="v411-rate" type="number" min="0.0001" max="10" step="0.0001" value="0.22" inputmode="decimal"></label><div class="v411-exchange-result"><small>約合新台幣</small><strong id="v411-twd">NT$ 660</strong></div></div></section>
     <section class="card checklist-card" aria-labelledby="checklist-title">
       <div class="section-head">
         <div>
@@ -567,6 +579,18 @@ body{background:radial-gradient(circle at 100% 0%,rgba(229,106,156,.18),transpar
  </div>
 </div>
 
+<div id="region-setup" class="app-dialog region-setup" hidden>
+  <div class="app-dialog-panel region-setup-panel" role="dialog" aria-modal="true" aria-labelledby="region-setup-title">
+    <h2 id="region-setup-title">選擇旅行地區</h2>
+    <p id="region-setup-lead">勾選要去的都道府縣，並填停留天數。勾選順序就是旅行順序。可先略過，之後在「① 選擇旅行地區」再打開。</p>
+    <div id="region-setup-list" class="region-setup-list"></div>
+    <p id="region-setup-error" class="app-dialog-error" role="alert"></p>
+    <div class="app-dialog-actions">
+      <button type="button" id="region-setup-skip" class="btn btn-secondary">先略過</button>
+      <button type="button" id="region-setup-ok" class="btn btn-primary">用這些地區</button>
+    </div>
+  </div>
+</div>
 <div id="app-dialog" class="app-dialog" hidden>
   <div class="app-dialog-panel" role="dialog" aria-modal="true" aria-labelledby="app-dialog-title">
     <h2 id="app-dialog-title">請確認</h2>
@@ -582,7 +606,7 @@ body{background:radial-gradient(circle at 100% 0%,rgba(229,106,156,.18),transpar
 </div>
 <div id="trip-calendar" class="trip-calendar-overlay" hidden role="dialog" aria-modal="true" aria-label="選擇出發與回程日期"><div class="trip-calendar-panel"><div class="trip-calendar-head"><strong>選擇旅行日期</strong><button type="button" id="trip-calendar-close" class="mini-btn">✕ 關閉</button></div><p id="trip-calendar-status">請選擇出發日期</p><div class="trip-calendar-controls"><button type="button" id="trip-cal-prev" class="mini-btn">← 上個月</button><button type="button" id="trip-cal-next" class="mini-btn">下個月 →</button></div><div id="trip-cal-months" class="trip-cal-months"></div><div class="trip-calendar-actions"><button type="button" id="trip-cal-clear" class="mini-btn">清除日期</button><button type="button" id="trip-cal-done" class="mini-btn" disabled>完成</button></div></div></div>
 <style>
-.trip-date-inputs{display:flex;gap:5px;align-items:center}.trip-date-inputs input{width:calc(50% - 12px);min-width:0;border:1px solid #d9e1db;border-radius:10px;padding:9px 4px;background:white;color:#163e33;font:inherit}.trip-calendar-open{margin:8px 0}.trip-days-result{margin-top:6px}.trip-days-result input{background:#f1f5f1}.trip-calendar-overlay{position:fixed;inset:0;z-index:9999;background:#14271c99;display:flex;justify-content:center;align-items:center;padding:12px}.trip-calendar-overlay[hidden]{display:none}.trip-calendar-panel{background:#fff;border-radius:18px;width:min(760px,100%);max-height:94vh;overflow:auto;padding:18px;box-shadow:0 12px 50px #0003}.trip-calendar-head,.trip-calendar-controls,.trip-calendar-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.trip-calendar-status{color:#27634d;font-size:14px}.trip-cal-months{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.trip-cal-month h3{text-align:center;margin:5px 0 12px}.trip-cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}.trip-cal-grid span{text-align:center;font-size:12px;padding:7px 0}.trip-cal-grid button{border:0;background:transparent;border-radius:7px;min-height:36px;cursor:pointer;color:#153e31;font:inherit}.trip-cal-grid button:hover{background:#e5f2ea}.trip-cal-grid button.trip-range{background:#e5f2ea}.trip-cal-grid button.trip-selected{background:#245e49;color:white}.trip-cal-grid button:focus-visible{outline:2px solid #195d44}@media(max-width:600px){.trip-cal-months{grid-template-columns:1fr}.trip-calendar-panel{padding:12px}.trip-date-inputs{flex-wrap:wrap}.trip-date-inputs input{font-size:13px}}
+.trip-date-inputs{display:flex;gap:5px;align-items:center}.trip-date-inputs input{width:calc(50% - 12px);min-width:0;border:1px solid #d9e1db;border-radius:10px;padding:9px 4px;background:white;color:#163e33;font:inherit}.trip-calendar-open{margin:8px 0}.trip-days-result{margin-top:6px}.trip-days-result input{background:#f1f5f1}.trip-calendar-overlay{position:fixed;inset:0;z-index:9999;background:#14271c99;display:flex;justify-content:center;align-items:center;padding:12px}.trip-calendar-overlay[hidden]{display:none}.trip-calendar-panel{background:#fff;border-radius:18px;width:min(760px,100%);max-height:94vh;overflow:auto;padding:18px;box-shadow:0 12px 50px #0003}.trip-calendar-head,.trip-calendar-controls,.trip-calendar-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.trip-calendar-status{color:#27634d;font-size:14px}.trip-cal-months{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.trip-cal-month h3{text-align:center;margin:5px 0 12px}.trip-cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}.trip-cal-grid span{text-align:center;font-size:12px;padding:7px 0}.trip-cal-grid button{border:0;background:transparent;border-radius:7px;min-height:36px;cursor:pointer;color:#153e31;font:inherit}.trip-cal-grid button:hover{background:#ffe4ef}.trip-cal-grid button.trip-range{background:#ffe4ef}.trip-cal-grid button.trip-selected{background:#c2185b;color:white}.trip-cal-grid button:focus-visible{outline:2px solid #c2185b}@media(max-width:600px){.trip-cal-months{grid-template-columns:1fr}.trip-calendar-panel{padding:12px}.trip-date-inputs{flex-wrap:wrap}.trip-date-inputs input{font-size:13px}}
 </style>
 <script>
 (()=>{
@@ -606,7 +630,7 @@ body{background:radial-gradient(circle at 100% 0%,rgba(229,106,156,.18),transpar
  const dayCount=(a,b)=>{const s=parse(a),e=parse(b);if(!s||!e)return 0;return Math.round((Date.UTC(e.getFullYear(),e.getMonth(),e.getDate())-Date.UTC(s.getFullYear(),s.getMonth(),s.getDate()))/86400000)+1;};
  const formatMD=isoStr=>{const d=parse(isoStr);if(!d)return '';return `${d.getMonth()+1}/${d.getDate()}（${WEEK[d.getDay()]}）`;};
  window.syncOverlayNav=function(){
-  const open=['spot-picker','app-dialog','trip-calendar','v411-travel'].some(id=>{const el=document.getElementById(id);return el&&!el.hidden;});
+  const open=['spot-picker','app-dialog','trip-calendar','v411-travel','region-setup'].some(id=>{const el=document.getElementById(id);return el&&!el.hidden;});
   document.body.classList.toggle('overlay-open',open);
  };
  function paintError(on){
@@ -784,8 +808,8 @@ body{background:radial-gradient(circle at 100% 0%,rgba(229,106,156,.18),transpar
     (() => {
       "use strict";
       const defaults = {
-        people: 3, days: 5, flight: 10000, hotel: 1800,
-        food: 1200, transport: 500, airport: 0, tickets: 0, shopping: 0, buffer: 10
+        people: 1, days: 5, flight: 0, hotel: 0,
+        food: 0, transport: 0, airport: 0, tickets: 0, shopping: 0, buffer: 10
       };
       const fields = Object.keys(defaults);
       const moneyFields = ['flight','hotel','food','transport','airport','tickets','shopping'];
@@ -1335,7 +1359,7 @@ body{background:radial-gradient(circle at 100% 0%,rgba(229,106,156,.18),transpar
         render();
         window.TripPlans?.noteBudget();
         const ticketNote=Number($('tickets').value)>0?'門票仍依目前行程裡已查證的票價估算。':'';
-        showToast(`已恢復預設：3 人、5 天、機票 10,000、住宿每晚 1,800、餐費 1,200、交通 500、預備金 10%。${ticketNote}全團約 ${$('grand-total').textContent}。旅行日期也回到 5 天，每日行程會跟著調整。`);
+        showToast(`已恢復預設：1 人、5 天，機票、住宿、餐費、交通與其他金額先以 0 計算，預備金 10%。${ticketNote}全團約 ${$('grand-total').textContent}。旅行日期也回到 5 天，每日行程會跟著調整。`);
       });
       document.getElementById('currency-twd').addEventListener('click',()=>setCurrency('TWD'));
       document.getElementById('currency-jpy').addEventListener('click',()=>setCurrency('JPY'));
@@ -1583,7 +1607,17 @@ body{background:radial-gradient(circle at 100% 0%,rgba(229,106,156,.18),transpar
  const storeKey='japanTripPlannerV2';
  const PLANS_KEY='japanTripPlansV1';
  const escapeHTML=str=>String(str).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
- const initial=()=>({flight:{tw:'TPE',arr:'KIX',dep:'KIX',twReturn:'TPE',arrTime:'13:30',depTime:'18:00',entry:90,transfer:90,checkin:180,mode:'transit'},stops:[{pref:'大阪府',days:3},{pref:'京都府',days:2}],prefs:['文化','美食','自然'],days:[],dates:{start:'',end:''},settings:{start:'09:00',duration:90,transfer:0,base:'',coords:'',smart:true,pace:'normal',must:''}});
+ const initial=()=>({flight:{tw:'TPE',arr:'KIX',dep:'KIX',twReturn:'TPE',arrTime:'13:30',depTime:'18:00',entry:90,transfer:90,transferBack:90,checkin:180,mode:'transit',arrCustom:false,depCustom:false,transferCustom:false,transferBackCustom:false},stops:[{pref:'大阪府',days:3},{pref:'京都府',days:2}],prefs:['文化','美食','自然'],days:[],dates:{start:'',end:''},regionSetupDone:false,settings:{start:'09:00',duration:90,transfer:0,base:'',coords:'',smart:true,pace:'normal',must:''}});
+ function adoptFlight(raw){
+  const before=raw&&typeof raw==='object'?raw:{};
+  const flight={...initial().flight,...before};
+  if(!('arrCustom' in before))flight.arrCustom=true;
+  if(!('depCustom' in before))flight.depCustom=true;
+  if(!('transferCustom' in before))flight.transferCustom=true;
+  if(!('transferBackCustom' in before))flight.transferBackCustom=true;
+  if(!('transferBack' in before)||!Number.isFinite(Number(before.transferBack)))flight.transferBack=Number(flight.transfer)||90;
+  return flight;
+ }
  const PLACE_SHORT={'大阪府':'大阪','京都府':'京都','東京都':'東京','北海道':'北海道','沖繩縣':'沖繩','福岡縣':'福岡','奈良縣':'奈良','兵庫縣':'神戶','愛知縣':'名古屋','神奈川縣':'橫濱','広島縣':'廣島','廣島縣':'廣島'};
  function suggestPlanName(data){
   const year=String(data?.dates?.start||'').slice(0,4);
@@ -1609,7 +1643,8 @@ body{background:radial-gradient(circle at 100% 0%,rgba(229,106,156,.18),transpar
  if(!state||!Array.isArray(state.stops)||!Array.isArray(state.days))state=initial();
  state.settings={...initial().settings,...(state.settings||{})};
  if(!/^\d{2}:\d{2}$/.test(String(state.settings.start||'')))state.settings.start='09:00';
- state.flight={...initial().flight,...(state.flight||{})};
+ state.flight=adoptFlight(state.flight);
+ if(!('regionSetupDone' in state))state.regionSetupDone=state.stops.length>0;
  if(!state.dates||typeof state.dates!=='object')state.dates={start:'',end:''};
  let paintingPlans=false;
  function renderPlanSelect(){
@@ -1661,7 +1696,7 @@ body{background:radial-gradient(circle at 100% 0%,rgba(229,106,156,.18),transpar
   return true;
  }
  byId('export-trip').addEventListener('click',()=>{
-  const blob=new Blob([JSON.stringify({format:'japan-trip-planner',version:'4.17',exportedAt:new Date().toISOString(),data:state,budget:window.TripBudget?.snapshot?.()||null},null,2)],{type:'application/json'});
+  const blob=new Blob([JSON.stringify({format:'japan-trip-planner',version:'4.18',exportedAt:new Date().toISOString(),data:state,budget:window.TripBudget?.snapshot?.()||null},null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='japan-trip-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
   showMessage('行程備份已下載，請妥善保管 JSON 檔案。');
  });
@@ -1683,25 +1718,47 @@ body{background:radial-gradient(circle at 100% 0%,rgba(229,106,156,.18),transpar
    }
    clearRemovedDays();
    state=restored;activeDay=0;
-   state.settings={...initial().settings,...(state.settings||{})};
-   if(!/^\d{2}:\d{2}$/.test(String(state.settings.start||'')))state.settings.start='09:00';
-   state.flight={...initial().flight,...(state.flight||{})};
-   if(!state.dates||typeof state.dates!=='object')state.dates={start:'',end:''};
+   normalizeState();
    ensureDates();save();writeSettings();writeFlight();locationStatus();renderStops();renderPrefs();renderDays();
    if(payload&&payload.budget)window.TripBudget?.restore(payload.budget);
    window.TripTickets?.refresh?.();
    showMessage('已還原行程備份。缺少的航班欄位已用預設值補上，並更新了航班表單。');
   }catch(err){console.error(err);showMessage('無法讀取 JSON 備份檔。')}
  });
- const flightIds={tw:'flight-tw',arr:'flight-arr',dep:'flight-dep',twReturn:'flight-tw-return',arrTime:'flight-arr-time',depTime:'flight-dep-time',entry:'flight-entry',transfer:'flight-transfer',checkin:'flight-checkin',mode:'flight-mode'};
- function readFlight(){for(const [key,id] of Object.entries(flightIds)){const raw=byId(id).value;state.flight[key]=['entry','transfer','checkin'].includes(key)?Math.max(0,Number(raw)||0):raw;}save();}
- function writeFlight(){for(const [key,id] of Object.entries(flightIds))byId(id).value=String(state.flight[key]??'');}
- for(const id of Object.values(flightIds))byId(id).addEventListener('change',()=>{readFlight();renderDays()});
- for(const id of ['flight-entry','flight-transfer','flight-checkin','flight-arr-time','flight-dep-time'])byId(id).addEventListener('input',()=>{readFlight();renderDays();});
- writeFlight();
+ const flightIds={tw:'flight-tw',arr:'flight-arr',dep:'flight-dep',twReturn:'flight-tw-return',arrTime:'flight-arr-time',depTime:'flight-dep-time',entry:'flight-entry',transfer:'flight-transfer',transferBack:'flight-transfer-back',checkin:'flight-checkin',mode:'flight-mode'};
+ const flightNumbers=['entry','transfer','transferBack','checkin'];
+ let paintingFlight=false;
+ function readFlight(){for(const [key,id] of Object.entries(flightIds)){const raw=byId(id).value;state.flight[key]=flightNumbers.includes(key)?Math.max(0,Math.min(360,Number(raw)||0)):raw;}save();}
+ function writeFlight(){
+  paintingFlight=true;
+  paintAirportSelects();
+  for(const [key,id] of Object.entries(flightIds)){if(key==='arr'||key==='dep')continue;const el=byId(id);if(el)el.value=String(state.flight[key]??'');}
+  paintingFlight=false;
+  const note=byId('airport-suggest-note');
+  if(note){
+   const first=state.stops[0]?.pref||'', last=state.stops[state.stops.length-1]?.pref||'';
+   const a=airportAdvice(first), d=airportAdvice(last);
+   const openJaw=state.flight.arr&&state.flight.dep&&state.flight.arr!==state.flight.dep;
+   note.textContent=`抵達依${first||'第一個地區'}建議 ${airportNames[a.primary]||a.primary}（${a.primary}，預留約 ${minutesFor(first,a.primary)} 分鐘進市區），回程依${last||'最後一個地區'}建議 ${airportNames[d.primary]||d.primary}（${d.primary}，預留約 ${minutesFor(last,d.primary)} 分鐘到機場）。${openJaw?'目前是不同機場進出。':''}下拉選單可改；你改過之後，地區變動會先詢問。`;
+  }
+ }
+ for(const id of Object.values(flightIds))byId(id).addEventListener('change',()=>{
+  if(paintingFlight)return;
+  if(id==='flight-arr')state.flight.arrCustom=true;
+  if(id==='flight-dep')state.flight.depCustom=true;
+  if(id==='flight-transfer')state.flight.transferCustom=true;
+  if(id==='flight-transfer-back')state.flight.transferBackCustom=true;
+  readFlight();renderDays();
+ });
+ for(const id of ['flight-entry','flight-transfer','flight-transfer-back','flight-checkin','flight-arr-time','flight-dep-time'])byId(id).addEventListener('input',()=>{
+  if(paintingFlight)return;
+  if(id==='flight-transfer')state.flight.transferCustom=true;
+  if(id==='flight-transfer-back')state.flight.transferBackCustom=true;
+  readFlight();renderDays();
+ });
  const clockMinutes=t=>{const m=/^(\d{2}):(\d{2})$/.exec(t||'');return m?Number(m[1])*60+Number(m[2]):0;};
  const flightFirstStart=()=>clockMinutes(state.flight.arrTime)+Number(state.flight.entry)+Number(state.flight.transfer);
- const flightLastCutoff=()=>clockMinutes(state.flight.depTime)-Number(state.flight.checkin)-Number(state.flight.transfer);
+ const flightLastCutoff=()=>clockMinutes(state.flight.depTime)-Number(state.flight.checkin)-Number(state.flight.transferBack??state.flight.transfer);
  // Day 1 cannot start before immigration and airport-to-city transfer are complete.
  const effectiveDayStart=di=>Math.max(getStartMinutes(),di===0?flightFirstStart():0);
  const airportNames={KIX:'關西國際機場',NRT:'成田國際機場',HND:'羽田機場',NGO:'中部國際機場',FUK:'福岡機場',CTS:'新千歲機場',OKA:'那霸機場',ITM:'大阪國際機場',UKB:'神戶機場',HIJ:'廣島機場',SDJ:'仙台機場',KOJ:'鹿兒島機場',KMJ:'熊本機場',TAK:'高松機場',MYJ:'松山機場',OIT:'大分機場',NGS:'長崎機場',KMQ:'小松機場',HKD:'函館機場',ASJ:'奄美機場',ISG:'新石垣機場',MMY:'宮古機場'};
@@ -1722,7 +1779,7 @@ body{background:radial-gradient(circle at 100% 0%,rgba(229,106,156,.18),transpar
   };
   const arriveWhen=window.TripDates.formatMD(state.dates?.start),leaveWhen=window.TripDates.formatMD(state.dates?.end);
   if(di===0){const h=document.createElement('strong');h.textContent='✈️ 抵達日'+(arriveWhen?' '+arriveWhen:'')+' · '+f.tw+' → '+f.arr;p.append(h);const t=document.createElement('p');t.textContent='日本 '+f.arrTime+' 抵達｜入境 '+f.entry+' 分＋進市區 '+f.transfer+' 分｜建議 '+minutesClock(flightFirstStart())+' 後開始市區行程（估算）';p.append(t);addRoute('📍 機場 → 飯店 Google Maps 導航',f.arr,true);}
-  if(di===last){const h=document.createElement('strong');h.textContent='🛫 回程日'+(leaveWhen?' '+leaveWhen:'')+' · '+f.dep+' → '+f.twReturn;p.append(h);const t=document.createElement('p');t.textContent='日本 '+f.depTime+' 起飛｜提前 '+f.checkin+' 分到機場＋交通 '+f.transfer+' 分｜建議最晚 '+minutesClock(Math.max(0,flightLastCutoff()))+' 從市區出發（估算）';p.append(t);addRoute('📍 飯店 → 回程機場 Google Maps 導航',f.dep,false);}
+  if(di===last){const backMin=Number(f.transferBack??f.transfer)||0;const h=document.createElement('strong');h.textContent='🛫 回程日'+(leaveWhen?' '+leaveWhen:'')+' · '+f.dep+' → '+f.twReturn;p.append(h);const t=document.createElement('p');t.textContent='日本 '+f.depTime+' 起飛｜提前 '+f.checkin+' 分到機場＋交通 '+backMin+' 分｜建議最晚 '+minutesClock(Math.max(0,flightLastCutoff()))+' 從市區出發（估算）';p.append(t);addRoute('📍 飯店 → 回程機場 Google Maps 導航',f.dep,false);}
   wrap.append(p);
  }
  function readSettings(){const start=byId('day-start-time').value;state.settings={start:/^\d{2}:\d{2}$/.test(start)?start:'09:00',duration:Number(byId('trip-duration').value),transfer:0,base:byId('trip-base').value.trim(),coords:byId('trip-coords').value.trim(),smart:byId('trip-smart').checked,pace:byId('trip-pace').value,must:byId('trip-must').value};save()}
@@ -1839,6 +1896,8 @@ body{background:radial-gradient(circle at 100% 0%,rgba(229,106,156,.18),transpar
   }
  }
  function publishFromStops(mutate){
+  const oldFirst=state.stops[0]?.pref||'';
+  const oldLast=state.stops[state.stops.length-1]?.pref||'';
   clearRemovedDays();
   const hadDays=state.days.length>0;
   const snap=state.stops.map(s=>({...s}));
@@ -1873,6 +1932,7 @@ body{background:radial-gradient(circle at 100% 0%,rgba(229,106,156,.18),transpar
   writeFlightDates();
   if(activeDay>=state.days.length)activeDay=Math.max(0,state.days.length-1);
   save();renderStops();renderDays();
+  void syncSuggestedAirports(oldFirst, oldLast);
  }
  function undoShorten(){
   if(!undoSnapshot)return;
@@ -2315,7 +2375,7 @@ body{background:radial-gradient(circle at 100% 0%,rgba(229,106,156,.18),transpar
  });
  byId('generate-trip').addEventListener('click',generate);
  byId('manual-trip').addEventListener('click',createManualTrip);
- byId('reset-trip').addEventListener('click',async()=>{const ok=await openAppDialog({title:'重設行程',message:'確定要重設行程規劃嗎？景點會清空，旅行日期會回到 5 天，並與旅費天數一起更新。',okText:'重設行程'});if(!ok)return;clearRemovedDays();state=initial();activeDay=0;ensureDates();save();writeSettings();writeFlight();locationStatus();renderStops();renderPrefs();renderDays();showMessage('已重設行程，日期已回到 5 天。');});
+ byId('reset-trip').addEventListener('click',async()=>{const ok=await openAppDialog({title:'重設行程',message:'確定要重設行程規劃嗎？景點會清空，旅行日期會回到 5 天（大阪 3 天、京都 2 天），並與旅費天數一起更新。接著可以重選地區。',okText:'重設行程'});if(!ok)return;clearRemovedDays();state=initial();activeDay=0;ensureDates();save();writeSettings();writeFlight();locationStatus();renderStops();renderPrefs();renderDays();showMessage('已重設行程，日期已回到 5 天。');openRegionSetup();});
  byId('copy-trip').addEventListener('click',async()=>{
   if(!state.days.length){showMessage('請先產生行程。');return;}
   const range=window.TripDates.rangeText();
@@ -2323,13 +2383,257 @@ body{background:radial-gradient(circle at 100% 0%,rgba(229,106,156,.18),transpar
   try{await navigator.clipboard.writeText(content);showMessage('行程已複製！')}catch{const area=document.createElement('textarea');area.value=content;document.body.append(area);area.select();try{const ok=document.execCommand('copy');showMessage(ok?'行程已複製！':'無法複製，請手動選取文字。')}catch{showMessage('無法複製，請手動選取文字。')}area.remove()}
  });
  byId('print-trip').addEventListener('click',()=>{switchTab('planner');window.print()});
+ const AIRPORT_ORDER=['KIX','ITM','UKB','NRT','HND','NGO','CTS','HKD','FUK','OKA','HIJ','SDJ','KOJ','KMJ','NGS','OIT','TAK','MYJ','KMQ','ASJ','ISG','MMY'];
+ const AIRPORT_GUIDE={
+  '北海道':['CTS',['CTS','HKD'],{CTS:50,HKD:40}],
+  '青森縣':['SDJ',['SDJ','CTS','HND'],{SDJ:160,CTS:180,HND:90}],
+  '岩手縣':['SDJ',['SDJ','HND','NRT'],{SDJ:100,HND:80,NRT:100}],
+  '宮城縣':['SDJ',['SDJ','HND','NRT'],{SDJ:30,HND:70,NRT:90}],
+  '秋田縣':['SDJ',['SDJ','KMQ','HND'],{SDJ:150,KMQ:160,HND:90}],
+  '山形縣':['SDJ',['SDJ','HND','NRT'],{SDJ:80,HND:80,NRT:100}],
+  '福島縣':['SDJ',['SDJ','HND','NRT'],{SDJ:70,HND:80,NRT:90}],
+  '茨城縣':['NRT',['NRT','HND'],{NRT:50,HND:90}],
+  '栃木縣':['NRT',['NRT','HND'],{NRT:100,HND:90}],
+  '群馬縣':['HND',['HND','NRT'],{HND:100,NRT:120}],
+  '埼玉縣':['HND',['HND','NRT'],{HND:50,NRT:80}],
+  '千葉縣':['NRT',['NRT','HND'],{NRT:40,HND:60}],
+  '東京都':['NRT',['NRT','HND'],{NRT:80,HND:35}],
+  '神奈川縣':['HND',['HND','NRT'],{HND:30,NRT:90}],
+  '新潟縣':['HND',['HND','NRT','NGO'],{HND:130,NRT:150,NGO:140}],
+  '富山縣':['KMQ',['KMQ','NGO','KIX'],{KMQ:70,NGO:120,KIX:150}],
+  '石川縣':['KMQ',['KMQ','NGO'],{KMQ:40,NGO:90}],
+  '福井縣':['KMQ',['KMQ','NGO','KIX'],{KMQ:70,NGO:80,KIX:120}],
+  '山梨縣':['HND',['HND','NRT','NGO'],{HND:100,NRT:120,NGO:150}],
+  '長野縣':['NGO',['NGO','HND','NRT'],{NGO:120,HND:150,NRT:160}],
+  '岐阜縣':['NGO',['NGO','KIX'],{NGO:50,KIX:120}],
+  '靜岡縣':['NGO',['NGO','HND','NRT'],{NGO:60,HND:80,NRT:100}],
+  '愛知縣':['NGO',['NGO','KIX','HND'],{NGO:40,KIX:100,HND:90}],
+  '三重縣':['KIX',['KIX','NGO','ITM'],{KIX:80,NGO:70,ITM:90}],
+  '滋賀縣':['KIX',['KIX','ITM','UKB'],{KIX:90,ITM:80,UKB:100}],
+  '京都府':['KIX',['KIX','ITM','UKB'],{KIX:95,ITM:75,UKB:100}],
+  '大阪府':['KIX',['KIX','ITM','UKB'],{KIX:70,ITM:35,UKB:45}],
+  '兵庫縣':['KIX',['KIX','ITM','UKB'],{KIX:75,ITM:40,UKB:25}],
+  '奈良縣':['KIX',['KIX','ITM','UKB'],{KIX:70,ITM:60,UKB:80}],
+  '和歌山縣':['KIX',['KIX','ITM'],{KIX:60,ITM:80}],
+  '鳥取縣':['HIJ',['HIJ','KIX'],{HIJ:120,KIX:150}],
+  '島根縣':['HIJ',['HIJ','KIX'],{HIJ:120,KIX:180}],
+  '岡山縣':['HIJ',['HIJ','KIX'],{HIJ:70,KIX:120}],
+  '廣島縣':['HIJ',['HIJ','FUK','KIX'],{HIJ:40,FUK:90,KIX:140}],
+  '山口縣':['HIJ',['HIJ','FUK'],{HIJ:80,FUK:70}],
+  '德島縣':['TAK',['TAK','KIX','ITM'],{TAK:70,KIX:80,ITM:90}],
+  '香川縣':['TAK',['TAK','KIX'],{TAK:30,KIX:90}],
+  '愛媛縣':['MYJ',['MYJ','TAK','FUK'],{MYJ:30,TAK:90,FUK:80}],
+  '高知縣':['TAK',['TAK','MYJ','FUK'],{TAK:120,MYJ:100,FUK:90}],
+  '福岡縣':['FUK',['FUK','NGS'],{FUK:25,NGS:80}],
+  '佐賀縣':['FUK',['FUK','NGS'],{FUK:50,NGS:70}],
+  '長崎縣':['NGS',['NGS','FUK'],{NGS:40,FUK:80}],
+  '熊本縣':['KMJ',['KMJ','FUK'],{KMJ:40,FUK:70}],
+  '大分縣':['OIT',['OIT','FUK'],{OIT:40,FUK:80}],
+  '宮崎縣':['KOJ',['KOJ','FUK','OIT'],{KOJ:80,FUK:100,OIT:70}],
+  '鹿兒島縣':['KOJ',['KOJ','FUK'],{KOJ:40,FUK:90}],
+  '沖繩縣':['OKA',['OKA','ISG','MMY','ASJ'],{OKA:30,ISG:20,MMY:20,ASJ:25}]
+ };
+ function airportAdvice(pref){
+  const row=AIRPORT_GUIDE[pref];
+  if(!row)return {primary:'HND',nearby:['HND','NRT'],times:{HND:80,NRT:90}};
+  return {primary:row[0],nearby:row[1],times:row[2]};
+ }
+ function minutesFor(pref,code){const n=airportAdvice(pref).times[code];return Number.isFinite(n)?n:90;}
+ function paintAirportSelects(){
+  for(const which of ['arr','dep']){
+   const sel=byId(flightIds[which]);if(!sel)continue;
+   const pref=which==='arr'?state.stops[0]?.pref:state.stops[state.stops.length-1]?.pref;
+   const advice=airportAdvice(pref);
+   const suggested=[advice.primary,...(advice.nearby||[])].filter((code,i,arr)=>AIRPORT_ORDER.includes(code)&&arr.indexOf(code)===i);
+   const current=AIRPORT_ORDER.includes(state.flight[which])?state.flight[which]:advice.primary;
+   sel.replaceChildren();
+   const near=document.createElement('optgroup');near.label=which==='arr'?`建議抵達（${pref||'第一個地區'}）`:`建議回程（${pref||'最後一個地區'}）`;
+   const rest=document.createElement('optgroup');rest.label='其他機場';
+   for(const code of AIRPORT_ORDER){
+    const opt=document.createElement('option');opt.value=code;opt.textContent=`${airportNames[code]||code}（${code}）`;
+    (suggested.includes(code)?near:rest).append(opt);
+   }
+   sel.append(near,rest);sel.value=current;
+  }
+ }
+ function syncSuggestedAirports(oldFirst,oldLast){
+  const first=state.stops[0]?.pref, last=state.stops[state.stops.length-1]?.pref;
+  if(!first||!last)return Promise.resolve();
+  const jobs=[];
+  let changed=false;
+  function queue(which,prevPref,nextPref,customKey,timeKey,timeFlag){
+   if(prevPref===nextPref)return;
+   const advice=airportAdvice(nextPref);
+   if(!state.flight[customKey]){
+    state.flight[which]=advice.primary;
+    if(!state.flight[timeFlag])state.flight[timeKey]=minutesFor(nextPref,advice.primary);
+    changed=true;
+    return;
+   }
+   if(!prevPref||state.flight[which]===advice.primary)return;
+   jobs.push({which,nextPref,advice,customKey,timeKey,timeFlag});
+  }
+  queue('arr',oldFirst,first,'arrCustom','transfer','transferCustom');
+  queue('dep',oldLast,last,'depCustom','transferBack','transferBackCustom');
+  const finish=()=>{if(changed){writeFlight();save();renderDays();}else paintAirportSelects();};
+  if(!jobs.length){finish();return Promise.resolve();}
+  return (async()=>{
+   for(const job of jobs){
+    const label=job.which==='arr'?'抵達':'回程';
+    const ok=await openAppDialog({title:`更新${label}機場？`,message:`${job.which==='arr'?'第一個':'最後一個'}地區改成${job.nextPref}。建議${label}機場是${airportNames[job.advice.primary]||job.advice.primary}（${job.advice.primary}）。要換成建議機場嗎？維持目前會保留 ${state.flight[job.which]}。`,okText:'改成建議',cancelText:'維持目前'});
+    if(!ok){
+     if(!state.flight[job.timeFlag]){state.flight[job.timeKey]=minutesFor(job.nextPref,state.flight[job.which]);changed=true;}
+     continue;
+    }
+    state.flight[job.which]=job.advice.primary;
+    state.flight[job.customKey]=false;
+    if(!state.flight[job.timeFlag])state.flight[job.timeKey]=minutesFor(job.nextPref,job.advice.primary);
+    changed=true;
+   }
+   finish();
+  })();
+ }
+ let regionOrder=[];
+ let regionSetupOpener=null;
+ function selectedRegionDraft(){
+  const list=byId('region-setup-list');
+  const rows=[...list.querySelectorAll('.region-choice')];
+  return regionOrder.map(pref=>{
+   const row=rows.find(el=>el.querySelector('input[type="checkbox"]').value===pref);
+   const box=row?.querySelector('input[type="checkbox"]');
+   const days=row?.querySelector('input[type="number"]');
+   return box&&box.checked?{pref,days:Number(days?.value)}:null;
+  }).filter(Boolean);
+ }
+ function paintRegionOrder(){
+  const list=byId('region-setup-list');
+  list.querySelectorAll('.region-choice').forEach(row=>{
+   const pref=row.querySelector('input[type="checkbox"]').value;
+   const idx=regionOrder.indexOf(pref);
+   row.querySelector('.region-order').textContent=idx>=0?String(idx+1):'';
+  });
+ }
+ function closeRegionSetup(){
+  const root=byId('region-setup');
+  if(!root||root.hidden)return;
+  root.hidden=true;
+  document.body.style.overflow='';
+  window.syncOverlayNav?.();
+  if(regionSetupOpener&&regionSetupOpener.isConnected)regionSetupOpener.focus();
+  regionSetupOpener=null;
+ }
+ function openRegionSetup(){
+  const root=byId('region-setup');
+  const list=byId('region-setup-list');
+  if(!root||!list||!root.hidden)return;
+  regionSetupOpener=document.activeElement;
+  regionOrder=state.stops.map(s=>s.pref);
+  const daysByPref=Object.fromEntries(state.stops.map(s=>[s.pref,s.days]));
+  list.replaceChildren();
+  byId('region-setup-error').textContent='';
+  for(const [groupName,names] of PREFECTURE_REGIONS){
+   const section=document.createElement('section');section.className='region-group';
+   const h=document.createElement('h3');h.textContent=groupName;section.append(h);
+   for(const name of names){
+    const row=document.createElement('div');row.className='region-choice';
+    const box=document.createElement('input');box.type='checkbox';box.value=name;box.checked=regionOrder.includes(name);
+    const text=document.createElement('label');
+    const city=PREFECTURES.find(p=>p.pref===name)?.city||'';
+    text.textContent=city&&city!==name?`${name}（${city}）`:name;
+    text.prepend(box);
+    const badge=document.createElement('span');badge.className='region-order';badge.setAttribute('aria-hidden','true');
+    const days=document.createElement('input');days.type='number';days.min='1';days.max='30';days.step='1';days.inputMode='numeric';days.value=String(daysByPref[name]||2);days.disabled=!box.checked;days.setAttribute('aria-label',name+' 停留天數');
+    box.addEventListener('change',()=>{
+     if(box.checked){if(!regionOrder.includes(name))regionOrder.push(name);}
+     else regionOrder=regionOrder.filter(p=>p!==name);
+     days.disabled=!box.checked;
+     paintRegionOrder();
+    });
+    row.append(text,badge,days);section.append(row);
+   }
+   list.append(section);
+  }
+  paintRegionOrder();
+  root.hidden=false;
+  document.body.style.overflow='hidden';
+  window.syncOverlayNav?.();
+  const panel=root.querySelector('[role="dialog"]');
+  root.onkeydown=e=>{
+   if(root.hidden)return;
+   if(e.key==='Escape'){e.preventDefault();e.stopPropagation();skipRegionSetup();return;}
+   if(e.key!=='Tab')return;
+   const items=[...panel.querySelectorAll('button,input')].filter(el=>!el.disabled);
+   if(!items.length){e.preventDefault();return;}
+   const first=items[0],last=items[items.length-1];
+   if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+   else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+  };
+  byId('region-setup-skip').onclick=skipRegionSetup;
+  byId('region-setup-ok').onclick=()=>{void confirmRegionSetup();};
+  root.onclick=e=>{if(e.target===root)skipRegionSetup();};
+  (list.querySelector('input[type="checkbox"]')||byId('region-setup-ok')).focus();
+ }
+ function skipRegionSetup(){
+  state.regionSetupDone=true;
+  if(!state.stops.length){
+   state.stops=[{pref:'大阪府',days:3},{pref:'京都府',days:2}];
+   state.days=[];
+   ensureDates();
+  }
+  save();renderStops();renderDays();
+  closeRegionSetup();
+ }
+ async function confirmRegionSetup(){
+  const err=byId('region-setup-error');
+  const next=selectedRegionDraft();
+  if(!next.length){err.textContent='請至少勾選一個都道府縣，或按「先略過」。';return;}
+  if(next.some(s=>!Number.isInteger(s.days)||s.days<1||s.days>30)){err.textContent='每個地區請填 1～30 的整數天數。';return;}
+  const total=next.reduce((a,s)=>a+s.days,0);
+  if(total>60){err.textContent='單次行程上限為 60 天，請減少天數。';return;}
+  err.textContent='';
+  const oldFirst=state.stops[0]?.pref||'';
+  const oldLast=state.stops[state.stops.length-1]?.pref||'';
+  clearRemovedDays();
+  const pool={};
+  for(const day of state.days){(pool[day.pref]||=[]).push(day);}
+  state.stops=next.map(s=>({pref:s.pref,days:s.days}));
+  state.days=[];
+  for(const stop of state.stops){
+   const block=pool[stop.pref]||[];
+   for(let i=0;i<stop.days;i++){
+    const prev=block[i];
+    state.days.push(prev?{...prev,pref:stop.pref,day:i+1,spots:(prev.spots||[]).map(s=>({...s}))}:{pref:stop.pref,day:i+1,spots:[]});
+   }
+  }
+  state.regionSetupDone=true;
+  const cur=window.TripDates.get();
+  const start=window.TripDates.parse(cur.start)?cur.start:window.TripDates.today();
+  const end=window.TripDates.addDays(start,Math.max(1,state.days.length)-1);
+  state.dates={start,end};
+  window.TripDates.set(start,end,'planner');
+  writeFlightDates();
+  if(activeDay>=state.days.length)activeDay=0;
+  save();renderStops();renderDays();
+  closeRegionSetup();
+  await syncSuggestedAirports(oldFirst,oldLast);
+  showMessage(`已依 ${state.stops.map(s=>s.pref).join('、')} 更新行程，共 ${state.days.length} 天。抵達與回程機場會依第一個和最後一個地區建議。`);
+ }
+ function maybeOfferRegions(){
+  const view=byId('planner-view');
+  if(!view||view.hidden)return;
+  const root=byId('region-setup');
+  if(root&&!root.hidden)return;
+  if(state.regionSetupDone&&state.stops.length)return;
+  openRegionSetup();
+ }
  const tabBudget=byId('tab-budget'),tabPlanner=byId('tab-planner');
- function switchTab(which){const planner=which==='planner';byId('planner-view').hidden=!planner;byId('budget-view').hidden=planner;tabBudget.classList.toggle('active',!planner);tabPlanner.classList.toggle('active',planner);tabBudget.setAttribute('aria-selected',String(!planner));tabPlanner.setAttribute('aria-selected',String(planner));try{history.replaceState(null,'',planner?'#planner':'#budget')}catch{}}
+ function switchTab(which){const planner=which==='planner';byId('planner-view').hidden=!planner;byId('budget-view').hidden=planner;tabBudget.classList.toggle('active',!planner);tabPlanner.classList.toggle('active',planner);tabBudget.setAttribute('aria-selected',String(!planner));tabPlanner.setAttribute('aria-selected',String(planner));try{history.replaceState(null,'',planner?'#planner':'#budget')}catch{}if(planner)maybeOfferRegions();}
  tabBudget.addEventListener('click',()=>switchTab('budget'));tabPlanner.addEventListener('click',()=>switchTab('planner'));
  function normalizeState(){
   state.settings={...initial().settings,...(state.settings||{})};
   if(!/^\d{2}:\d{2}$/.test(String(state.settings.start||'')))state.settings.start='09:00';
-  state.flight={...initial().flight,...(state.flight||{})};
+  state.flight=adoptFlight(state.flight);
+  if(!('regionSetupDone' in state))state.regionSetupDone=state.stops.length>0;
   if(!state.dates||typeof state.dates!=='object')state.dates={start:'',end:''};
  }
  function applyActivePlan(){
@@ -2341,10 +2645,11 @@ body{background:radial-gradient(circle at 100% 0%,rgba(229,106,156,.18),transpar
   ensureDates();writeSettings();writeFlight();locationStatus();renderStops();renderPrefs();renderDays();
   if(plan?.budget)window.TripBudget?.restore(plan.budget);
   renderPlanSelect();
+  maybeOfferRegions();
  }
  async function createPlan(){
   const suggested=suggestPlanName(state)||'新的旅行計畫';
-  const name=await openAppDialog({title:'新增旅行計畫',message:'例如「2027 大阪京都 9 天」或「東京 5 天」。新計畫會從空白的 5 天行程開始，目前這份會先存起來。',label:'計畫名稱',input:true,value:suggested,okText:'建立',validate:v=>v.trim()&&v.trim().length<=40?'':'請輸入 1～40 個字的名稱。'});
+  const name=await openAppDialog({title:'新增旅行計畫',message:'例如「2027 大阪京都 9 天」或「東京 5 天」。新計畫先用 5 天範例（大阪 3 天、京都 2 天），接著請你選擇地區。目前這份會先存起來。',label:'計畫名稱',input:true,value:suggested,okText:'建立',validate:v=>v.trim()&&v.trim().length<=40?'':'請輸入 1～40 個字的名稱。'});
   if(name===null)return;
   save();
   clearRemovedDays();
@@ -2359,6 +2664,7 @@ body{background:radial-gradient(circle at 100% 0%,rgba(229,106,156,.18),transpar
   window.TripBudget?.restore(null);
   save();writeSettings();writeFlight();locationStatus();renderStops();renderPrefs();renderDays();
   showMessage('已建立「'+plan.name+'」。');
+  openRegionSetup();
  }
  async function renamePlan(){
   const plan=plansDoc.plans.find(p=>p.id===plansDoc.activeId);if(!plan)return;
@@ -2387,12 +2693,15 @@ body{background:radial-gradient(circle at 100% 0%,rgba(229,106,156,.18),transpar
   save();
  });
  byId('plan-new').addEventListener('click',createPlan);
+ byId('open-region-setup').addEventListener('click',openRegionSetup);
  byId('plan-rename').addEventListener('click',renamePlan);
  byId('plan-delete').addEventListener('click',deletePlan);
  const note=byId('spot-data-note');
  if(note)note.textContent=`已核對官網的景點 ${Object.keys(SPOT_META).length} 筆（${SPOT_DATA_DATE}）。沒查到的營業時間、門票與座標留白。既有參考座標仍可拿來估算直線距離。`;
  normalizeState();
- ensureDates();writeSettings();writeFlight();locationStatus();renderStops();renderPrefs();renderDays();
+ ensureDates();
+ void syncSuggestedAirports('','');
+ writeSettings();writeFlight();locationStatus();renderStops();renderPrefs();renderDays();
  const activePlan=plansDoc.plans.find(p=>p.id===plansDoc.activeId);
  if(activePlan?.budget)window.TripBudget?.restore(activePlan.budget);
  else if(!activePlan?.nameCustom)activePlan.name=suggestPlanName(state);
@@ -2585,9 +2894,11 @@ for(const btn of document.querySelectorAll('[data-v411-tab]'))btn.addEventListen
 function updateTabs(){document.querySelectorAll('[data-v411-tab]').forEach(b=>b.setAttribute('aria-current',by('tab-'+b.dataset.v411Tab)?.classList.contains('active')?'page':'false'))}
 by('tab-budget').addEventListener('click',updateTabs);by('tab-planner').addEventListener('click',updateTabs);updateTabs();
 const jpy=by('v411-jpy'),rate=by('v411-rate'),result=by('v411-twd');
-try{const saved=localStorage.getItem('japan-trip-manual-rate');if(saved&&Number(saved)>0&&Number(saved)<=10)rate.value=saved}catch{}
-function exchange(){const amount=Number(jpy.value),r=Number(rate.value);result.textContent=Number.isFinite(amount)&&amount>=0&&Number.isFinite(r)&&r>0&&r<=10?'NT$ '+Math.round(amount*r).toLocaleString('zh-TW'):'請輸入有效金額與匯率'}
-jpy.addEventListener('input',exchange);rate.addEventListener('input',()=>{exchange();const r=Number(rate.value);if(r>0&&r<=10)try{localStorage.setItem('japan-trip-manual-rate',String(r))}catch{}});exchange();
+if(jpy&&rate&&result){
+ try{const saved=localStorage.getItem('japan-trip-manual-rate');if(saved&&Number(saved)>0&&Number(saved)<=10)rate.value=saved}catch{}
+ function exchange(){const amount=Number(jpy.value),r=Number(rate.value);result.textContent=Number.isFinite(amount)&&amount>=0&&Number.isFinite(r)&&r>0&&r<=10?'NT$ '+Math.round(amount*r).toLocaleString('zh-TW'):'請輸入有效金額與匯率'}
+ jpy.addEventListener('input',exchange);rate.addEventListener('input',()=>{exchange();const r=Number(rate.value);if(r>0&&r<=10)try{localStorage.setItem('japan-trip-manual-rate',String(r))}catch{}});exchange();
+}
 })();
 </script>
 <script>
