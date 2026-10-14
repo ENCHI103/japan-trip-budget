@@ -55,7 +55,7 @@
     .hero-note p { margin: 4px 0 0; color: rgba(255,255,255,.76); font-size: 13px; }
     .hero-note .note-bottom { border-top: 1px solid rgba(255,255,255,.22); padding-top: 14px; margin-top: 22px; font-size: 13px; }
     .layout { display: grid; grid-template-columns: minmax(0, 1.04fr) minmax(0, .96fr); gap: 22px; align-items: start; }
-    .card { background: var(--panel); border: 1px solid rgba(35,54,42,.06); border-radius: 22px; padding: 23px; box-shadow: var(--shadow); min-width: 0; }
+    .card { background: var(--panel); border: 2px solid #e56a9c; border-top: 4px solid #c2185b; border-radius: 22px; padding: 23px; box-shadow: 0 10px 26px rgba(194, 24, 91, .12); min-width: 0; }
     .section-head { display: flex; justify-content: space-between; align-items: start; gap: 12px; margin-bottom: 20px; }
     h2 { font-size: 20px; margin: 0; letter-spacing: -.02em; }
     .sub { color: var(--muted); font-size: 13px; margin: 5px 0 0; }
@@ -242,6 +242,45 @@
 .v411-today p{margin:4px 0;line-height:1.5}
 .v411-today .v411-travel-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .v411-today .v4-link{font-size:14px;padding:10px 12px;min-height:44px;display:inline-flex;align-items:center}
+.hint.is-error,#flight-date-note.is-error{color:var(--danger);font-weight:750}
+#budget-jpy-rate[aria-invalid="true"]{border-color:var(--danger);box-shadow:0 0 0 3px rgba(180,35,24,.12)}
+#trip-undo{margin:0 0 10px}
+.app-dialog-panel p{white-space:pre-wrap}
+body.overlay-open .v411-mobile-nav{display:none!important}
+.picker-overlay{z-index:9000}
+@media(max-width:760px){
+  .picker-panel{max-height:calc(100dvh - 24px)}
+  .picker-bottom{padding-bottom:calc(18px + env(safe-area-inset-bottom))}
+}
+.card,
+.plan-bar,
+.v4-guide,
+.itinerary-day,
+.v411-travel-card,
+.v411-today,
+.day-switcher,
+.stop,
+.picker-card,
+.v49-chart-panel,
+.v49-lodging,
+.v49-cost-details,
+.v49-person,
+.v4-guide-grid article,
+.checklist li{
+  border:2px solid #e56a9c;
+  border-top:4px solid #c2185b;
+  box-shadow:0 8px 22px rgba(194,24,91,.12);
+}
+.plan-bar,.stop,.checklist li,.v49-person{border-width:2px}
+.hero-note{background:linear-gradient(160deg,#e989b0,#c2185b);box-shadow:0 12px 28px rgba(194,24,91,.2)}
+.brand-mark,.btn-primary,.tab-btn.active,.v48-toggle button.v48-selected,.day-pill[aria-current="page"]{background:#c2185b;border-color:#c2185b;color:#fff}
+.btn-primary:hover{background:#9b1348}
+.tab-btn{border:2px solid #e56a9c}
+.total-panel,.tag{background:#fff0f5}
+.total-label,.pill,.tag{color:#9b1348}
+.input-wrap:focus-within{border-color:#c2185b;box-shadow:0 0 0 3px rgba(194,24,91,.15)}
+a.sakura-link{border:2px solid #c2185b;color:#9b1348;background:#fff0f5;font-weight:800;text-decoration:none;border-radius:8px;padding:6px 10px;display:inline-flex;align-items:center}
+body{background:radial-gradient(circle at 100% 0%,rgba(229,106,156,.18),transparent 28rem),#fff8fa}
 </style>
 </head>
 <body>
@@ -293,8 +332,7 @@
               <button type="button" id="currency-jpy">日圓</button>
             </div>
             <label class="currency-rate" for="budget-jpy-rate">1 日圓＝<input id="budget-jpy-rate" type="number" min="0.0001" max="10" step="0.0001" value="0.22" inputmode="decimal" aria-describedby="currency-note"> 新台幣</label>
-            <button type="button" class="mini-btn" id="fetch-bot-rate">取得臺灣銀行匯率</button>
-            <a class="v4-link" href="https://rate.bot.com.tw/xrt?Lang=zh-TW" target="_blank" rel="noopener noreferrer">查看牌告</a>
+            <a class="sakura-link" id="view-bot-rate" href="https://rate.bot.com.tw/xrt?Lang=zh-TW" target="_blank" rel="noopener noreferrer">查看台銀牌告</a>
             <p id="currency-note" class="hint">總預算一律以新台幣顯示。切換日圓時，欄位金額會依這個匯率換算。</p>
           </div>
           <div class="field-grid">
@@ -470,6 +508,7 @@
   <section class="card" aria-label="每日行程結果">
    <div class="section-head"><div><h2>每日行程</h2><p class="sub">一次查看一天；使用上方 Day 切換日期，景點可搜尋、編輯與跨天移動。</p></div><span class="tag" id="trip-total">0 天</span></div>
    <p class="planner-status" id="trip-status" role="status" aria-live="polite">請先設定地區並按「自動產生每日行程」。</p>
+   <button type="button" id="trip-undo" class="mini-btn" hidden>復原縮短</button>
    <div class="v411-entry"><button type="button" id="v411-open" class="btn btn-primary">🧳 開啟旅行模式</button><span class="muted-note">旅行途中專用：一次查看當天景點、住宿與導航</span></div>
    <nav id="day-switcher" class="day-switcher" aria-label="切換每日行程" hidden>
      <div class="day-switcher-top"><button id="day-prev" type="button" class="mini-btn">← 上一天</button><label for="day-jump" class="day-jump-label"><span class="day-jump-caption">查看日期</span><select id="day-jump" class="select-control"></select></label><button id="day-next" type="button" class="mini-btn">下一天 →</button></div>
@@ -541,7 +580,7 @@
     </div>
   </div>
 </div>
-<div id="trip-calendar" class="trip-calendar-overlay" hidden role="dialog" aria-modal="true" aria-label="選擇出發與回程日期"><div class="trip-calendar-panel"><div class="trip-calendar-head"><strong>選擇旅行日期</strong><button type="button" id="trip-calendar-close" class="mini-btn">✕ 關閉</button></div><p id="trip-calendar-status">請選擇出發日期</p><div class="trip-calendar-controls"><button type="button" id="trip-cal-prev" class="mini-btn">← 上個月</button><button type="button" id="trip-cal-next" class="mini-btn">下個月 →</button></div><div id="trip-cal-months" class="trip-cal-months"></div><div class="trip-calendar-actions"><button type="button" id="trip-cal-clear" class="mini-btn">清除日期</button><button type="button" id="trip-cal-done" class="mini-btn">完成</button></div></div></div>
+<div id="trip-calendar" class="trip-calendar-overlay" hidden role="dialog" aria-modal="true" aria-label="選擇出發與回程日期"><div class="trip-calendar-panel"><div class="trip-calendar-head"><strong>選擇旅行日期</strong><button type="button" id="trip-calendar-close" class="mini-btn">✕ 關閉</button></div><p id="trip-calendar-status">請選擇出發日期</p><div class="trip-calendar-controls"><button type="button" id="trip-cal-prev" class="mini-btn">← 上個月</button><button type="button" id="trip-cal-next" class="mini-btn">下個月 →</button></div><div id="trip-cal-months" class="trip-cal-months"></div><div class="trip-calendar-actions"><button type="button" id="trip-cal-clear" class="mini-btn">清除日期</button><button type="button" id="trip-cal-done" class="mini-btn" disabled>完成</button></div></div></div>
 <style>
 .trip-date-inputs{display:flex;gap:5px;align-items:center}.trip-date-inputs input{width:calc(50% - 12px);min-width:0;border:1px solid #d9e1db;border-radius:10px;padding:9px 4px;background:white;color:#163e33;font:inherit}.trip-calendar-open{margin:8px 0}.trip-days-result{margin-top:6px}.trip-days-result input{background:#f1f5f1}.trip-calendar-overlay{position:fixed;inset:0;z-index:9999;background:#14271c99;display:flex;justify-content:center;align-items:center;padding:12px}.trip-calendar-overlay[hidden]{display:none}.trip-calendar-panel{background:#fff;border-radius:18px;width:min(760px,100%);max-height:94vh;overflow:auto;padding:18px;box-shadow:0 12px 50px #0003}.trip-calendar-head,.trip-calendar-controls,.trip-calendar-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.trip-calendar-status{color:#27634d;font-size:14px}.trip-cal-months{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.trip-cal-month h3{text-align:center;margin:5px 0 12px}.trip-cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}.trip-cal-grid span{text-align:center;font-size:12px;padding:7px 0}.trip-cal-grid button{border:0;background:transparent;border-radius:7px;min-height:36px;cursor:pointer;color:#153e31;font:inherit}.trip-cal-grid button:hover{background:#e5f2ea}.trip-cal-grid button.trip-range{background:#e5f2ea}.trip-cal-grid button.trip-selected{background:#245e49;color:white}.trip-cal-grid button:focus-visible{outline:2px solid #195d44}@media(max-width:600px){.trip-cal-months{grid-template-columns:1fr}.trip-calendar-panel{padding:12px}.trip-date-inputs{flex-wrap:wrap}.trip-date-inputs input{font-size:13px}}
 </style>
@@ -549,55 +588,195 @@
 (()=>{
  const start=document.getElementById('trip-date-start'),end=document.getElementById('trip-date-end'),days=document.getElementById('days');
  const overlay=document.getElementById('trip-calendar'),status=document.getElementById('trip-calendar-status'),months=document.getElementById('trip-cal-months');
+ const hint=document.getElementById('trip-date-hint');
+ const flightNote=document.getElementById('flight-date-note');
+ const doneBtn=document.getElementById('trip-cal-done');
+ const FLIGHT_NOTE='去程與回程日期跟上方旅行日期是同一組。改其中一邊，天數、住宿晚數與每日行程會一起改。';
  const WEEK=['日','一','二','三','四','五','六'];
  const listeners=new Set();
  let cursor=new Date();cursor=new Date(cursor.getFullYear(),cursor.getMonth(),1);
  let lock=false;
+ let committed={start:'',end:''};
+ let invalid=false;
+ let draftStart='',draftEnd='';
+ let calendarOpener=null;
  const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
  const parse=x=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(x||''))return null;const [y,m,d]=x.split('-').map(Number);const v=new Date(y,m-1,d);return v.getFullYear()===y&&v.getMonth()===m-1&&v.getDate()===d?v:null};
  const addDays=(isoStr,n)=>{const d=parse(isoStr);if(!d)return '';const v=new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);return iso(v);};
  const dayCount=(a,b)=>{const s=parse(a),e=parse(b);if(!s||!e)return 0;return Math.round((Date.UTC(e.getFullYear(),e.getMonth(),e.getDate())-Date.UTC(s.getFullYear(),s.getMonth(),s.getDate()))/86400000)+1;};
  const formatMD=isoStr=>{const d=parse(isoStr);if(!d)return '';return `${d.getMonth()+1}/${d.getDate()}（${WEEK[d.getDay()]}）`;};
- function sync(cause){
-  const raw=dayCount(start.value,end.value);
-  let n=0;
-  const hint=document.getElementById('trip-date-hint');
-  if(parse(start.value)&&parse(end.value)&&raw<1) hint.textContent='回程日期不能早於出發日期';
-  else if(raw>60){end.value=addDays(start.value,59);n=60;hint.textContent=`旅程最多 60 天，已調整為 ${formatMD(start.value)} 至 ${formatMD(end.value)}`;}
-  else if(raw>=1){n=raw;hint.textContent=`${formatMD(start.value)} 至 ${formatMD(end.value)}，共 ${n} 天（住宿 ${Math.max(0,n-1)} 晚）。改期會同步航班、住宿與每日行程。`;}
-  else hint.textContent='請選擇出發與回程日期，最多 60 天（含首尾日）';
-  days.value=String(n);
-  const detail={start:start.value,end:end.value,days:n,cause:cause||'input'};
-  try{localStorage.setItem('japan-trip-dates',JSON.stringify({start:detail.start,end:detail.end}));}catch{}
+ window.syncOverlayNav=function(){
+  const open=['spot-picker','app-dialog','trip-calendar','v411-travel'].some(id=>{const el=document.getElementById(id);return el&&!el.hidden;});
+  document.body.classList.toggle('overlay-open',open);
+ };
+ function paintError(on){
+  if(hint)hint.classList.toggle('is-error',on);
+  if(flightNote)flightNote.classList.toggle('is-error',on);
+ }
+ function restoreFlightNote(){if(flightNote)flightNote.textContent=FLIGHT_NOTE;}
+ function paintCommittedHint(n){
+  if(!hint)return;
+  hint.textContent=`${formatMD(committed.start)} 至 ${formatMD(committed.end)}，共 ${n} 天（住宿 ${Math.max(0,n-1)} 晚）。改期會同步航班、住宿與每日行程。`;
+ }
+ function notify(cause,n){
+  const detail={start:start.value,end:end.value,days:n,cause:cause||'input',invalid,incomplete:!invalid&&!(n>=1)};
   days.dispatchEvent(new Event('input',{bubbles:true}));
+  if(cause==='revert')return;
   listeners.forEach(fn=>{try{fn(detail);}catch(err){console.error(err);}});
   window.dispatchEvent(new CustomEvent('trip-dates-changed',{detail}));
  }
- function draw(){months.innerHTML='';for(let offset=0;offset<2;offset++){const m=new Date(cursor.getFullYear(),cursor.getMonth()+offset,1),year=m.getFullYear(),month=m.getMonth();const wrap=document.createElement('section');wrap.className='trip-cal-month';const heading=document.createElement('h3');heading.textContent=`${year} 年 ${month+1} 月`;wrap.append(heading);const grid=document.createElement('div');grid.className='trip-cal-grid';for(const w of WEEK){const label=document.createElement('span');label.textContent=w;grid.append(label)}for(let i=0;i<m.getDay();i++)grid.append(document.createElement('span'));const count=new Date(year,month+1,0).getDate();for(let i=1;i<=count;i++){const d=iso(new Date(year,month,i));const btn=document.createElement('button');btn.type='button';btn.textContent=i;btn.setAttribute('aria-label',formatMD(d));if(d===start.value||d===end.value)btn.classList.add('trip-selected');else if(start.value&&end.value&&d>start.value&&d<end.value)btn.classList.add('trip-range');btn.addEventListener('click',()=>{if(!start.value||end.value||d<start.value){start.value=d;end.value='';}else end.value=d;sync('input');draw();});grid.append(btn)}wrap.append(grid);months.append(wrap)}status.textContent=!start.value?'請先選擇出發日期':!end.value?`出發：${formatMD(start.value)}，請選回程日期`:`${formatMD(start.value)} → ${formatMD(end.value)}（${days.value} 天）`;}
+ function reject(cause){
+  invalid=true;
+  days.value='';
+  paintError(true);
+  if(hint)hint.textContent='回程日期不能早於出發日期';
+  if(flightNote)flightNote.textContent='回程日期不能早於出發日期';
+  notify(cause,0);
+ }
+ function applyCommitted(n,cause,note){
+  invalid=false;
+  days.value=String(n);
+  paintError(false);
+  if(hint)hint.textContent=note;
+  restoreFlightNote();
+  try{localStorage.setItem('japan-trip-dates',JSON.stringify({start:committed.start,end:committed.end}));}catch{}
+  notify(cause,n);
+ }
+ function sync(cause){
+  if(cause==='revert'){
+   invalid=false;
+   const n=dayCount(start.value,end.value);
+   days.value=n>=1?String(Math.min(60,n)):'';
+   paintError(false);
+   if(n>=1)paintCommittedHint(Number(days.value));
+   else if(hint)hint.textContent='請選擇出發與回程日期，最多 60 天（含首尾日）';
+   restoreFlightNote();
+   try{if(committed.start)localStorage.setItem('japan-trip-dates',JSON.stringify({start:committed.start,end:committed.end}));}catch{}
+   days.dispatchEvent(new Event('input',{bubbles:true}));
+   return;
+  }
+  const raw=dayCount(start.value,end.value);
+  if(parse(start.value)&&parse(end.value)&&raw<1){reject(cause);return;}
+  if(!(parse(start.value)&&parse(end.value)&&raw>=1)){
+   invalid=false;
+   days.value='';
+   paintError(false);
+   if(hint)hint.textContent='請選擇出發與回程日期，最多 60 天（含首尾日）';
+   restoreFlightNote();
+   notify(cause,0);
+   return;
+  }
+  let nextE=end.value,n=raw,note;
+  if(raw>60){nextE=addDays(start.value,59);end.value=nextE;n=60;note=`旅程最多 60 天，已調整為 ${formatMD(start.value)} 至 ${formatMD(nextE)}`;}
+  else note=`${formatMD(start.value)} 至 ${formatMD(end.value)}，共 ${n} 天（住宿 ${Math.max(0,n-1)} 晚）。改期會同步航班、住宿與每日行程。`;
+  committed={start:start.value,end:nextE};
+  applyCommitted(n,cause,note);
+ }
+ function selection(){return overlay.hidden?{s:start.value,e:end.value}:{s:draftStart,e:draftEnd};}
+ function updateDone(){if(doneBtn)doneBtn.disabled=!(draftStart&&draftEnd);}
+ function draw(){
+  const sel=selection();
+  months.innerHTML='';
+  for(let offset=0;offset<2;offset++){
+   const m=new Date(cursor.getFullYear(),cursor.getMonth()+offset,1),year=m.getFullYear(),month=m.getMonth();
+   const wrap=document.createElement('section');wrap.className='trip-cal-month';
+   const heading=document.createElement('h3');heading.textContent=`${year} 年 ${month+1} 月`;wrap.append(heading);
+   const grid=document.createElement('div');grid.className='trip-cal-grid';
+   for(const w of WEEK){const label=document.createElement('span');label.textContent=w;grid.append(label);}
+   for(let i=0;i<m.getDay();i++)grid.append(document.createElement('span'));
+   const count=new Date(year,month+1,0).getDate();
+   for(let i=1;i<=count;i++){
+    const d=iso(new Date(year,month,i));
+    const btn=document.createElement('button');btn.type='button';btn.textContent=i;btn.setAttribute('aria-label',formatMD(d));
+    if(d===sel.s||d===sel.e)btn.classList.add('trip-selected');
+    else if(sel.s&&sel.e&&d>sel.s&&d<sel.e)btn.classList.add('trip-range');
+    btn.addEventListener('click',()=>{
+     if(!draftStart||draftEnd){draftStart=d;draftEnd='';}
+     else if(d<draftStart){draftEnd=draftStart;draftStart=d;}
+     else draftEnd=d;
+     updateDone();draw();
+    });
+    grid.append(btn);
+   }
+   wrap.append(grid);months.append(wrap);
+  }
+  const draftDays=dayCount(draftStart,draftEnd);
+  status.textContent=!draftStart?'請先選擇出發日期':!draftEnd?`出發：${formatMD(draftStart)}，請選回程日期`:`${formatMD(draftStart)} → ${formatMD(draftEnd)}（${Math.max(draftDays,0)} 天）`;
+  updateDone();
+ }
+ function restoreCommittedInputs(){
+  if(!(committed.start&&committed.end))return;
+  lock=true;start.value=committed.start;end.value=committed.end;lock=false;
+  invalid=false;
+  const n=dayCount(committed.start,committed.end);
+  days.value=String(n);
+  paintError(false);
+  paintCommittedHint(n);
+  restoreFlightNote();
+  days.dispatchEvent(new Event('input',{bubbles:true}));
+ }
+ function closeCalendar(){
+  overlay.hidden=true;
+  window.syncOverlayNav();
+  restoreCommittedInputs();
+  if(calendarOpener&&calendarOpener.isConnected)calendarOpener.focus();
+  calendarOpener=null;
+  draw();
+ }
+ function finishCalendar(){
+  if(!(draftStart&&draftEnd))return;
+  lock=true;start.value=draftStart;end.value=draftEnd;lock=false;
+  overlay.hidden=true;
+  window.syncOverlayNav();
+  sync('input');
+  if(calendarOpener&&calendarOpener.isConnected)calendarOpener.focus();
+  calendarOpener=null;
+  draw();
+ }
  function setRange(s,e,cause){
   const nextS=s||'',nextE=e||'';
-  if(start.value===nextS&&end.value===nextE&&cause!=='force')return window.TripDates.get();
+  if(cause==='revert'){
+   committed={start:nextS,end:nextE};
+   lock=true;start.value=nextS;end.value=nextE;lock=false;
+   invalid=false;
+   sync('revert');draw();
+   return window.TripDates.get();
+  }
+  if(start.value===nextS&&end.value===nextE&&cause!=='force'&&!invalid)return window.TripDates.get();
   lock=true;start.value=nextS;end.value=nextE;lock=false;
   sync(cause||'set');draw();
   return window.TripDates.get();
  }
  start.addEventListener('change',()=>{if(!lock){sync('input');draw();}});
  end.addEventListener('change',()=>{if(!lock){sync('input');draw();}});
- document.getElementById('trip-calendar-open').addEventListener('click',()=>{const d=parse(start.value);if(d)cursor=new Date(d.getFullYear(),d.getMonth(),1);draw();overlay.hidden=false;document.getElementById('trip-cal-next').focus();});
- document.getElementById('trip-calendar-close').addEventListener('click',()=>overlay.hidden=true);
- document.getElementById('trip-cal-done').addEventListener('click',()=>overlay.hidden=true);
+ document.getElementById('trip-calendar-open').addEventListener('click',()=>{
+  calendarOpener=document.activeElement;
+  draftStart=invalid?'':start.value;
+  draftEnd=invalid?'':end.value;
+  const d=parse(draftStart)||parse(committed.start);
+  if(d)cursor=new Date(d.getFullYear(),d.getMonth(),1);
+  updateDone();draw();
+  overlay.hidden=false;
+  window.syncOverlayNav();
+  document.getElementById('trip-cal-next').focus();
+ });
+ document.getElementById('trip-calendar-close').addEventListener('click',closeCalendar);
+ document.getElementById('trip-cal-done').addEventListener('click',finishCalendar);
  document.getElementById('trip-cal-prev').addEventListener('click',()=>{cursor.setMonth(cursor.getMonth()-1);draw();});
  document.getElementById('trip-cal-next').addEventListener('click',()=>{cursor.setMonth(cursor.getMonth()+1);draw();});
- document.getElementById('trip-cal-clear').addEventListener('click',()=>{start.value='';end.value='';sync('input');draw();});
- overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.hidden=true;});
- document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!overlay.hidden)overlay.hidden=true;});
+ document.getElementById('trip-cal-clear').addEventListener('click',()=>{draftStart='';draftEnd='';updateDone();restoreCommittedInputs();draw();});
+ overlay.addEventListener('click',e=>{if(e.target===overlay)closeCalendar();});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!overlay.hidden){e.preventDefault();closeCalendar();}});
  window.TripDates={
   get(){return {start:start.value,end:end.value,days:Number(days.value)||0};},
   set:setRange,
   subscribe(fn){listeners.add(fn);return ()=>listeners.delete(fn);},
-  labelForIndex(i){const n=Number(days.value)||0;if(!parse(start.value)||i<0||i>=n)return '';return formatMD(addDays(start.value,i));},
+  labelForIndex(i){const base=invalid?committed.start:start.value;const n=invalid?dayCount(committed.start,committed.end):(Number(days.value)||0);if(!parse(base)||i<0||i>=n)return '';return formatMD(addDays(base,i));},
   formatMD,addDays,dayCount,parse,iso,today(){return iso(new Date());},
-  rangeText(){if(!parse(start.value)||!parse(end.value)||Number(days.value)<1)return '';return `${formatMD(start.value)}～${formatMD(end.value)}`;}
+  rangeText(){if(invalid||!parse(committed.start)||dayCount(committed.start,committed.end)<1)return '';return `${formatMD(committed.start)}～${formatMD(committed.end)}`;},
+  isInvalid(){return invalid;},
+  committedDays(){return dayCount(committed.start,committed.end);},
+  committedRange(){return {start:committed.start,end:committed.end};}
  };
 })();
 </script>
@@ -616,6 +795,51 @@
        let currencyMode='TWD';
        let jpyRate=0.22;
        let hotelClampNote='';
+       const canonical={};
+       let canonicalReady=false;
+       function twdMax(key){
+         const input=document.getElementById(key);
+         return Number(input?.getAttribute('data-twd-max')||input?.max)||1000000;
+       }
+       function clampTwd(n,key){
+         const max=twdMax(key);
+         if(!Number.isFinite(n)||n<0)return 0;
+         return Math.min(max,Math.round(n));
+       }
+       function rateField(){return document.getElementById('budget-jpy-rate');}
+       function readRateRaw(){
+         const raw=String(rateField()?.value??'').trim();
+         const r=Number(raw);
+         return {raw,r,ok:raw!==''&&Number.isFinite(r)&&r>0&&r<=10};
+       }
+       function activeRate(){const info=readRateRaw();return info.ok?info.r:jpyRate;}
+       function displayOf(twd){return currencyMode==='JPY'?Math.round((Number(twd)||0)/activeRate()):Math.round(Number(twd)||0);}
+       function seedCanonical(){
+         if(canonicalReady)return;
+         moneyFields.forEach(key=>{
+           const input=document.getElementById(key);
+           if(input&&!input.hasAttribute('data-twd-max'))input.setAttribute('data-twd-max',input.max||'1000000');
+           canonical[key]=clampTwd(Number(input?.value)||defaults[key]||0,key);
+         });
+         canonicalReady=true;
+       }
+       function writeField(key,force){
+         const input=document.getElementById(key);
+         if(!input||(!force&&document.activeElement===input))return;
+         input.value=String(displayOf(canonical[key]||0));
+       }
+       function paintMoney(force){moneyFields.forEach(key=>writeField(key,force));}
+       function ingestField(key){
+         const input=document.getElementById(key);
+         if(!input)return false;
+         const raw=input.value.trim();
+         const shown=Number(raw);
+         if(raw===''||!Number.isFinite(shown))return false;
+         if(Number(raw)===displayOf(canonical[key]||0))return true;
+         const twd=currencyMode==='JPY'?shown*activeRate():shown;
+         canonical[key]=clampTwd(twd,key);
+         return true;
+       }
        const hotelNightBtn=document.getElementById('hotel-night-btn'),hotelTotalBtn=document.getElementById('hotel-total-btn');
        const groupBtn=document.getElementById('view-group-btn'),personBtn=document.getElementById('view-person-btn');
        const lodgeTotalBtn=document.getElementById('v49-lodge-total'),lodgeNightBtn=document.getElementById('v49-lodge-night');
@@ -623,42 +847,45 @@
        lodgeNightBtn.addEventListener('click',()=>{lodgingView='night';render()});
        document.getElementById('v49-lodge-body').addEventListener('change',e=>{
          if(!e.target.matches('[data-night-index]'))return;
+         seedCanonical();
          const i=Number(e.target.dataset.nightIndex),shown=Number(e.target.value);
-         const rate=currentRate();
-         const twd=currencyMode==='JPY'?(Number.isFinite(rate)?shown*rate:NaN):shown;
-         const cap=currencyMode==='JPY'&&Number.isFinite(rate)?1000000*rate:1000000;
-         if(!Number.isFinite(twd)||twd<0||twd>cap){
-           hotelClampNote='單晚金額需介於 0～1,000,000（以目前輸入的幣別計算）。';
+         const twd=currencyMode==='JPY'?Math.round(shown*activeRate()):Math.round(shown);
+         if(!Number.isFinite(shown)||shown<0||!Number.isFinite(twd)||twd<0||twd>1000000){
+           hotelClampNote='單晚金額需介於 0～1,000,000（以新台幣計算；日圓會先換算成整數）。';
            render();
            return;
          }
          const count=Math.max(0,Number(document.getElementById('days').value)-1);
-         if(!customNights||customNights.length!==count)customNights=Array.from({length:count},()=>0);
+         if(!customNights)customNights=[];
+         while(customNights.length<count)customNights.push(customNights.length?customNights[customNights.length-1]:0);
          customNights[i]=twd;
-         const total=customNights.reduce((a,b)=>a+b,0);
+         const used=customNights.slice(0,count);
+         const total=used.reduce((a,b)=>a+b,0);
          const people=Math.max(1,Number(document.getElementById('people').value)||1);
-         let display=hotelMode==='total'?total:(count?total/count:0);
-         if(summaryMode==='person')display/=people;
-         if(currencyMode==='JPY'&&Number.isFinite(rate)&&rate>0)display/=rate;
-         document.getElementById('hotel').value=Number(display.toFixed(4));
+         let next=hotelMode==='total'?total:(count?Math.round(total/count):0);
+         if(summaryMode==='person')next=Math.round(next/people);
+         canonical.hotel=clampTwd(next,'hotel');
          hotelClampNote='';
+         writeField('hotel');
          render();
        });
        function setHotelMode(mode){
          if(hotelMode===mode)return;
+         seedCanonical();
          const nights=Math.max(0,Number(document.getElementById('days').value||0)-1);
-         const input=document.getElementById('hotel');
-         const amount=Number(input.value)||0;
-         const max=Number(input.max)||1000000;
-         let next=mode==='total'?Math.round(amount*nights*100)/100:(nights?Math.round(amount/nights*100)/100:0);
+         const amount=canonical.hotel||0;
+         const max=twdMax('hotel');
+         let next=mode==='total'?Math.round(amount*nights):(nights?Math.round(amount/nights):0);
          hotelClampNote='';
          if(!Number.isFinite(next)||next<0)next=0;
          if(next>max){
            next=max;
            const unit=currencyMode==='JPY'?'日圓':'新台幣';
-           hotelClampNote=`整趟住宿換算後超過 ${max.toLocaleString('zh-TW')} ${unit}，已調整為上限。若實際費用更高，請改回「每晚費用」，或把超出的部分記入其他支出。`;
+           const capShown=displayOf(max);
+           hotelClampNote=`整趟住宿換算後超過 ${capShown.toLocaleString('zh-TW')} ${unit}，已調整為上限。若實際費用更高，請改回「每晚費用」，或把超出的部分記入其他支出。`;
          }
-         input.value=String(next);
+         canonical.hotel=next;
+         writeField('hotel');
          hotelMode=mode;
          customNights=null;
          document.getElementById('hotel-field-label').textContent=mode==='night'?'住宿每晚總價':'整趟住宿總費用';
@@ -673,10 +900,11 @@
        hotelTotalBtn.addEventListener('click',()=>setHotelMode('total'));
        function setSummaryMode(mode){
          if(summaryMode!==mode){
-           const input=document.getElementById('hotel');
+           seedCanonical();
            const people=Math.max(1,Number(document.getElementById('people').value)||1);
-           const current=Number(input.value)||0;
-           input.value=Number((mode==='person'?current/people:current*people).toFixed(4));
+           const current=canonical.hotel||0;
+           canonical.hotel=clampTwd(mode==='person'?current/people:current*people,'hotel');
+           writeField('hotel');
          }
          summaryMode=mode;
          groupBtn.classList.toggle('v48-selected',mode==='group');
@@ -688,10 +916,12 @@
        personBtn.addEventListener('click',()=>setSummaryMode('person'));
       let lastPeople=Number(document.getElementById('people').value)||1;
        document.getElementById('people').addEventListener('input',()=>{
-         const nextPeople=Math.max(1,Number(document.getElementById('people').value)||1);
-         if(summaryMode==='person'){
-           const hotelInput=document.getElementById('hotel');
-           hotelInput.value=Number(((Number(hotelInput.value)||0)*lastPeople/nextPeople).toFixed(4));
+         seedCanonical();
+         const nextPeople=Number(document.getElementById('people').value);
+         if(!Number.isInteger(nextPeople)||nextPeople<1||nextPeople>30)return;
+         if(summaryMode==='person'&&lastPeople>0){
+           canonical.hotel=clampTwd(Math.round((canonical.hotel||0)*lastPeople/nextPeople),'hotel');
+           writeField('hotel');
          }
          lastPeople=nextPeople;
        });
@@ -702,24 +932,18 @@
       const $ = id => document.getElementById(id);
       const numberFormat = new Intl.NumberFormat("zh-TW", { maximumFractionDigits: 0 });
       const money = value => "NT$ " + numberFormat.format(Math.round(value));
-      const currentRate = () => {
-        const r=Number(document.getElementById('budget-jpy-rate').value);
-        return Number.isFinite(r)&&r>0&&r<=10?r:NaN;
-      };
-      const toDisplay = twd => {
-        if(currencyMode!=='JPY')return twd;
-        const rate=currentRate();
-        return Number.isFinite(rate)&&rate>0?twd/rate:twd;
-      };
       const getValues = () => {
-        const values=Object.fromEntries(fields.map(key => [key, Number($(key).value)]));
-        if(currencyMode==='JPY'){
-          const rate=currentRate();
-          if(!Number.isFinite(rate))return null;
-          moneyFields.forEach(key=>{values[key]*=rate;});
-        }
-        // The hotel input is per person in personal view, but calculation uses group lodging.
-        if(summaryMode==='person')values.hotel*=Math.max(1,values.people);
+        seedCanonical();
+        if(currencyMode==='JPY'&&!readRateRaw().ok)return null;
+        const values={};
+        fields.forEach(key=>{
+          if(key==='days'){
+            values.days=window.TripDates?.isInvalid?.()?window.TripDates.committedDays():Number($(key).value);
+          }else if(moneyFields.includes(key))values[key]=canonical[key]||0;
+          else values[key]=Number($(key).value);
+        });
+        // The hotel figure is per person in personal view, but calculation uses group lodging.
+        if(summaryMode==='person')values.hotel*=Math.max(1,values.people||1);
         return values;
       };
       function updateCurrencyLabels(){
@@ -737,94 +961,69 @@
             :'總預算一律以新台幣顯示。切換日圓時，欄位金額會依這個匯率換算。';
         }
       }
-      let twdShadow=null;
       function setCurrency(mode){
         if(mode===currencyMode)return;
-        const rate=currentRate();
-        if(!Number.isFinite(rate)){showToast('請先輸入有效匯率（1 日圓等於多少新台幣，0.0001～10）。');return;}
-        jpyRate=rate;
-        if(mode==='JPY'){
-          twdShadow={};
-          moneyFields.forEach(key=>{
-            const input=$(key);
-            const v=Number(input.value);
-            if(!Number.isFinite(v))return;
-            twdShadow[key]=v;
-            input.value=String(Math.round((v/rate)*100)/100);
-          });
-        }else{
-          moneyFields.forEach(key=>{
-            const input=$(key);
-            const v=Number(input.value);
-            if(!Number.isFinite(v))return;
-            const remembered=twdShadow&&twdShadow[key];
-            const unchanged=remembered!=null&&Math.round((remembered/rate)*100)/100===Math.round(v*100)/100;
-            input.value=String(unchanged?remembered:Math.round((v*rate)*100)/100);
-          });
-          twdShadow=null;
-        }
+        seedCanonical();
+        const info=readRateRaw();
+        if(!info.ok){showToast('請先輸入有效匯率（1 日圓等於多少新台幣，0.0001～10）。');return;}
+        jpyRate=info.r;
         currencyMode=mode;
         try{localStorage.setItem('japan-trip-currency',mode);}catch{}
+        paintMoney(true);
         updateCurrencyLabels();
         render();
         window.TripPlans?.noteBudget();
       }
       function shareRate(value,source){
-        const r=Number(value);
-        if(!(r>0&&r<=10))return;
-        jpyRate=r;
+        const raw=String(value??'').trim();
+        const r=Number(raw);
+        const ok=raw!==''&&r>0&&r<=10;
+        const rateInput=rateField();
+        rateInput.setAttribute('aria-invalid',String(!ok));
+        const note=document.getElementById('currency-note');
         for(const id of ['budget-jpy-rate','v411-rate']){
           const el=document.getElementById(id);
-          if(el&&el!==source&&el.value!==String(value))el.value=value;
+          if(el&&el!==source&&el.value!==raw)el.value=raw;
         }
+        if(!ok){
+          note.dataset.locked='1';
+          note.textContent='請輸入有效匯率（1 日圓等於多少新台幣，大於 0 且不超過 10）。';
+          render();
+          return;
+        }
+        delete note.dataset.locked;
+        jpyRate=r;
         try{localStorage.setItem('japan-trip-manual-rate',String(r));}catch{}
         const exchange=document.getElementById('v411-jpy');
         if(exchange)exchange.dispatchEvent(new Event('input',{bubbles:true}));
-        if(currencyMode==='JPY'){twdShadow=null;render();}
-      }
-      function parseBotJpy(csv){
-        const lines=String(csv||'').replace(/^\uFEFF/,'').split(/\r?\n/).map(line=>line.trim()).filter(Boolean);
-        const row=lines.find(line=>/^"?JPY"?,/i.test(line)||line.includes('日圓')||line.includes('日元'));
-        if(!row)return null;
-        const nums=row.split(',').map(cell=>Number(String(cell).replace(/"/g,''))).filter(n=>Number.isFinite(n)&&n>0&&n<5);
-        const sell=nums.length>=2?nums[1]:nums[0];
-        return Number.isFinite(sell)?Math.round(sell*10000)/10000:null;
-      }
-      async function fetchBotRate(){
-        const note=document.getElementById('currency-note');
-        const btn=document.getElementById('fetch-bot-rate');
-        btn.disabled=true;
-        note.dataset.locked='1';
-        note.textContent='正在向臺灣銀行查詢日圓現金賣出匯率…';
-        const ctrl=new AbortController();
-        const timer=setTimeout(()=>ctrl.abort(),8000);
-        try{
-          const res=await fetch('https://rate.bot.com.tw/xrt/flcsv/0/day',{signal:ctrl.signal,cache:'no-store'});
-          if(!res.ok)throw new Error('status');
-          const rate=parseBotJpy(await res.text());
-          if(!rate)throw new Error('parse');
-          document.getElementById('budget-jpy-rate').value=String(rate);
-          shareRate(String(rate),document.getElementById('budget-jpy-rate'));
-          note.textContent=`已帶入臺灣銀行日圓現金賣出匯率：1 日圓 = ${rate} 元。牌告與實際換匯可能不同。`;
-        }catch{
-          note.textContent='無法直接讀取臺灣銀行匯率（瀏覽器可能阻擋跨站請求）。請按「查看牌告」，把日圓現金賣出匯率手動填在上方。';
-        }finally{
-          clearTimeout(timer);
-          btn.disabled=false;
-          setTimeout(()=>{delete note.dataset.locked;},4000);
-        }
+        if(currencyMode==='JPY')paintMoney(true);
+        updateCurrencyLabels();
+        render();
+        window.TripPlans?.noteBudget();
       }
 
       function validate() {
         let valid = true;
+        const rateBad=currencyMode==='JPY'&&!readRateRaw().ok;
         fields.forEach(key => {
           const input = $(key);
           const wrapper = document.querySelector(`[data-field="${key}"]`);
-          const value = input.value.trim() === "" ? NaN : Number(input.value);
-          const min = Number(input.min);
-          const max = Number(input.max);
-          const isInteger = ["people", "days", "buffer"].includes(key);
-          const ok = Number.isFinite(value) && value >= min && value <= max && (!isInteger || Number.isInteger(value));
+          let ok;
+          if(moneyFields.includes(key)){
+            const raw=input.value.trim();
+            const shown=Number(raw);
+            const twd=raw!==''&&Number.isFinite(shown)?(currencyMode==='JPY'?Math.round(shown*activeRate()):Math.round(shown)):NaN;
+            ok=Number.isFinite(twd)&&twd>=0&&twd<=twdMax(key)&&!rateBad;
+          }else if(key==='days'){
+            const value=input.value.trim()===''?NaN:Number(input.value);
+            ok=!window.TripDates?.isInvalid?.()&&Number.isFinite(value)&&value>=0&&value<=60&&Number.isInteger(value);
+          }else{
+            const value = input.value.trim() === "" ? NaN : Number(input.value);
+            const min = Number(input.min);
+            const max = Number(input.max);
+            const isInteger = key==='people'||key==='buffer';
+            ok = Number.isFinite(value) && value >= min && value <= max && (!isInteger || Number.isInteger(value));
+          }
           wrapper.classList.toggle("invalid", !ok);
           input.setAttribute("aria-invalid", String(!ok));
           if (!ok) valid = false;
@@ -832,11 +1031,27 @@
         return valid;
       }
 
+      function blankSummary(totalText, subText){
+        $("grand-total").textContent = totalText;
+        $("per-person").textContent = subText;
+        $("meta-people").textContent = "—";
+        $("meta-days").textContent = "—";
+        $("meta-buffer").textContent = "—";
+        const donutTotal=document.getElementById('v49-donut-total');
+        if(donutTotal)donutTotal.textContent='—';
+        const legend=document.getElementById('v49-legend');
+        if(legend)legend.innerHTML='';
+        const peopleGrid=document.getElementById('v49-person-grid');
+        if(peopleGrid)peopleGrid.innerHTML='';
+        $("cost-list").innerHTML='';
+      }
+
       function calculate(v) {
         const nights = Math.max(0, v.days - 1);
+        const customHotel=customNights&&customNights.length?(()=>{let sum=0;const fill=customNights[customNights.length-1]||0;for(let i=0;i<nights;i++)sum+=i<customNights.length?customNights[i]:fill;return sum;})():null;
         const costs = {
           flight: v.flight * v.people,
-          hotel: customNights&&customNights.length===nights?customNights.reduce((a,b)=>a+b,0):(hotelMode==='total'?v.hotel:v.hotel*nights),
+          hotel: customHotel!=null?customHotel:(hotelMode==='total'?v.hotel:v.hotel*nights),
           food: v.food * v.days * v.people,
           transport: v.transport * v.days * v.people,
           airport: (v.airport||0) * v.people,
@@ -850,25 +1065,31 @@
       }
 
       function render() {
+        seedCanonical();
+        if(!readRateRaw().ok){
+          rateField().setAttribute('aria-invalid','true');
+          blankSummary('請檢查輸入','請輸入有效匯率（1 日圓等於多少新台幣，大於 0 且不超過 10）。');
+          return null;
+        }
+        if(window.TripDates?.isInvalid?.()){
+          document.querySelector('[data-field="days"]')?.classList.add('invalid');
+          $("days").setAttribute('aria-invalid','true');
+          blankSummary('—','回程日期不能早於出發日期');
+          return null;
+        }
         const missingTrip = Number($("people").value)<1 || Number($("days").value)<1;
         if (!validate()) {
-          $("grand-total").textContent = "請檢查輸入";
-          $("per-person").textContent = "請修正標示的欄位後查看估算";
+          blankSummary(currencyMode==='JPY'&&!readRateRaw().ok?'請檢查輸入':'—','請修正標示的欄位後查看估算');
           return null;
         }
         if (missingTrip) {
+          blankSummary('NT$ 0','請先選擇旅行日期並填入旅遊人數');
           $("grand-total").textContent = "NT$ 0";
-          $("per-person").textContent = "請先選擇旅行日期並填入旅遊人數";
-          document.getElementById('v49-donut-total').textContent='NT$ 0';
-          document.getElementById('v49-legend').innerHTML='';
-          document.getElementById('v49-person-grid').innerHTML='';
-          document.getElementById('cost-list').innerHTML='';
           return null;
         }
         const v = getValues();
         if(!v){
-          $("grand-total").textContent = "請檢查輸入";
-          $("per-person").textContent = "請輸入有效的日圓匯率（1 日圓等於多少新台幣）。";
+          blankSummary('請檢查輸入','請輸入有效的日圓匯率（1 日圓等於多少新台幣）。');
           return null;
         }
         const { nights, costs, subtotal, perPerson } = calculate(v);
@@ -896,10 +1117,10 @@
         document.getElementById('v49-legend').innerHTML=chartData.map(([name,amount,color])=>`<div class="v49-legend-row"><span class="v49-dot" style="background:${color}"></span><span>${name}</span><span>${((costs.total?amount/costs.total*100:0)).toFixed(1)}%</span><strong>${money(summaryMode==='group'?amount:amount/v.people)}</strong></div>`).join('');
         lodgeTotalBtn.classList.toggle('v48-selected',lodgingView==='total');
         lodgeNightBtn.classList.toggle('v48-selected',lodgingView==='night');
-        const nightCosts=customNights&&customNights.length===nights?customNights:Array.from({length:nights},()=>nights?costs.hotel/nights:0);
+        const nightCosts=customNights&&customNights.length?Array.from({length:nights},(_,i)=>i<customNights.length?customNights[i]:customNights[customNights.length-1]||0):Array.from({length:nights},()=>nights?costs.hotel/nights:0);
         document.getElementById('v49-lodge-body').innerHTML=lodgingView==='total'
           ?`<div class="v49-lodge-stat"><div><small>住宿晚數</small><strong>${nights} 晚</strong></div><div><small>整趟住宿總費用</small><strong>${money(costs.hotel)}</strong></div><div><small>平均每晚</small><strong>${money(nights?costs.hotel/nights:0)}</strong></div></div>`
-          :`<div class="v49-night-list">${nightCosts.map((amount,i)=>{const shown=Math.round(toDisplay(amount)*100)/100;const nightWhen=window.TripDates?.labelForIndex(i)||'';return `<label class="v49-night-row"><span>${nightWhen?nightWhen+' · ':''}第 ${i+1} 晚</span><span>${currencyMode==='JPY'?'円':'NT$'} <input data-night-index="${i}" type="number" min="0" max="1000000" step="1" value="${shown}" aria-label="第 ${i+1} 晚住宿費用"></span></label>`;}).join('')||'<p>目前沒有住宿晚數</p>'}</div><p class="v49-night-total">住宿合計：${money(costs.hotel)}</p>`;
+          :`<div class="v49-night-list">${nightCosts.map((amount,i)=>{const shown=displayOf(amount);const nightWhen=window.TripDates?.labelForIndex(i)||'';return `<label class="v49-night-row"><span>${nightWhen?nightWhen+' · ':''}第 ${i+1} 晚</span><span>${currencyMode==='JPY'?'円':'NT$'} <input data-night-index="${i}" type="number" min="0" max="1000000" step="1" value="${shown}" aria-label="第 ${i+1} 晚住宿費用"></span></label>`;}).join('')||'<p>目前沒有住宿晚數</p>'}</div><p class="v49-night-total">住宿合計：${money(costs.hotel)}</p>`;
         $("meta-people").textContent = `${v.people} 位旅客`;
         const rangeLabel=window.TripDates?.rangeText?.()||'';
         $("meta-days").textContent = rangeLabel?`${v.days} 天（${rangeLabel}）`:`${v.days} 天`;
@@ -975,14 +1196,21 @@
         if(!btn)return;
         certainty[btn.dataset.cert]=btn.dataset.certValue;
         paintCert();
-        render();
-        window.TripPlans?.noteBudget();
+        if(btn.dataset.cert==='tickets'&&window.TripTickets?.refresh)window.TripTickets.refresh();
+        else {render();window.TripPlans?.noteBudget();}
       });
       function budgetSnapshot(){
+        seedCanonical();
+        const values={};
+        fields.forEach(key=>{
+          if(moneyFields.includes(key))values[key]=String(Math.round(canonical[key]||0));
+          else if(key==='days')values[key]=String(window.TripDates?.isInvalid?.()?window.TripDates.committedDays():(Number($(key).value)||0));
+          else values[key]=$(key).value;
+        });
         return {
-          values:Object.fromEntries(fields.map(key=>[key,$(key).value])),
+          values,moneyUnit:'TWD',
           hotelMode,summaryMode,lodgingView,currencyMode,
-          rate:document.getElementById('budget-jpy-rate').value,
+          rate:rateField().value,
           certainty:{...certainty},
           customNights:customNights?customNights.slice():null
         };
@@ -1007,24 +1235,36 @@
         restore(data){
           restoringBudget=true;
           try{
+            seedCanonical();
             if(!data){
-              currencyMode='TWD';twdShadow=null;
+              currencyMode='TWD';
               hotelMode='night';summaryMode='group';lodgingView='total';customNights=null;hotelClampNote='';
               certainty={hotel:'estimate',airport:'estimate',tickets:'estimate'};
               lastPeople=defaults.people;
+              moneyFields.forEach(key=>{canonical[key]=defaults[key];});
               fields.forEach(key=>{if(key!=='days')$(key).value=defaults[key];});
             }else{
               currencyMode=data.currencyMode==='JPY'?'JPY':'TWD';
-              twdShadow=null;
               hotelMode=data.hotelMode==='total'?'total':'night';
               summaryMode=data.summaryMode==='person'?'person':'group';
               lodgingView=data.lodgingView==='night'?'night':'total';
-              customNights=Array.isArray(data.customNights)?data.customNights.slice():null;
+              customNights=Array.isArray(data.customNights)?data.customNights.map(n=>Math.round(Number(n)||0)):null;
               certainty={hotel:'estimate',airport:'estimate',tickets:'estimate',...(data.certainty||{})};
-              if(data.rate)document.getElementById('budget-jpy-rate').value=data.rate;
-              fields.forEach(key=>{if(key!=='days'&&data.values&&data.values[key]!=null)$(key).value=data.values[key];});
+              if(data.rate)rateField().value=data.rate;
+              const info=readRateRaw();
+              if(info.ok)jpyRate=info.r;
+              const legacyJpy=data.moneyUnit!=='TWD'&&data.currencyMode==='JPY';
+              const rate=info.ok?info.r:jpyRate;
+              fields.forEach(key=>{
+                if(key==='days'||!data.values||data.values[key]==null)return;
+                if(moneyFields.includes(key)){
+                  const n=Number(data.values[key])||0;
+                  canonical[key]=clampTwd(legacyJpy?n*rate:n,key);
+                }else $(key).value=data.values[key];
+              });
               lastPeople=Math.max(1,Number($('people').value)||1);
             }
+            paintMoney();
             syncModeButtons();paintCert();render();
           }finally{restoringBudget=false;}
         },
@@ -1032,11 +1272,12 @@
           ticketHint(items||[]);
           paintCert();
           if(certainty.tickets!=='estimate')return;
-          const rate=currentRate();
+          seedCanonical();
           const list=items||[];
           const jpy=list.reduce((sum,it)=>sum+(Number(it.jpy)>0?Number(it.jpy):0),0);
-          if(!Number.isFinite(rate))return;
-          const shown=currencyMode==='JPY'?jpy:Math.round(jpy*rate);
+          const twd=clampTwd(Math.round(jpy*jpyRate),'tickets');
+          const shown=currencyMode==='JPY'?Math.round(jpy):twd;
+          canonical.tickets=twd;
           const input=$('tickets');
           if(Number(input.value)===shown)return;
           restoringBudget=true;
@@ -1050,13 +1291,16 @@
       fields.forEach(key => $(key).addEventListener("input", () => {
         if(restoringBudget)return;
         if(key==='tickets'&&certainty.tickets==='estimate')return;
+        if(moneyFields.includes(key))ingestField(key);
         if(key==='hotel'){customNights=null;hotelClampNote='';}
-        if(key==='days'&&customNights){
-          const nights=Math.max(0,Number($('days').value)-1);
-          const prev=customNights;
-          const fill=prev.length?prev[prev.length-1]:0;
-          customNights=Array.from({length:nights},(_,i)=>i<prev.length?prev[i]:fill);
-        }
+        render();
+        window.TripPlans?.noteBudget();
+      }));
+      moneyFields.forEach(key=>$(key).addEventListener('blur',()=>{
+        if(restoringBudget)return;
+        if(key==='tickets'&&certainty.tickets==='estimate')return;
+        ingestField(key);
+        writeField(key);
         render();
         window.TripPlans?.noteBudget();
       }));
@@ -1072,7 +1316,6 @@
       }
       $("reset-btn").addEventListener("click", () => {
         currencyMode='TWD';
-        twdShadow=null;
         try{localStorage.setItem('japan-trip-currency','TWD');}catch{}
         hotelMode='night';
         summaryMode='group';
@@ -1081,7 +1324,10 @@
         hotelClampNote='';
         lastPeople=defaults.people;
         certainty={hotel:'estimate',airport:'estimate',tickets:'estimate'};
-        fields.forEach(key => $(key).value = defaults[key]);
+        seedCanonical();
+        moneyFields.forEach(key=>{canonical[key]=defaults[key];});
+        fields.forEach(key => {if(key!=='days')$(key).value = defaults[key];});
+        paintMoney();
         paintCert();
         syncModeButtons();
         const start=window.TripDates.today();
@@ -1094,7 +1340,6 @@
       document.getElementById('currency-twd').addEventListener('click',()=>setCurrency('TWD'));
       document.getElementById('currency-jpy').addEventListener('click',()=>setCurrency('JPY'));
       document.getElementById('budget-jpy-rate').addEventListener('input',e=>shareRate(e.target.value,e.target));
-      document.getElementById('fetch-bot-rate').addEventListener('click',fetchBotRate);
       try{
         const savedRate=localStorage.getItem('japan-trip-manual-rate');
         if(savedRate&&Number(savedRate)>0&&Number(savedRate)<=10){
@@ -1172,7 +1417,7 @@
   el.append(decor,text,note);
  }
  async function commonsPhoto(query){
-  const url='https://commons.wikimedia.org/w/api.php?'+new URLSearchParams({action:'query',generator:'search',gsrsearch:'filetype:bitmap '+query,gsrnamespace:'6',gsrlimit:'8',prop:'imageinfo',iiprop:'url|mime',iiurlwidth:'520',format:'json',origin:'*'});
+  const url='https://commons.wikimedia.org/w/api.php?'+new URLSearchParams({action:'query',generator:'search',gsrsearch:'filetype:bitmap '+query,gsrnamespace:'6',gsrlimit:'8',prop:'imageinfo',iiprop:'url|mime',iiurlwidth:'240',format:'json',origin:'*'});
   const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),9000);
   try{
    const r=await fetch(url,{signal:controller.signal});if(!r.ok)throw Error('photo search failed');
@@ -1185,6 +1430,19 @@
    const selected=valid[0],info=selected.imageinfo[0];
    return {url:info.thumburl,source:info.descriptionurl||'https://commons.wikimedia.org/wiki/'+encodeURIComponent(selected.title)};
   }finally{clearTimeout(timer)}
+ }
+ const photoQueue=[];let photoActive=0;
+ function enqueuePhoto(name,pref,el,cat){
+  photoQueue.push({name,pref,el,cat});
+  pumpPhotos();
+ }
+ function pumpPhotos(){
+  while(photoActive<3&&photoQueue.length){
+   const job=photoQueue.shift();
+   if(!job.el.isConnected)continue;
+   photoActive++;
+   Promise.resolve(loadPhoto(job.name,job.pref,job.el,job.cat)).finally(()=>{photoActive--;pumpPhotos();});
+  }
  }
  async function loadPhoto(name,pref,el,cat){
   if(!el.isConnected)return;
@@ -1235,12 +1493,14 @@
    ok.textContent=opts.okText||'確定';
    cancel.textContent=opts.cancelText||'取消';
    root.hidden=false;
+   window.syncOverlayNav?.();
    const focusables=()=>[...panel.querySelectorAll('button,input')].filter(el=>!el.hidden&&!el.disabled);
    let settled=false;
    function finish(result){
     if(settled)return;
     settled=true;
     root.hidden=true;
+    window.syncOverlayNav?.();
     document.removeEventListener('keydown',onKey,true);
     ok.onclick=null;cancel.onclick=null;root.onclick=null;
     if(prev&&prev.isConnected&&typeof prev.focus==='function')prev.focus();
@@ -1271,15 +1531,21 @@
   });
  }
  const picker=byId('spot-picker');
+ let pickerOpener=null;
  function allChosen(){return state.days.flatMap((d,i)=>d.spots.map(s=>({name:s.name,pref:d.pref,day:i})));}
  function openPicker(di){
+  pickerOpener=document.activeElement;
   pickerDay=di;pickerRegion=state.days[di].pref;pickerCategory='全部';pickerChosen.clear();
   byId('picker-day-label').textContent=`Day ${di+1} · ${pickerRegion}｜可一次選擇多個景點`;
   const sel=byId('picker-region');sel.replaceChildren();
   for(const p of PREFECTURES){const o=document.createElement('option');o.value=p.pref;o.textContent=p.pref;sel.append(o)}sel.value=pickerRegion;
-  byId('picker-search').value='';byId('picker-custom-name').value='';picker.hidden=false;document.body.style.overflow='hidden';renderPicker();byId('picker-search').focus();
+  byId('picker-search').value='';byId('picker-custom-name').value='';picker.hidden=false;document.body.style.overflow='hidden';window.syncOverlayNav?.();renderPicker();byId('picker-search').focus();
  }
- function closePicker(){picker.hidden=true;document.body.style.overflow='';pickerDay=-1;}
+ function closePicker(){
+  picker.hidden=true;document.body.style.overflow='';pickerDay=-1;window.syncOverlayNav?.();
+  if(pickerOpener&&pickerOpener.isConnected)pickerOpener.focus();
+  pickerOpener=null;
+ }
  function renderPicker(){
   if(pickerDay<0)return;
   const catsEl=byId('picker-categories');catsEl.replaceChildren();
@@ -1294,7 +1560,7 @@
    const key=pickerRegion+'|'+s.name;const inDays=chosen.filter(x=>x.name===s.name&&x.pref===pickerRegion);const alreadyToday=inDays.some(x=>x.day===pickerDay);const other=inDays.filter(x=>x.day!==pickerDay);const picked=pickerChosen.has(key);
    const card=document.createElement('div');card.className='picker-card'+(picked?' selected':'');
    const photo=document.createElement('div');photo.className='picker-photo';photo.dataset.key=key;photo.dataset.cat=s.cat;photo.textContent='🗾 照片載入中…';
-   if(photoObserver)photoObserver.observe(photo);else loadPhoto(s.name,pickerRegion,photo,s.cat);
+   if(photoObserver)photoObserver.observe(photo);else enqueuePhoto(s.name,pickerRegion,photo,s.cat);
    const info=document.createElement('div');info.className='picker-info';const name=document.createElement('strong');name.textContent=s.name;const meta=document.createElement('span');meta.className='picker-meta';const listed=SPOT_META[s.name];const ticketBit=listed?.ticket?listed.ticket.jpy>0?` · 門票約 ${listed.ticket.jpy.toLocaleString('zh-TW')} 日圓`:' · 免費':'';const hourBit=listed?.hours?` · ${listed.hours.open}–${listed.hours.close}`:'';meta.textContent=`${s.cat} · ${s.area||pickerRegion}${s.near?' · 同區推薦':''}${hourBit}${ticketBit}`;info.append(name,meta);
    if(alreadyToday||other.length){const warn=document.createElement('span');warn.className='picker-warning';warn.textContent=alreadyToday?'已在本日行程':`已安排 Day ${other.map(x=>x.day+1).join('、')}`;info.append(warn)}
    const b=document.createElement('button');b.type='button';b.className='mini-btn';b.disabled=alreadyToday;b.textContent=alreadyToday?'已加入本日':picked?'✓ 已勾選':'＋ 勾選景點';b.addEventListener('click',()=>{if(pickerChosen.has(key))pickerChosen.delete(key);else pickerChosen.set(key,{name:s.name,cat:s.cat,area:s.area,pref:pickerRegion});renderPicker()});info.append(b);card.append(photo,info);grid.append(card);
@@ -1308,10 +1574,10 @@
  byId('picker-custom-add').addEventListener('click',async()=>{const name=byId('picker-custom-name').value.trim();const err=byId('picker-custom-error');if(!name||name.length>80){if(err)err.textContent='請輸入 1～80 個字的景點名稱。';await openAppDialog({title:'無法加入景點',message:'請輸入 1～80 個字的景點名稱。',alertOnly:true});byId('picker-custom-name').focus();return;}if(err)err.textContent='';const key=pickerRegion+'|'+name;pickerChosen.set(key,{name,cat:'自訂',area:pickerRegion,pref:pickerRegion});byId('picker-custom-name').value='';renderPicker()});
  byId('picker-apply').addEventListener('click',()=>{
   if(pickerDay<0)return;const day=state.days[pickerDay];let count=0;
-  for(const s of pickerChosen.values()){if(day.spots.some(x=>x.name===s.name))continue;day.spots.push({...s});count++}
+  for(const s of pickerChosen.values()){if(day.spots.some(x=>x.name===s.name))continue;day.spots.push(withRef({...s}));count++}
   save();closePicker();renderDays();showMessage(`已加入 ${count} 個景點；其他天已有的景點會提示，但仍允許加入。`);
  });
- if('IntersectionObserver' in window){photoObserver=new IntersectionObserver(entries=>{for(const e of entries)if(e.isIntersecting){photoObserver.unobserve(e.target);const [pref,...rest]=e.target.dataset.key.split('|');loadPhoto(rest.join('|'),pref,e.target,e.target.dataset.cat)}},{root:byId('picker-grid').closest('.picker-body'),rootMargin:'180px'});}
+ if('IntersectionObserver' in window){photoObserver=new IntersectionObserver(entries=>{for(const e of entries)if(e.isIntersecting){photoObserver.unobserve(e.target);const [pref,...rest]=e.target.dataset.key.split('|');enqueuePhoto(rest.join('|'),pref,e.target,e.target.dataset.cat)}},{root:byId('picker-grid').closest('.picker-body'),rootMargin:'0px'});}
 
  const cats=['文化','自然','美食','購物','動漫','娛樂','散步'];
  const storeKey='japanTripPlannerV2';
@@ -1388,14 +1654,14 @@
   save();renderDays();showMessage('已移動景點；受影響日的交通分鐘數已清除，請重新查詢。');
  }
  function validateBackup(obj){
-  if(!obj||typeof obj!=='object'||!Array.isArray(obj.stops)||!Array.isArray(obj.days)||!obj.settings||typeof obj.settings!=='object')return false;
+  if(!obj||typeof obj!=='object'||!Array.isArray(obj.stops)||!Array.isArray(obj.days))return false;
   if(obj.stops.length>47||obj.days.length>60||JSON.stringify(obj).length>500000)return false;
   if(!obj.stops.every(x=>x&&typeof x.pref==='string'&&Number.isInteger(Number(x.days))&&Number(x.days)>=1&&Number(x.days)<=60))return false;
   if(!obj.days.every(d=>d&&typeof d.pref==='string'&&Array.isArray(d.spots)&&d.spots.length<=100&&d.spots.every(p=>p&&typeof p.name==='string'&&p.name.length>0&&p.name.length<=120)))return false;
   return true;
  }
  byId('export-trip').addEventListener('click',()=>{
-  const blob=new Blob([JSON.stringify({format:'japan-trip-planner',version:'4.16',exportedAt:new Date().toISOString(),data:state},null,2)],{type:'application/json'});
+  const blob=new Blob([JSON.stringify({format:'japan-trip-planner',version:'4.17',exportedAt:new Date().toISOString(),data:state,budget:window.TripBudget?.snapshot?.()||null},null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='japan-trip-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
   showMessage('行程備份已下載，請妥善保管 JSON 檔案。');
  });
@@ -1405,14 +1671,25 @@
   if(file.size>500000){showMessage('備份檔過大（上限 500 KB）。');return}
   try{const payload=JSON.parse(await file.text());const restored=payload?.format==='japan-trip-planner'?payload.data:payload;
    if(!validateBackup(restored)){showMessage('檔案格式不正確或超過資料限制，無法還原。');return}
-   const agreed=await openAppDialog({title:'還原備份',message:'還原會覆蓋目前這份計畫的行程。預估中的門票會依新行程重算；已確定的住宿、機場交通與門票金額不會被覆蓋。沒有航班或日期的舊檔會自動補上預設值。確定嗎？',okText:'覆蓋還原'});
+   const agreed=await openAppDialog({title:'還原備份',message:'還原會覆蓋目前這份計畫的行程。有附帶預算的備份會一併還原；沒有預算的舊檔不會改動目前金額。預估中的門票會依新行程重算；已確定的住宿、機場交通與門票金額不會被覆蓋。沒有航班的舊檔會補上預設值。沒有日期的舊檔會沿用你現在的出發日。確定嗎？',okText:'覆蓋還原'});
    if(!agreed)return;
+   const kept=window.TripDates.committedRange?.()||window.TripDates.get();
+   const backupCount=window.TripDates.dayCount(restored.dates?.start,restored.dates?.end);
+   const hasDates=!!(window.TripDates.parse(restored.dates?.start)&&backupCount>=1&&backupCount<=60);
+   if(!hasDates){
+    const len=Math.min(60,Math.max(1,restored.days.length||restored.stops.reduce((a,s)=>a+Number(s.days||0),0)||5));
+    const start=window.TripDates.parse(kept.start)?kept.start:window.TripDates.today();
+    restored.dates={start,end:window.TripDates.addDays(start,len-1)};
+   }
+   clearRemovedDays();
    state=restored;activeDay=0;
    state.settings={...initial().settings,...(state.settings||{})};
    if(!/^\d{2}:\d{2}$/.test(String(state.settings.start||'')))state.settings.start='09:00';
    state.flight={...initial().flight,...(state.flight||{})};
    if(!state.dates||typeof state.dates!=='object')state.dates={start:'',end:''};
    ensureDates();save();writeSettings();writeFlight();locationStatus();renderStops();renderPrefs();renderDays();
+   if(payload&&payload.budget)window.TripBudget?.restore(payload.budget);
+   window.TripTickets?.refresh?.();
    showMessage('已還原行程備份。缺少的航班欄位已用預設值補上，並更新了航班表單。');
   }catch(err){console.error(err);showMessage('無法讀取 JSON 備份檔。')}
  });
@@ -1420,6 +1697,7 @@
  function readFlight(){for(const [key,id] of Object.entries(flightIds)){const raw=byId(id).value;state.flight[key]=['entry','transfer','checkin'].includes(key)?Math.max(0,Number(raw)||0):raw;}save();}
  function writeFlight(){for(const [key,id] of Object.entries(flightIds))byId(id).value=String(state.flight[key]??'');}
  for(const id of Object.values(flightIds))byId(id).addEventListener('change',()=>{readFlight();renderDays()});
+ for(const id of ['flight-entry','flight-transfer','flight-checkin','flight-arr-time','flight-dep-time'])byId(id).addEventListener('input',()=>{readFlight();renderDays();});
  writeFlight();
  const clockMinutes=t=>{const m=/^(\d{2}):(\d{2})$/.exec(t||'');return m?Number(m[1])*60+Number(m[2]):0;};
  const flightFirstStart=()=>clockMinutes(state.flight.arrTime)+Number(state.flight.entry)+Number(state.flight.transfer);
@@ -1450,6 +1728,7 @@
  function readSettings(){const start=byId('day-start-time').value;state.settings={start:/^\d{2}:\d{2}$/.test(start)?start:'09:00',duration:Number(byId('trip-duration').value),transfer:0,base:byId('trip-base').value.trim(),coords:byId('trip-coords').value.trim(),smart:byId('trip-smart').checked,pace:byId('trip-pace').value,must:byId('trip-must').value};save()}
  function writeSettings(){byId('day-start-time').value=state.settings.start;byId('trip-duration').value=String(state.settings.duration);byId('trip-base').value=state.settings.base;byId('trip-coords').value=state.settings.coords||'';byId('trip-smart').checked=state.settings.smart;byId('trip-pace').value=state.settings.pace||'normal';byId('trip-must').value=state.settings.must||''}
  for(const id of ['day-start-time','trip-duration','trip-base','trip-coords','trip-smart','trip-pace','trip-must'])byId(id).addEventListener('change',()=>{readSettings();locationStatus();renderDays()});
+ byId('trip-duration').addEventListener('input',()=>{readSettings();});
  function areaOf(s,pref){return s.area&&s.area!==pref?s.area:(AREA[s.name]||PREFECTURES.find(p=>p.pref===pref)?.city||pref)}
  const SPOT_COORDS={"大阪城公園":[34.6873,135.5262],"道頓堀":[34.6687,135.5013],"心齋橋":[34.6751,135.5013],"環球影城":[34.6654,135.4323],"黑門市場":[34.6663,135.5064],"通天閣":[34.6525,135.5063],"日本橋電電街":[34.6599,135.5055],"海遊館":[34.6545,135.4289],"難波八阪神社":[34.6611,135.4967],"清水寺":[34.9949,135.785],"伏見稻荷大社":[34.9671,135.7727],"嵐山竹林":[35.0172,135.6716],"錦市場":[35.005,135.7646],"祇園花見小路":[35.003,135.778],"金閣寺":[35.0394,135.7292],"京都國際漫畫博物館":[35.0105,135.7595],"淺草寺":[35.7148,139.7967],"上野公園":[35.7156,139.773],"秋葉原":[35.6984,139.7731],"澀谷十字路口":[35.6595,139.7005],"明治神宮":[35.6764,139.6993],"東京晴空塔":[35.7101,139.8107],"銀座":[35.6717,139.765],"新宿御苑":[35.6852,139.71]};
  const SPOT_DATA_DATE='2026-10-14';
@@ -1467,13 +1746,15 @@
  };
  function parseCoords(raw){if(!raw)return null;const match=String(raw).match(/(?:@|^|[?&]query=)(-?\d{1,2}(?:\.\d+)?),\s*(-?\d{1,3}(?:\.\d+)?)/);if(!match)return null;const lat=Number(match[1]),lng=Number(match[2]);return lat>=24&&lat<=46&&lng>=122&&lng<=154?[lat,lng]:null}
  function haversine(a,b){const r=Math.PI/180,dlat=(b[0]-a[0])*r,dlng=(b[1]-a[1])*r,x=Math.sin(dlat/2)**2+Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.sin(dlng/2)**2;return 6371*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x))}
- function spotCoords(s){return SPOT_COORDS[s.name]||null}
+ function spotCoords(s){return SPOT_COORDS[s.refName||s.name]||null}
+ function withRef(spot){if(spot&&SPOT_META[spot.name]&&!spot.refName)spot.refName=spot.name;return spot;}
+ function metaFor(spot){return spot?SPOT_META[spot.refName||spot.name]||null:null;}
  function geoSort(spots,pref,originCoords){if(!state.settings.smart||spots.length<2)return spots;const remaining=[...spots];const ordered=[];let current=parseCoords(originCoords||state.settings.coords);if(!current){const known=remaining.find(s=>spotCoords(s));current=known?spotCoords(known):null}if(!current)return smartSort(spots,pref);while(remaining.length){let best=-1,dist=Infinity;remaining.forEach((s,i)=>{const c=spotCoords(s);if(c){const d=haversine(current,c);if(d<dist){best=i;dist=d}}});if(best<0){ordered.push(...smartSort(remaining,pref));break}const s=remaining.splice(best,1)[0];ordered.push(s);current=spotCoords(s)}return ordered}
  function locationStatus(){const el=byId('trip-location-status');if(!el)return;const c=parseCoords(state.settings.coords);el.textContent=c?'✓ 已辨識住宿座標（'+c[0].toFixed(4)+', '+c[1].toFixed(4)+'）；有座標的景點將優先依直線距離排序。':'住宿座標未設定或無法辨識：仍可用地址開啟導航，排序使用既有景點區域資料。可貼上 Google Maps 網址中 @緯度,經度 的部分。'}
  function smartSort(spots,pref){if(!state.settings.smart)return spots;const indexed=spots.map((s,i)=>({...s,__i:i}));const count=new Map();indexed.forEach(s=>{const a=areaOf(s,pref);count.set(a,(count.get(a)||0)+1)});indexed.sort((a,b)=>(count.get(areaOf(b,pref))-count.get(areaOf(a,pref)))||(areaOf(a,pref).localeCompare(areaOf(b,pref),'zh-Hant'))||(a.__i-b.__i));return indexed.map(({__i,...s})=>s)}
  function minutesClock(n){const h=Math.floor(n/60)%24;return String(h).padStart(2,'0')+':'+String(n%60).padStart(2,'0')}
  function getStartMinutes(){const [h,m]=(state.settings.start||'09:00').split(':').map(Number);return (h||0)*60+(m||0)}
- function stayMinutes(s){if(s.minutes&&Number.isFinite(Number(s.minutes)))return Math.max(15,Math.min(720,Number(s.minutes)));const listed=SPOT_META[s.name];if(listed?.stay)return listed.stay;if(/環球影城|迪士尼|豪斯登堡|吉卜力公園/.test(s.name))return 420;if(/水族館|博物館|美術館|動物王國/.test(s.name))return 150;if(s.cat==='美食')return 60;return state.settings.duration}
+ function stayMinutes(s){if(s.minutes&&Number.isFinite(Number(s.minutes)))return Math.max(15,Math.min(720,Number(s.minutes)));const listed=metaFor(s);if(listed?.stay)return listed.stay;if(/環球影城|迪士尼|豪斯登堡|吉卜力公園/.test(s.refName||s.name))return 420;if(/水族館|博物館|美術館|動物王國/.test(s.name))return 150;if(s.cat==='美食')return 60;return state.settings.duration}
  function mapSearch(name,pref){return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(name+' '+pref+' 日本')}
  function mapRoute(day){const ss=day.spots.slice(0,10);if(!ss.length)return '';const place=s=>encodeURIComponent(s.name+' '+(s.pref||day.pref)+' 日本');const start=state.settings.base?encodeURIComponent(state.settings.base+' 日本'):place(ss[0]);const dest=place(ss[ss.length-1]);const via=ss.slice(state.settings.base?0:1,-1).map(place).join('%7C');return 'https://www.google.com/maps/dir/?api=1&origin='+start+'&destination='+dest+(via?'&waypoints='+via:'')+'&travelmode=transit'}
  function segmentRoute(from,to,mode){return 'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(from)+'&destination='+encodeURIComponent(to)+'&travelmode='+encodeURIComponent(mode)}
@@ -1523,6 +1804,15 @@
    const pref=state.days[state.days.length-1]?.pref||state.stops[state.stops.length-1]?.pref||'大阪府';
    while(state.days.length<n)state.days.push({pref,day:1,spots:[]});
   }else if(n<state.days.length)state.days.length=n;
+  rebuildStopsFromDays();
+ }
+ function cloneDays(days){return days.map(d=>({...d,spots:(d.spots||[]).map(s=>({...s}))}));}
+ let removedTail=[];
+ let undoSnapshot=null;
+ let dateSeq=0;
+ function showUndo(on){const btn=byId('trip-undo');if(btn)btn.hidden=!on;}
+ function clearRemovedDays(){removedTail=[];undoSnapshot=null;showUndo(false);}
+ function rebuildStopsFromDays(){
   const counts={};
   state.days.forEach(d=>{counts[d.pref]=(counts[d.pref]||0)+1;d.day=counts[d.pref];});
   const stops=[];
@@ -1530,6 +1820,7 @@
   if(stops.length)state.stops=stops;
   if(activeDay>=state.days.length)activeDay=Math.max(0,state.days.length-1);
  }
+ function prefsOf(days){const list=[];for(const d of days)if(!list.includes(d.pref))list.push(d.pref);return list;}
  function blankDaysFromStops(){
   state.days=state.stops.flatMap(stop=>Array.from({length:Number(stop.days)||0},(_,i)=>({pref:stop.pref,day:i+1,spots:[]})));
   if(activeDay>=state.days.length)activeDay=0;
@@ -1548,6 +1839,7 @@
   }
  }
  function publishFromStops(mutate){
+  clearRemovedDays();
   const hadDays=state.days.length>0;
   const snap=state.stops.map(s=>({...s}));
   const split=hadDays?splitBlocks(snap,state.days):{blocks:[],matched:false};
@@ -1582,17 +1874,74 @@
   if(activeDay>=state.days.length)activeDay=Math.max(0,state.days.length-1);
   save();renderStops();renderDays();
  }
- function onDatesChanged(detail){
-  if(!detail||detail.cause==='planner')return;
+ function undoShorten(){
+  if(!undoSnapshot)return;
+  const snap=undoSnapshot;
+  clearRemovedDays();
+  state.days=cloneDays(snap.days);
+  state.stops=snap.stops.map(s=>({...s}));
+  state.dates={start:snap.dates.start,end:snap.dates.end};
+  activeDay=snap.activeDay||0;
+  window.TripDates.set(snap.dates.start,snap.dates.end,'revert');
+  writeFlightDates();
+  save();renderStops();renderDays();
+  showMessage('已復原縮短前的行程與日期。');
+ }
+ async function onDatesChanged(detail){
+  if(!detail||detail.cause==='planner'||detail.cause==='import'||detail.cause==='revert')return;
+  if(detail.invalid||detail.incomplete||window.TripDates.isInvalid?.()){
+   writeFlightDates();
+   const note=byId('flight-date-note');
+   if(detail.invalid&&note){note.textContent='回程日期不能早於出發日期';note.classList.add('is-error');}
+   return;
+  }
+  const n=detail.days|0;
+  const seq=++dateSeq;
+  const prevStart=state.dates?.start||'';
+  const prevEnd=state.dates?.end||'';
+  if(n<1||n>60)return;
+  const before=state.days.length;
+  if(before&&n<before){
+   const removed=state.days.slice(n);
+   const spots=removed.flatMap(d=>(d.spots||[]).map(s=>s.name));
+   const lost=prefsOf(state.days).filter(p=>!prefsOf(state.days.slice(0,n)).includes(p));
+   if((spots.length||lost.length)&&detail.cause!=='undo'){
+    const shown=spots.slice(0,12);
+    const lines=[];
+    if(lost.length)lines.push('會從行程拿掉的地區：'+lost.join('、'));
+    if(shown.length)lines.push('會先移出的景點：'+shown.join('、')+(spots.length>shown.length?`，另有 ${spots.length-shown.length} 個`:''));
+    lines.push('可以按「復原縮短」，或把日期加長，被移出的日子會接回來。');
+    const ok=await openAppDialog({title:'縮短行程',message:`日期從 ${before} 天改成 ${n} 天。\n`+lines.join('\n'),okText:'縮短並移出',cancelText:'取消'});
+    if(seq!==dateSeq)return;
+    if(!ok){window.TripDates.set(prevStart,prevEnd,'revert');writeFlightDates();return;}
+   }
+   undoSnapshot={days:cloneDays(state.days),stops:state.stops.map(s=>({...s})),dates:{start:prevStart,end:prevEnd},activeDay};
+   removedTail=cloneDays(removed).concat(removedTail);
+   state.days=state.days.slice(0,n);
+   rebuildStopsFromDays();
+   state.dates={start:detail.start,end:detail.end};
+   writeFlightDates();
+   save();renderStops();renderDays();
+   showUndo(true);
+   const hint=byId('trip-date-hint');
+   if(hint)hint.textContent=`已縮成 ${n} 天。被移出的日子還留著，可按「復原縮短」或把日期加長接回來。`;
+   showMessage(`已縮成 ${n} 天。被移出的日子還留著，可按「復原縮短」或把日期加長接回來。`);
+   return;
+  }
   state.dates={start:detail.start||'',end:detail.end||''};
   writeFlightDates();
-  const n=detail.days|0;
-  if(n<1||n>60){save();renderStops();renderDays();return;}
-  const before=state.days.length;
-  if(before)resizeFlatDays(n);else{fitStopsOnly(n);blankDaysFromStops();}
+  if(before&&n>before){
+   while(state.days.length<n&&removedTail.length)state.days.push(removedTail.shift());
+   const pref=state.days[state.days.length-1]?.pref||state.stops[state.stops.length-1]?.pref||'大阪府';
+   while(state.days.length<n)state.days.push({pref,day:1,spots:[]});
+   rebuildStopsFromDays();
+   if(!removedTail.length)showUndo(!!undoSnapshot);
+  }else if(!before){fitStopsOnly(n);blankDaysFromStops();}
   save();renderStops();renderDays();
-  if(before&&before!==n)showMessage(n>before?`已依新日期把行程從 ${before} 天延到 ${n} 天，原本的每日內容都還在，多出來的日子加在最後。`:`已依新日期把行程調整為 ${n} 天，並保留前 ${n} 天的內容。`);
+  if(before&&before!==n)showMessage(`已依新日期把行程從 ${before} 天延到 ${n} 天，原本的每日內容都還在，多出來的日子會先接回先前移出的天。`);
  }
+ const undoBtn=byId('trip-undo');
+ if(undoBtn)undoBtn.addEventListener('click',undoShorten);
  function ensureDates(){
   const saved=state.dates;
   const nSaved=window.TripDates.dayCount(saved?.start,saved?.end);
@@ -1716,7 +2065,7 @@
    }
   }
   spots.forEach((spot,i)=>{
-   const meta=spotMeta(spot.name);
+   const meta=metaFor(spot);
    const closed=closureReason(meta,di);
    if(closed)issues.push(`${spot.name}：${closed}`);
    const prev=i?spots[i-1]:null;
@@ -1751,7 +2100,7 @@
   return {bounds,issues,timeline,steps,end:cursor,hard:issues.some(isHardIssue)};
  }
  function canAccept(di,total,day,spot){
-  if(closureReason(spotMeta(spot.name),di))return false;
+  if(closureReason(metaFor(spot),di))return false;
   const sim=simulateDay(di,total,[...day.spots,spot]);
   if(sim.end>sim.bounds.end)return false;
   if(sim.issues.some(msg=>msg.includes(spot.name)&&/營業時間|休館|公休/.test(msg)))return false;
@@ -1773,6 +2122,7 @@
   if(!state.stops.length){showMessage('請先加入至少一個目的地。');return;}
   if(total>60){showMessage('為避免過長，單次行程上限為 60 天。');return;}
   if(state.days.some(d=>d.spots&&d.spots.length)&&!await openAppDialog({title:'重新產生行程',message:'重新產生會覆蓋目前已編輯的每日景點。確定繼續？',okText:'覆蓋產生'}))return;
+  clearRemovedDays();
   const output=state.stops.flatMap(stop=>Array.from({length:stop.days},(_,i)=>({pref:stop.pref,day:i+1,spots:[]})));
   const used=new Set(),must=mustSeeNames(),matched=new Set(),capacity=output.map((d,i)=>dayCapacity(i,output.length));
   const uniqueKey=(pref,s)=>pref+'|'+normName(s.name);
@@ -1783,7 +2133,7 @@
    const options=output.map((d,i)=>({d,i})).filter(x=>x.d.pref===entry.pref&&x.d.spots.length<capacity[x.i]&&canAccept(x.i,output.length,x.d,entry.spot));
    if(!options.length)continue;
    options.sort((a,b)=>a.d.spots.length-b.d.spots.length||a.i-b.i);
-   const target=options[0];target.d.spots.push({...entry.spot,locked:true});used.add(uniqueKey(entry.pref,entry.spot));matched.add(wanted);
+   const target=options[0];target.d.spots.push(withRef({...entry.spot,locked:true}));used.add(uniqueKey(entry.pref,entry.spot));matched.add(wanted);
   }
   for(let di=0;di<output.length;di++){
    const d=output[di],stop={pref:d.pref},region=PREFECTURES.find(p=>p.pref===d.pref);if(!region)continue;
@@ -1803,7 +2153,7 @@
     if(!picked)break;
     const next=picked.s;
     candidates.splice(candidates.indexOf(next),1);
-    d.spots.push({...next});used.add(uniqueKey(d.pref,next));
+    d.spots.push(withRef({...next}));used.add(uniqueKey(d.pref,next));
    }
    // Respect the fixed must-see order, then choose the nearest remaining spot.
    if(!d.spots.some(s=>s.locked))d.spots=geoSort(d.spots,d.pref,state.settings.coords);
@@ -1819,6 +2169,7 @@
   if(!state.stops.length){showMessage('請先加入至少一個目的地。');return;}
   if(total>60){showMessage('單次行程上限為 60 天。');return;}
   if(state.days.some(d=>d.spots&&d.spots.length)&&!await openAppDialog({title:'建立空白行程',message:'建立手動空白行程會覆蓋目前每日景點。建議先備份，確定繼續？',okText:'覆蓋並建立'}))return;
+  clearRemovedDays();
   state.days=state.stops.flatMap(stop=>Array.from({length:stop.days},(_,i)=>({pref:stop.pref,day:i+1,spots:[]})));
   activeDay=0;save();renderDays();showMessage('已建立 '+state.days.length+' 天空白行程。請在右側逐日按「＋ 選擇景點」自由新增與排序。');
  }
@@ -1898,7 +2249,7 @@
     clock.textContent=minutesClock(step.begin)+' – '+minutesClock(step.begin+stay)+travelNote;desc.append(clock);
     const name=document.createElement('div');name.className='spot-title';name.textContent=`${si+1}. ${spot.name}`;
     const cat=document.createElement('div');cat.className='v4-spot-details';cat.textContent=(spot.cat||'自訂')+' · '+areaOf(spot,day.pref)+' · 建議停留 '+stay+' 分鐘';desc.append(name,cat);
-    const info=spotMeta(spot.name);
+    const info=metaFor(spot);
     const facts=document.createElement('div');facts.className='spot-meta';
     const bits=[];
     if(info?.hours)bits.push(`營業 ${info.hours.open}–${info.hours.close}`);
@@ -1906,8 +2257,8 @@
     if(info?.ticket)bits.push(info.ticket.jpy>0?`門票參考 ${info.ticket.jpy.toLocaleString('zh-TW')} 日圓`:'門票：免費');
     if(info?.note)bits.push(info.note);
     if(info?.updated)bits.push('資料 '+info.updated);
-    if(SPOT_COORDS[spot.name])bits.push('有參考座標');
-    if(!info&&!SPOT_COORDS[spot.name])bits.push('營業時間、門票與座標尚未查證');
+    if(SPOT_COORDS[spot.refName||spot.name])bits.push('有參考座標');
+    if(!info&&!SPOT_COORDS[spot.refName||spot.name])bits.push('營業時間、門票與座標尚未查證');
     facts.textContent=bits.join(' · ');
     if(info?.url){const site=document.createElement('a');site.className='v4-link';site.href=info.url;site.target='_blank';site.rel='noopener noreferrer';site.textContent='官網';facts.append(' ');facts.append(site)}
     desc.append(facts);
@@ -1931,7 +2282,7 @@
     moveLabel.append(moveSelect);moveControls.append(moveLabel,moveBtn);desc.append(moveControls);
     const actions=document.createElement('div');actions.className='spot-actions';
     const make=(label,aria,fn,disabled=false)=>{const b=document.createElement('button');b.type='button';b.className='mini-btn';b.textContent=label;b.setAttribute('aria-label',aria);b.disabled=disabled;b.addEventListener('click',fn);actions.append(b)};
-    make('✎','編輯 '+spot.name,async()=>{const name=await openAppDialog({title:'編輯景點名稱',message:'名稱會顯示在當天行程上。',label:'景點名稱',input:true,value:spot.name,validate:v=>{const val=v.trim();return val&&val.length<=80?'':'請輸入 1～80 個字。';}});if(name===null)return;spot.name=name.trim();save();renderDays()});
+    make('✎','編輯 '+spot.name,async()=>{const name=await openAppDialog({title:'編輯景點名稱',message:'名稱會顯示在當天行程上。',label:'景點名稱',input:true,value:spot.name,validate:v=>{const val=v.trim();return val&&val.length<=80?'':'請輸入 1～80 個字。';}});if(name===null)return;if(!spot.refName&&SPOT_META[spot.name])spot.refName=spot.name;spot.name=name.trim();save();renderDays()});
     make('↑','上移 '+spot.name,()=>{[day.spots[si-1],day.spots[si]]=[day.spots[si],day.spots[si-1]];save();renderDays()},si===0);
     make('↓','下移 '+spot.name,()=>{[day.spots[si+1],day.spots[si]]=[day.spots[si],day.spots[si+1]];save();renderDays()},si===day.spots.length-1);
     make('×','刪除 '+spot.name,()=>{day.spots.splice(si,1);save();renderDays()});
@@ -1951,9 +2302,10 @@
  }
  function publishTickets(){
   const map=new Map();
-  for(const day of state.days)for(const spot of day.spots){const info=spotMeta(spot.name);if(info?.ticket&&Number.isFinite(info.ticket.jpy))map.set(spot.name,info.ticket)}
+  for(const day of state.days)for(const spot of day.spots){const info=metaFor(spot);if(info?.ticket&&Number.isFinite(info.ticket.jpy))map.set(spot.refName||spot.name,info.ticket)}
   window.TripBudget?.syncTickets([...map.entries()].map(([name,ticket])=>({name,jpy:ticket.jpy,note:ticket.note||''})));
  }
+ window.TripTickets={refresh:publishTickets};
  byId('add-stop').addEventListener('click',()=>{
   const region=PREFECTURES[Number(select.value)];if(!region)return;
   if(state.stops.some(s=>s.pref===region.pref)){showMessage('這個都道府縣已在清單中，可直接調整停留天數。');return;}
@@ -1963,7 +2315,7 @@
  });
  byId('generate-trip').addEventListener('click',generate);
  byId('manual-trip').addEventListener('click',createManualTrip);
- byId('reset-trip').addEventListener('click',async()=>{const ok=await openAppDialog({title:'重設行程',message:'確定要重設行程規劃嗎？景點會清空，旅行日期會回到 5 天，並與旅費天數一起更新。',okText:'重設行程'});if(!ok)return;state=initial();activeDay=0;ensureDates();save();writeSettings();writeFlight();locationStatus();renderStops();renderPrefs();renderDays();showMessage('已重設行程，日期已回到 5 天。');});
+ byId('reset-trip').addEventListener('click',async()=>{const ok=await openAppDialog({title:'重設行程',message:'確定要重設行程規劃嗎？景點會清空，旅行日期會回到 5 天，並與旅費天數一起更新。',okText:'重設行程'});if(!ok)return;clearRemovedDays();state=initial();activeDay=0;ensureDates();save();writeSettings();writeFlight();locationStatus();renderStops();renderPrefs();renderDays();showMessage('已重設行程，日期已回到 5 天。');});
  byId('copy-trip').addEventListener('click',async()=>{
   if(!state.days.length){showMessage('請先產生行程。');return;}
   const range=window.TripDates.rangeText();
@@ -1981,6 +2333,7 @@
   if(!state.dates||typeof state.dates!=='object')state.dates={start:'',end:''};
  }
  function applyActivePlan(){
+  clearRemovedDays();
   const plan=plansDoc.plans.find(p=>p.id===plansDoc.activeId);
   state=plan?.data&&Array.isArray(plan.data.stops)&&Array.isArray(plan.data.days)?plan.data:initial();
   normalizeState();
@@ -1994,6 +2347,7 @@
   const name=await openAppDialog({title:'新增旅行計畫',message:'例如「2027 大阪京都 9 天」或「東京 5 天」。新計畫會從空白的 5 天行程開始，目前這份會先存起來。',label:'計畫名稱',input:true,value:suggested,okText:'建立',validate:v=>v.trim()&&v.trim().length<=40?'':'請輸入 1～40 個字的名稱。'});
   if(name===null)return;
   save();
+  clearRemovedDays();
   const plan={id:newPlanId(),name:name.trim(),nameCustom:true,updatedAt:new Date().toISOString(),data:initial(),budget:null};
   plansDoc.plans.push(plan);
   plansDoc.activeId=plan.id;
@@ -2013,7 +2367,7 @@
   plan.name=name.trim();plan.nameCustom=true;save();showMessage('已改名為「'+plan.name+'」。');
  }
  async function deletePlan(){
-  if(plansDoc.plans.length<=1){showMessage('至少要留下一份旅行計畫。');return;}
+  if(plansDoc.plans.length<=1){await openAppDialog({title:'無法刪除',message:'至少要留下一份旅行計畫。',alertOnly:true});showMessage('至少要留下一份旅行計畫。');return;}
   const plan=plansDoc.plans.find(p=>p.id===plansDoc.activeId);
   const ok=await openAppDialog({title:'刪除旅行計畫',message:`確定刪除「${plan?.name||'這份計畫'}」？刪了就不能從這台裝置救回。`,okText:'刪除'});
   if(!ok)return;
@@ -2027,9 +2381,10 @@
   if(paintingPlans)return;
   const next=byId('plan-select').value;
   if(!next||next===plansDoc.activeId)return;
-  save();
+  readSettings();readFlight();save();
   plansDoc.activeId=next;
   applyActivePlan();
+  save();
  });
  byId('plan-new').addEventListener('click',createPlan);
  byId('plan-rename').addEventListener('click',renamePlan);
@@ -2219,12 +2574,13 @@ function build(){
   card.append(rowActions);body.append(card);
  });
 }
-function open(){previousFocus=document.activeElement;index=tripToday(getDays().length).index;build();overlay.hidden=false;document.body.style.overflow='hidden';by('v411-close').focus();}
-function close(){overlay.hidden=true;document.body.style.overflow='';if(previousFocus?.isConnected)previousFocus.focus();}
+function open(){previousFocus=document.activeElement;index=tripToday(getDays().length).index;build();overlay.hidden=false;document.body.style.overflow='hidden';window.syncOverlayNav?.();by('v411-close').focus();}
+function close(){if(overlay.hidden)return;overlay.hidden=true;document.body.style.overflow='';window.syncOverlayNav?.();if(previousFocus?.isConnected)previousFocus.focus();}
 by('v411-open').addEventListener('click',open);by('v411-mobile-trip').addEventListener('click',open);
 by('v411-close').addEventListener('click',close);by('v411-back-edit').addEventListener('click',()=>{close();by('tab-planner').click();document.querySelector('#planner-view')?.scrollIntoView({behavior:'smooth'})});
 by('v411-prev').addEventListener('click',()=>{index--;build()});by('v411-next').addEventListener('click',()=>{index++;build()});daySelect.addEventListener('change',()=>{index=Number(daySelect.value);build()});
 overlay.addEventListener('keydown',e=>{if(e.key==='Escape')close();if(e.key==='Tab'){const focusable=[...overlay.querySelectorAll('button:not([disabled]),select,a[href]')];if(!focusable.length)return;const first=focusable[0],last=focusable[focusable.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&overlay&&!overlay.hidden){e.preventDefault();close();}});
 for(const btn of document.querySelectorAll('[data-v411-tab]'))btn.addEventListener('click',()=>{by('tab-'+btn.dataset.v411Tab).click();window.scrollTo({top:0,behavior:'smooth'});updateTabs()});
 function updateTabs(){document.querySelectorAll('[data-v411-tab]').forEach(b=>b.setAttribute('aria-current',by('tab-'+b.dataset.v411Tab)?.classList.contains('active')?'page':'false'))}
 by('tab-budget').addEventListener('click',updateTabs);by('tab-planner').addEventListener('click',updateTabs);updateTabs();
