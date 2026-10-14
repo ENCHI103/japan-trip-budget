@@ -243,22 +243,24 @@
           <div class="field-grid">
             <div class="field" data-field="people">
               <label for="people">旅遊人數</label>
-              <div class="input-wrap"><input id="people" name="people" type="number" min="1" max="30" step="1" value="3" inputmode="numeric" required><span class="unit">人</span></div>
-              <div class="hint">1～30 人</div><div class="error">請輸入 1～30 的整數。</div>
+              <div class="input-wrap"><input id="people" name="people" type="number" min="0" max="30" step="1" value="0" inputmode="numeric" required><span class="unit">人</span></div>
+              <div class="hint">0～30 人；請輸入至少 1 人才能估算</div><div class="error">請輸入 0～30 的整數。</div>
             </div>
             <div class="field" data-field="days">
-              <label for="days">旅遊天數</label>
-              <div class="input-wrap"><input id="days" name="days" type="number" min="1" max="60" step="1" value="5" inputmode="numeric" required><span class="unit">天</span></div>
-              <div class="hint">1～60 天</div><div class="error">請輸入 1～60 的整數。</div>
+              <label for="trip-start">旅行日期（出發 → 回程）</label>
+              <div class="trip-date-inputs"><input id="trip-start" type="date" aria-label="出發日期"><span>→</span><input id="trip-end" type="date" aria-label="回程日期"></div>
+              <button id="trip-calendar-open" class="mini-btn trip-calendar-open" type="button">📅 開啟雙月日期選擇器</button>
+              <div class="input-wrap trip-days-result"><input id="days" name="days" type="number" min="0" max="60" step="1" value="0" readonly aria-label="依日期自動計算旅遊天數"><span class="unit">天（自動）</span></div>
+              <div class="hint" id="trip-date-hint">請選擇出發與回程日期，最多 60 天（含首尾日）</div><div class="error">請選擇有效日期，旅程需為 1～60 天。</div>
             </div>
             <div class="field" data-field="flight">
               <label for="flight">每人來回機票</label>
-              <div class="input-wrap"><input id="flight" name="flight" type="number" min="0" max="1000000" step="100" value="10000" inputmode="decimal" required><span class="unit">NT$</span></div>
+              <div class="input-wrap"><input id="flight" name="flight" type="number" min="0" max="1000000" step="100" value="0" inputmode="decimal" required><span class="unit">NT$</span></div>
               <div class="hint">每人總價</div><div class="error">請輸入 0～1,000,000 的金額。</div>
             </div>
             <div class="field" data-field="hotel">
               <label for="hotel" id="hotel-field-label">住宿每晚總價</label><div class="v48-toggle" role="group" aria-label="住宿費用輸入方式"><button type="button" class="v48-selected" id="hotel-night-btn">每晚費用</button><button type="button" id="hotel-total-btn">整趟住宿總費用</button></div>
-              <div class="input-wrap"><input id="hotel" name="hotel" type="number" min="0" max="1000000" step="100" value="1800" inputmode="decimal" required><span class="unit">NT$</span></div>
+              <div class="input-wrap"><input id="hotel" name="hotel" type="number" min="0" max="1000000" step="100" value="0" inputmode="decimal" required><span class="unit">NT$</span></div>
               <div class="hint" id="hotel-hint">整間房每晚，不是每人</div><div class="error">請輸入 0～1,000,000 的金額。</div>
             </div>
           </div>
@@ -267,12 +269,12 @@
           <div class="field-grid">
             <div class="field" data-field="food">
               <label for="food">每人每日餐費</label>
-              <div class="input-wrap"><input id="food" name="food" type="number" min="0" max="100000" step="100" value="1200" inputmode="decimal" required><span class="unit">NT$</span></div>
+              <div class="input-wrap"><input id="food" name="food" type="number" min="0" max="100000" step="100" value="0" inputmode="decimal" required><span class="unit">NT$</span></div>
               <div class="hint">早餐、午餐、晚餐等</div><div class="error">請輸入 0～100,000 的金額。</div>
             </div>
             <div class="field" data-field="transport">
               <label for="transport">每人每日交通</label>
-              <div class="input-wrap"><input id="transport" name="transport" type="number" min="0" max="100000" step="100" value="500" inputmode="decimal" required><span class="unit">NT$</span></div>
+              <div class="input-wrap"><input id="transport" name="transport" type="number" min="0" max="100000" step="100" value="0" inputmode="decimal" required><span class="unit">NT$</span></div>
               <div class="hint">市區交通與預估車資</div><div class="error">請輸入 0～100,000 的金額。</div>
             </div>
 
@@ -288,7 +290,7 @@
             </div>
             <div class="field full" data-field="buffer">
               <label for="buffer">預備金比例</label>
-              <div class="input-wrap"><input id="buffer" name="buffer" type="number" min="0" max="100" step="1" value="10" inputmode="numeric" required><span class="unit">%</span></div>
+              <div class="input-wrap"><input id="buffer" name="buffer" type="number" min="0" max="100" step="1" value="0" inputmode="numeric" required><span class="unit">%</span></div>
               <div class="hint">按機票、住宿、餐飲、交通、門票與購物小計計算，預留突發支出。</div><div class="error">請輸入 0～100 的比例。</div>
             </div>
           </div>
@@ -317,7 +319,7 @@
             <div class="total" id="grand-total" aria-live="polite">NT$ 0</div>
             <div class="per-person" id="per-person">平均每人 NT$ 0</div>
             <div class="summary-meta">
-              <span class="pill" id="meta-people">3 位旅客</span><span class="pill" id="meta-days">5 天</span><span class="pill" id="meta-buffer">含 10% 預備金</span>
+              <span class="pill" id="meta-people">0 位旅客</span><span class="pill" id="meta-days">0 天</span><span class="pill" id="meta-buffer">含 0% 預備金</span>
             </div>
           </div>
           <div class="v49-chart-panel">
@@ -438,12 +440,34 @@
  </div>
 </div>
 
+<div id="trip-calendar" class="trip-calendar-overlay" hidden role="dialog" aria-modal="true" aria-label="選擇出發與回程日期"><div class="trip-calendar-panel"><div class="trip-calendar-head"><strong>選擇旅行日期</strong><button type="button" id="trip-calendar-close" class="mini-btn">✕ 關閉</button></div><p id="trip-calendar-status">請選擇出發日期</p><div class="trip-calendar-controls"><button type="button" id="trip-cal-prev" class="mini-btn">← 上個月</button><button type="button" id="trip-cal-next" class="mini-btn">下個月 →</button></div><div id="trip-cal-months" class="trip-cal-months"></div><div class="trip-calendar-actions"><button type="button" id="trip-cal-clear" class="mini-btn">清除日期</button><button type="button" id="trip-cal-done" class="mini-btn">完成</button></div></div></div>
+<style>
+.trip-date-inputs{display:flex;gap:5px;align-items:center}.trip-date-inputs input{width:calc(50% - 12px);min-width:0;border:1px solid #d9e1db;border-radius:10px;padding:9px 4px;background:white;color:#163e33;font:inherit}.trip-calendar-open{margin:8px 0}.trip-days-result{margin-top:6px}.trip-days-result input{background:#f1f5f1}.trip-calendar-overlay{position:fixed;inset:0;z-index:9999;background:#14271c99;display:flex;justify-content:center;align-items:center;padding:12px}.trip-calendar-overlay[hidden]{display:none}.trip-calendar-panel{background:#fff;border-radius:18px;width:min(760px,100%);max-height:94vh;overflow:auto;padding:18px;box-shadow:0 12px 50px #0003}.trip-calendar-head,.trip-calendar-controls,.trip-calendar-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.trip-calendar-status{color:#27634d;font-size:14px}.trip-cal-months{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.trip-cal-month h3{text-align:center;margin:5px 0 12px}.trip-cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}.trip-cal-grid span{text-align:center;font-size:12px;padding:7px 0}.trip-cal-grid button{border:0;background:transparent;border-radius:7px;min-height:36px;cursor:pointer;color:#153e31;font:inherit}.trip-cal-grid button:hover{background:#e5f2ea}.trip-cal-grid button.trip-range{background:#e5f2ea}.trip-cal-grid button.trip-selected{background:#245e49;color:white}.trip-cal-grid button:focus-visible{outline:2px solid #195d44}@media(max-width:600px){.trip-cal-months{grid-template-columns:1fr}.trip-calendar-panel{padding:12px}.trip-date-inputs{flex-wrap:wrap}.trip-date-inputs input{font-size:13px}}
+</style>
+<script>
+(()=>{
+ const start=document.getElementById('trip-start'),end=document.getElementById('trip-end'),days=document.getElementById('days');
+ const overlay=document.getElementById('trip-calendar'),status=document.getElementById('trip-calendar-status'),months=document.getElementById('trip-cal-months');
+ let cursor=new Date();cursor=new Date(cursor.getFullYear(),cursor.getMonth(),1);
+ const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+ const parse=x=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(x||''))return null;const [y,m,d]=x.split('-').map(Number);const v=new Date(y,m-1,d);return v.getFullYear()===y&&v.getMonth()===m-1&&v.getDate()===d?v:null};
+ function sync(){const a=parse(start.value),b=parse(end.value);const n=a&&b?Math.round((Date.UTC(b.getFullYear(),b.getMonth(),b.getDate())-Date.UTC(a.getFullYear(),a.getMonth(),a.getDate()))/86400000)+1:0;days.value=n>=1&&n<=60?n:0;document.getElementById('trip-date-hint').textContent=n>60?'最多可選擇 60 天':n<0?'回程日期不能早於出發日期':days.value>0?`${start.value} 至 ${end.value}，共 ${n} 天（${n-1} 晚）`:'請選擇出發與回程日期，最多 60 天';days.dispatchEvent(new Event('input',{bubbles:true}));window.dispatchEvent(new CustomEvent('trip-dates-changed',{detail:{start:start.value,end:end.value,days:Number(days.value)}}));}
+ function draw(){months.innerHTML='';for(let offset=0;offset<2;offset++){const m=new Date(cursor.getFullYear(),cursor.getMonth()+offset,1),year=m.getFullYear(),month=m.getMonth();const wrap=document.createElement('section');wrap.className='trip-cal-month';const heading=document.createElement('h3');heading.textContent=`${year} 年 ${month+1} 月`;wrap.append(heading);const grid=document.createElement('div');grid.className='trip-cal-grid';for(const w of ['日','一','二','三','四','五','六']){const label=document.createElement('span');label.textContent=w;grid.append(label)}for(let i=0;i<m.getDay();i++)grid.append(document.createElement('span'));const count=new Date(year,month+1,0).getDate();for(let i=1;i<=count;i++){const d=iso(new Date(year,month,i));const btn=document.createElement('button');btn.type='button';btn.textContent=i;if(d===start.value||d===end.value)btn.classList.add('trip-selected');else if(start.value&&end.value&&d>start.value&&d<end.value)btn.classList.add('trip-range');btn.addEventListener('click',()=>{if(!start.value||end.value||d<start.value){start.value=d;end.value=''}else end.value=d;sync();draw()});grid.append(btn)}wrap.append(grid);months.append(wrap)}status.textContent=!start.value?'請先選擇出發日期':!end.value?`出發：${start.value}，請選回程日期`:`${start.value} → ${end.value}（${days.value} 天）`;}
+ start.addEventListener('change',()=>{sync();draw()});end.addEventListener('change',()=>{sync();draw()});
+ document.getElementById('trip-calendar-open').addEventListener('click',()=>{const d=parse(start.value);if(d)cursor=new Date(d.getFullYear(),d.getMonth(),1);draw();overlay.hidden=false});
+ document.getElementById('trip-calendar-close').addEventListener('click',()=>overlay.hidden=true);document.getElementById('trip-cal-done').addEventListener('click',()=>overlay.hidden=true);
+ document.getElementById('trip-cal-prev').addEventListener('click',()=>{cursor.setMonth(cursor.getMonth()-1);draw()});document.getElementById('trip-cal-next').addEventListener('click',()=>{cursor.setMonth(cursor.getMonth()+1);draw()});
+ document.getElementById('trip-cal-clear').addEventListener('click',()=>{start.value='';end.value='';sync();draw()});overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.hidden=true});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')overlay.hidden=true});
+ document.getElementById('reset-btn').addEventListener('click',()=>{start.value='';end.value='';sync();draw()});sync();
+})();
+</script>
   <script>
     (() => {
       "use strict";
       const defaults = {
-        people: 3, days: 5, flight: 10000, hotel: 1800,
-        food: 1200, transport: 500, tickets: 0, shopping: 0, buffer: 10
+        people: 0, days: 0, flight: 0, hotel: 0,
+        food: 0, transport: 0, tickets: 0, shopping: 0, buffer: 0
       };
       const fields = Object.keys(defaults);
        let hotelMode='night',summaryMode='group',lodgingView='total',customNights=null;
@@ -550,9 +574,13 @@
       }
 
       function render() {
-        if (!validate()) {
-          $("grand-total").textContent = "請檢查輸入";
-          $("per-person").textContent = "請修正標示的欄位後查看估算";
+        if (!validate() || Number($("people").value)<1 || Number($("days").value)<1) {
+          $("grand-total").textContent = "NT$ 0";
+          $("per-person").textContent = "請先選擇旅行日期並填入旅遊人數";
+          document.getElementById('v49-donut-total').textContent='NT$ 0';
+          document.getElementById('v49-legend').innerHTML='';
+          document.getElementById('v49-person-grid').innerHTML='';
+          document.getElementById('cost-list').innerHTML='';
           return null;
         }
         const v = getValues();
